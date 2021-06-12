@@ -1,7 +1,10 @@
-const response = function ({ response }, res) {
-  const message = { msg: response.msg };
-  if (response.data) message.data = response.data;
-  return res.status(response.status || 200).send(message);
+const lastFunction = function (
+  { method, response: { status, msg, data, etc } },
+  res
+) {
+  if (method == "GET" && !msg) return res.status(status || 200).json(data);
+  
+  return res.status(status || 200).json({ msg, ...etc, data });
 };
 
-module.exports = response;
+module.exports = lastFunction;

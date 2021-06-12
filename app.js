@@ -8,8 +8,12 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-const indexRouter = require("./src/routes/index");
-app.use("/", indexRouter);
+const response = require("./src/helpers/response");
+app.use("/users", require("./src/routes/userRoute"));
+app.use(response);
+
+const { sequelize } = require("./src/models");
+// sequelize.sync({ force: true });
 
 app.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);
