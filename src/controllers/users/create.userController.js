@@ -1,11 +1,13 @@
 const { User } = require("../../models");
 const sendEmail = require("../../services/sendEmail");
+const { body } = require("express-validator");
 
-module.exports = async (req, res, next) => {
+const service = async (req, res, next) => {
   const body = req.body;
   const payload = {
     name: body.name,
     email: body.email,
+    password: body.password,
   };
 
   try {
@@ -20,3 +22,17 @@ module.exports = async (req, res, next) => {
   }
   next();
 };
+
+const validation = [
+  body("name").notEmpty().withMessage("nama wajib diisi"),
+  body("email")
+    .isEmail()
+    .custom((value) => {
+      return User.findOne({ where: { email: value } }).then((user) => {
+        if (user) {
+          return Promise.reject("Email sudah digunakan");
+        }
+      });
+    }),
+];
+module.exports = { service, validation };

@@ -9,6 +9,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 const response = require("./src/helpers/response");
+app.post("/", require("./src/routes/authRoute"));
 app.use("/users", require("./src/routes/userRoute"));
 app.use(response);
 

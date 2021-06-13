@@ -1,6 +1,6 @@
 const { User } = require("../../models");
 
-module.exports = async (req, res, next) => {
+const service = async (req, res, next) => {
   try {
     const where = {};
     if (req.params.id) where.id = req.params.id;
@@ -18,3 +18,5 @@ module.exports = async (req, res, next) => {
   }
   next();
 };
+
+module.exports = { service };

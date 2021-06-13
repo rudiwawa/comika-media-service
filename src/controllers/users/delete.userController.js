@@ -1,6 +1,6 @@
 const { User } = require("../../models");
 
-module.exports = async function (req, res, next) {
+const service = async function (req, res, next) {
   try {
     const requestDB = await User.destroy({
       where: {
@@ -9,9 +9,10 @@ module.exports = async function (req, res, next) {
     });
 
     if (requestDB) req.response = { msg: `data user berhasil dihapus` };
-    else req.response = { msg: `data user gagal dihapus` };
+    else req.response = { status: 404, msg: `data gagal dihapus` };
   } catch (error) {
     req.response = { status: 500, msg: err.message };
   }
   next();
 };
+module.exports = { service };

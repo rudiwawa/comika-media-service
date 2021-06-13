@@ -1,6 +1,9 @@
-const { User } = require("../../models");
-
-module.exports = async function (req, res, next) {
+const {
+  User,
+  Sequelize: { Op },
+} = require("../../models");
+const { body } = require("express-validator");
+const service = async function (req, res, next) {
   const body = req.body;
   const payload = {
     name: body.name,
@@ -8,10 +11,9 @@ module.exports = async function (req, res, next) {
   };
   try {
     const requestDB = await User.update(payload, {
-      where: { id: req.params.id },
+      where: { id: body.id },
     });
-
-    if (requestDB)
+    if (requestDB[0])
       req.response = {
         msg: `data ${body.name} berhasil diperbarui`,
       };
@@ -25,3 +27,20 @@ module.exports = async function (req, res, next) {
   }
   next();
 };
+
+const validation = [
+  body("id").notEmpty().withMessage("id tidak boleh kosong"),
+  body("name").notEmpty().withMessage("name tidak boleh kosong"),
+  body("email").isEmail(),
+  body().custom(({ id, email }) => {
+    return User.findAll({
+      where: { [Op.and]: [{ email }, { id: { [Op.ne]: id } }] },
+    }).then((user) => {
+      console.log(user);
+      if (user.length) {
+        return Promise.reject("email sudah digunakan");
+      }
+    });
+  }),
+];
+module.exports = { service, validation };
