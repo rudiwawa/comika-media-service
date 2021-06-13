@@ -1,5 +1,6 @@
 const {
   User,
+  Role,
   Sequelize: { Op },
 } = require("../../models");
 const { body } = require("express-validator");
@@ -9,23 +10,40 @@ const service = async function (req, res, next) {
     name: body.name,
     email: body.email,
   };
+  const payloadRole = {
+    userId: body.id,
+    role: body.role,
+  };
   try {
     const requestDB = await User.update(payload, {
       where: { id: body.id },
     });
-    if (requestDB[0])
+    createNewRole(payloadRole);
+    if (requestDB[0]) {
       req.response = {
         msg: `data ${body.name} berhasil diperbarui`,
       };
-    else
+    } else {
       req.response = {
         status: 400,
         msg: `data ${body.name} gagal untuk diperbarui`,
       };
+    }
   } catch (err) {
     req.response = { status: 500, msg: err.message };
   }
   next();
+};
+
+const createNewRole = (payloadRole) => {
+  Role.destroy({
+    where: {
+      userId: payloadRole.userId,
+      role: { [Op.ne]: "user" },
+    },
+  }).then(() => {
+    Role.create(payloadRole);
+  });
 };
 
 const validation = [

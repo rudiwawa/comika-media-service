@@ -4,11 +4,12 @@ const service = async (req, res, next) => {
   try {
     const where = {};
     if (req.params.id) where.id = req.params.id;
-    const requestDB = await User.findAll({
+    const requestDB = await User.scope("admin").findAll({
       attributes: ["id", "name", "email"],
       where,
     });
-    if (req.params.id && !requestDB.length) req.response = { status: 404, msg: "data tidak ditemukan" };
+    if (req.params.id && !requestDB.length)
+      req.response = { status: 404, msg: "data tidak ditemukan" };
     else
       req.response = {
         data: requestDB,

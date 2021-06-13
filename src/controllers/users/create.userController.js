@@ -1,4 +1,4 @@
-const { User } = require("../../models");
+const { User, Role } = require("../../models");
 const sendEmail = require("../../services/sendEmail");
 const { body } = require("express-validator");
 
@@ -8,15 +8,20 @@ const service = async (req, res, next) => {
     name: body.name,
     email: body.email,
     password: body.password,
+    Roles: [
+      {
+        role: body.role,
+      },
+    ],
   };
 
   try {
-    const requestDB = await User.create(payload);
+    const requestDB = await User.create(payload, { include: Role });
     req.response = {
       msg: `data ${body.name} berhasil ditambahkan.`,
       data: requestDB,
     };
-    sendEmail({ to: req.body.email });
+    // sendEmail({ to: req.body.email });
   } catch (err) {
     req.response = { status: 500, msg: err.message };
   }

@@ -8,8 +8,19 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      // define association here
+    static associate({ User, Role }) {
+      User.hasMany(Role);
+      User.addScope("admin", {
+        include: [
+          {
+            attributes: ["role"],
+            model: Role,
+          },
+        ],
+        where: {
+          [Sequelize.Op.or]: [{ $role$: "writer" }, { $role$: "admin" }],
+        },
+      });
     }
   }
   User.init(
@@ -32,10 +43,6 @@ module.exports = (sequelize, DataTypes) => {
         set(value) {
           this.setDataValue("password", hashSync(value, genSaltSync(10)));
         },
-      },
-      role: {
-        type: DataTypes.ENUM(["writer", "admin"]),
-        defaultValue: "writer",
       },
     },
     {
