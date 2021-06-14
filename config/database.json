@@ -19,10 +19,15 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "username": "myghanco_comika",
+    "password": "RaJaTu24",
+    "database": "myghanco_comika-media",
+    "host": "103.147.154.53",
+    "dialect": "mysql",
+    "define": {
+      "paranoid": true,
+      "timestamps": true,
+      "underscored": true
+    }
   }
 }
