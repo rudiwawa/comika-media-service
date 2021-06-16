@@ -19,11 +19,20 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "myghanco_comika",
-    "password": "RaJaTu24",
-    "database": "myghanco_comika-media",
-    "host": "103.147.154.53",
-    "dialect": "mysql",
+    "url": "postgres://ehqmnizrwgqfsz:2059c4d5aca979d6b216f4a1d6261898e2b1421de9c8903cb861f733c3c4bb53@ec2-3-234-22-132.compute-1.amazonaws.com:5432/d8ph2e4vfim3n2",
+    "username": "ehqmnizrwgqfsz",
+    "password": "2059c4d5aca979d6b216f4a1d6261898e2b1421de9c8903cb861f733c3c4bb53",
+    "database": "d8ph2e4vfim3n2",
+    "host": "ec2-3-234-22-132.compute-1.amazonaws.com",
+    "dialect": "postgres",
+    "port": 5432,
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      },
+      "native": true
+    },
     "define": {
       "paranoid": true,
       "timestamps": true,

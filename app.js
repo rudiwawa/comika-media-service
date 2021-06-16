@@ -19,8 +19,8 @@ app.use("/article", require("./src/routes/articleRoute"));
 app.use(response);
 
 const { sequelize } = require("./src/models");
-// sequelize.sync({ force: true });
-sequelize.sync();
+sequelize.sync({ force: true });
+// sequelize.sync();
 
 app.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);
