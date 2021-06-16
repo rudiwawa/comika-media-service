@@ -12,8 +12,8 @@ app.use(cors());
 // app.use(express.urlencoded({ extended: false }));
 
 const response = require("./src/helpers/response");
+app.get("/", (req, res) => res.json("WELCOME TO COMIKA MEDIA SERVICE"));
 app.use("/", require("./src/routes/authRoute"));
-
 app.use("/users", require("./src/routes/userRoute"));
 app.use("/article", require("./src/routes/articleRoute"));
 app.use(response);
