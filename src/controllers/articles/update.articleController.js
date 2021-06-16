@@ -12,10 +12,15 @@ const service = async function (req, res, next) {
   if (req.file) payload.banner = req.file.path;
   try {
     const requestDB = await Article.update(payload, { where: { id: body.id } });
-    req.response = {
-      msg: `Article ${body.title} berhasil diubah`,
-      data: requestDB,
-    };
+    if (requestDB[0]) {
+      req.response = {
+        msg: `Article ${body.title} berhasil diubah`,
+      };
+    } else {
+      req.response = {
+        msg: `Article ${body.title} gagal diubah`,
+      };
+    }
   } catch (error) {
     req.response = { status: 500, msg: error.message };
   }

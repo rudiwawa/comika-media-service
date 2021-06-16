@@ -10,10 +10,8 @@ const db = {};
 
 let sequelize;
 if (config.url) {
-  console.log("if", config);
   sequelize = new Sequelize(config.url, config);
 } else {
-  console.log("else", config);
   sequelize = new Sequelize(
     config.database,
     config.username,

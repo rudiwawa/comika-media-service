@@ -19,7 +19,7 @@ app.use("/article", require("./src/routes/articleRoute"));
 app.use(response);
 
 const { sequelize } = require("./src/models");
-sequelize.sync({ force: true });
+// sequelize.sync({ force: true });
 // sequelize.sync();
 
 app.listen(PORT, () => {

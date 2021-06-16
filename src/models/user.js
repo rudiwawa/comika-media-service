@@ -10,15 +10,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate({ User, Role, Article }) {
       User.addScope("admin", {
-        include: {
-          attributes: ["role"],
-          model: Role,
-          where: {
-            [Sequelize.Op.or]: [{ $role$: "writer" }, { $role$: "admin" }],
-          },
+        where: {
+          [Sequelize.Op.or]: [{ role: "admin" }, { role: "writer" }],
         },
       });
-      User.hasMany(Role);
       User.hasMany(Article);
       User.belongsToMany(Article, { through: "likes" });
     }
@@ -42,6 +37,10 @@ module.exports = (sequelize, DataTypes) => {
         set(value) {
           this.setDataValue("password", hashSync(value, genSaltSync(10)));
         },
+      },
+      role: {
+        type: DataTypes.ENUM(["admin", "writer", "user"]),
+        defaultValue: "user",
       },
       phone: {
         type: DataTypes.STRING(13),

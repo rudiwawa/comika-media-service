@@ -5,7 +5,7 @@ const service = async (req, res, next) => {
     const where = {};
     if (req.params.id) where.id = req.params.id;
     const requestDB = await User.scope("admin").findAll({
-      attributes: ["id", "name", "email"],
+      attributes: { exclude: ["password"] },
       where,
     });
     if (req.params.id && !requestDB.length)

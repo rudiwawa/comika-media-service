@@ -7,7 +7,8 @@ const service = async (req, res, next) => {
   const payload = {
     name: body.name,
     email: body.email,
-    password: body.password,
+    password: "comika-media",
+    role: body.role,
     gender: body.gender,
     phone: body.phone,
     address: body.address,
@@ -15,20 +16,15 @@ const service = async (req, res, next) => {
     district: body.district,
     city: body.city,
     province: body.province,
-    Roles: [
-      {
-        role: body.role,
-      },
-    ],
   };
 
   try {
-    const requestDB = await User.create(payload, { include: Role });
+    const requestDB = await User.create(payload);
     req.response = {
       msg: `data ${body.name} berhasil ditambahkan.`,
       data: requestDB,
     };
-    // sendEmail({ to: req.body.email });
+    sendEmail({ to: req.body.email, html: greeting(body.name, body.role) });
   } catch (err) {
     req.response = { status: 500, msg: err.message };
   }
@@ -55,4 +51,8 @@ const validation = [
     .isIn(["admin", "writer", "user"])
     .withMessage("role tidak sesuai"),
 ];
+
+const greeting = (name, role) => {
+  return `Selamat bergabung <b>${name}</b>, sebagai <b>${role}</b> di Comika Media.`;
+};
 module.exports = { service, validation };

@@ -21,6 +21,6 @@ router.put(
   upload.single("banner"),
   updateArticle.service
 );
-router.delete("/", deleteArticle.service);
+router.delete("/:id", deleteArticle.service);
 
 module.exports = router;

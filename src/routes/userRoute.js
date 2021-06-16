@@ -7,7 +7,8 @@ const getUser = require("../controllers/users/get.userController");
 const updateUser = require("../controllers/users/update.userController");
 const deleteUser = require("../controllers/users/delete.userController");
 
-// router.use(checkToken);
+router.post("/no-auth", createUser.validation, validator, createUser.service);
+router.use(checkToken);
 router
   .post("/", createUser.validation, validator, createUser.service)
   .get("/", getUser.service)
