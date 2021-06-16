@@ -17,7 +17,7 @@ app.use(response);
 
 const { sequelize } = require("./src/models");
 // sequelize.sync({ force: true });
-sequelize.sync();
+// sequelize.sync();
 
 app.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);

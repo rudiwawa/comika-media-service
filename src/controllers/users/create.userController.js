@@ -8,6 +8,13 @@ const service = async (req, res, next) => {
     name: body.name,
     email: body.email,
     password: body.password,
+    gender: body.gender,
+    phone: body.phone,
+    address: body.address,
+    postalCode: body.postalCode,
+    district: body.district,
+    city: body.city,
+    province: body.province,
     Roles: [
       {
         role: body.role,
@@ -39,5 +46,13 @@ const validation = [
         }
       });
     }),
+  body("gender").isIn(["L", "P"]).withMessage("gender hanya bernilai L/P"),
+  body("phone", "phone tidak boleh kosong")
+    .notEmpty()
+    .isLength({ min: 12, max: 13 })
+    .withMessage("phone minimal 12 dan maksimal 13 karakter"),
+  body("role")
+    .isIn(["admin", "writer", "user"])
+    .withMessage("role tidak sesuai"),
 ];
 module.exports = { service, validation };

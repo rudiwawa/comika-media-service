@@ -9,6 +9,14 @@ const service = async function (req, res, next) {
   const payload = {
     name: body.name,
     email: body.email,
+    phone: body.phone,
+    gender: body.gender,
+    phone: body.phone,
+    address: body.address,
+    postalCode: body.postalCode,
+    district: body.district,
+    city: body.city,
+    province: body.province,
   };
   const payloadRole = {
     userId: body.id,

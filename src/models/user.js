@@ -9,19 +9,18 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate({ User, Role, Article }) {
-      User.hasMany(Role);
-      User.hasMany(Article);
       User.addScope("admin", {
-        include: [
-          {
-            attributes: ["role"],
-            model: Role,
+        include: {
+          attributes: ["role"],
+          model: Role,
+          where: {
+            [Sequelize.Op.or]: [{ $role$: "writer" }, { $role$: "admin" }],
           },
-        ],
-        where: {
-          [Sequelize.Op.or]: [{ $role$: "writer" }, { $role$: "admin" }],
         },
       });
+      User.hasMany(Role);
+      User.hasMany(Article);
+      User.belongsToMany(Article, { through: "likes" });
     }
   }
   User.init(
@@ -34,7 +33,6 @@ module.exports = (sequelize, DataTypes) => {
       name: DataTypes.STRING,
       email: {
         type: DataTypes.STRING,
-        unique: true,
         validate: {
           isEmail: true,
         },
@@ -44,6 +42,30 @@ module.exports = (sequelize, DataTypes) => {
         set(value) {
           this.setDataValue("password", hashSync(value, genSaltSync(10)));
         },
+      },
+      phone: {
+        type: DataTypes.STRING(13),
+        allowNull: true,
+      },
+      address: {
+        type: DataTypes.STRING(13),
+        allowNull: true,
+      },
+      postalCode: {
+        type: DataTypes.STRING(5),
+        allowNull: true,
+      },
+      district: {
+        type: DataTypes.STRING(50),
+        allowNull: true,
+      },
+      city: {
+        type: DataTypes.STRING(50),
+        allowNull: true,
+      },
+      province: {
+        type: DataTypes.STRING(50),
+        allowNull: true,
       },
     },
     {
