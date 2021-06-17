@@ -20,13 +20,13 @@ const service = async (req, res, next) => {
 
   try {
     const requestDB = await User.create(payload);
-    req.response = {
+    res.response = {
       msg: `data ${body.name} berhasil ditambahkan.`,
       data: requestDB,
     };
     sendEmail({ to: req.body.email, html: greeting(body.name, body.role) });
   } catch (err) {
-    req.response = { status: 500, msg: err.message };
+    res.response = { status: 500, msg: err.message };
   }
   next();
 };

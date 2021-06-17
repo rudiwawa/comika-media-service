@@ -23,17 +23,17 @@ const service = async function (req, res, next) {
       where: { id: body.id },
     });
     if (requestDB[0]) {
-      req.response = {
+      res.response = {
         msg: `data ${body.name} berhasil diperbarui`,
       };
     } else {
-      req.response = {
+      res.response = {
         status: 400,
         msg: `data ${body.name} gagal untuk diperbarui`,
       };
     }
   } catch (err) {
-    req.response = { status: 500, msg: err.message };
+    res.response = { status: 500, msg: err.message };
   }
   next();
 };

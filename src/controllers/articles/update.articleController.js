@@ -13,23 +13,23 @@ const service = async function (req, res, next) {
   try {
     const requestDB = await Article.update(payload, { where: { id: body.id } });
     if (requestDB[0]) {
-      req.response = {
+      res.response = {
         msg: `Article ${body.title} berhasil diubah`,
       };
     } else {
-      req.response = {
+      res.response = {
         msg: `Article ${body.title} gagal diubah`,
       };
     }
   } catch (error) {
-    req.response = { status: 500, msg: error.message };
+    res.response = { status: 500, msg: error.message };
   }
   next();
 };
 const validation = [
-  body("id").notEmpty(),
-  body("title").notEmpty(),
-  body("content").notEmpty(),
+  body("id", "id tidak boleh kosong").notEmpty(),
+  body("title", "title tidak boleh kosong").notEmpty(),
+  body("content", "content tidak boleh kosong").notEmpty(),
 ];
 
 module.exports = { service, validation };

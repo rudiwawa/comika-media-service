@@ -1,10 +1,23 @@
-const lastFunction = function (
-  { method, response: { status, msg, data, etc } },
-  res
-) {
-  if (method == "GET" && !msg) return res.status(status || 200).json(data);
-  
-  return res.status(status || 200).json({ msg, ...etc, data });
+const { Record } = require("../models");
+const lastFunction = function (req, res) {
+  try {
+    const data = res.response;
+    if (req.method == "GET" && !data.msg) {
+      res.status(data.status || 200).json(data.data);
+    } else {
+      res
+        .status(data.status || 200)
+        .json({ msg: data.msg, ...data.etc, data: data.data });
+    }
+    req.record.status = data.status || 200;
+    req.record.msg = data.msg;
+    Record.create(req.record);
+  } catch (error) {
+    req.record.status = 400;
+    req.record.msg = data.error.message;
+    Record.create(req.record);
+    return res.status(400).json({ msg: error.message });
+  }
 };
 
 module.exports = lastFunction;

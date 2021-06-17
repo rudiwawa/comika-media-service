@@ -8,10 +8,10 @@ const service = async function (req, res, next) {
       },
     });
 
-    if (requestDB) req.response = { msg: `data user berhasil dihapus` };
-    else req.response = { status: 404, msg: `data gagal dihapus` };
+    if (requestDB) res.response = { msg: `data user berhasil dihapus` };
+    else res.response = { status: 404, msg: `data gagal dihapus` };
   } catch (error) {
-    req.response = { status: 500, msg: err.message };
+    res.response = { status: 500, msg: err.message };
   }
   next();
 };

@@ -9,13 +9,13 @@ const service = async (req, res, next) => {
       where,
     });
     if (req.params.id && !requestDB.length)
-      req.response = { status: 404, msg: "data tidak ditemukan" };
+      res.response = { status: 404, msg: "data tidak ditemukan" };
     else
-      req.response = {
+      res.response = {
         data: requestDB,
       };
   } catch (err) {
-    req.response = { status: 500, msg: err.message };
+    res.response = { status: 500, msg: err.message };
   }
   next();
 };

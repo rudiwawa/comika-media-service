@@ -1,28 +1,30 @@
 "use strict";
-const { Model, Sequelize } = require("sequelize");
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Visitor extends Model {
+  class JWT extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate() {}
+    static associate({ JWT, User }) {
+      JWT.belongsTo(User);
+    }
   }
-  Visitor.init(
+  JWT.init(
     {
-      id: {
-        type: DataTypes.UUID,
-        defaultValue: Sequelize.UUIDV4,
-        primaryKey: true,
-      },
-      articleId: DataTypes.UUID,
       userId: DataTypes.UUID,
+      token: DataTypes.TEXT,
+      revoke: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
     {
       sequelize,
-      modelName: "Visitor",
+      modelName: "JWT",
+      tableName: "jwt",
     }
   );
-  return Visitor;
+  return JWT;
 };
