@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   Jumbotron.init(
     {
       img: DataTypes.STRING,
-      sequence: { type: DataTypes.TINYINT, defaultValue: 0 },
+      sequence: { type: DataTypes.SMALLINT, defaultValue: 0 },
       link: DataTypes.STRING,
       isPhone: {
         type: DataTypes.BOOLEAN,
