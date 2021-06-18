@@ -1,7 +1,7 @@
 const {
   User,
   Sequelize: { Op },
-} = require("../../models");
+} = require("../../../models");
 const { body } = require("express-validator");
 const service = async function (req, res, next) {
   const body = req.body;

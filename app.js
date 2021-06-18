@@ -13,13 +13,13 @@ app.use(cors());
 
 const response = require("./src/helpers/response");
 const record = require("./src/middlewares/record");
+const routeAPIadmin = require("./src/routes/admin");
+const routeAPIPublic = require("./src/routes/public");
 
-app.use(record);
 app.get("/", (req, res) => res.json("WELCOME TO COMIKA MEDIA SERVICE"));
-app.use("/", require("./src/routes/authRoute"));
-app.use("/users", require("./src/routes/userRoute"));
-app.use("/article", require("./src/routes/articleRoute"));
-app.use("/jumbotron", require("./src/routes/jumbotronRoute"));
+app.use(record);
+app.use("/api", routeAPIPublic);
+app.use("/api/admin", routeAPIadmin);
 app.use(response);
 
 const { sequelize } = require("./src/models");

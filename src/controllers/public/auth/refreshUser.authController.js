@@ -1,13 +1,13 @@
-const { JWT, Record, User } = require("../../models");
+const { JWT, Record, User } = require("../../../models");
 const jwt = require("jsonwebtoken");
-const { addJWT } = require("../../middlewares/jwt");
+const { addJWT } = require("../../../middlewares/jwtUser");
 
 const service = async function (req, res, next) {
   const token = req.get("Authorization");
   if (!token) return res.status(401).json({ msg: "Unauthorized." });
-  jwt.verify(token, process.env.KEY, async (err, decode) => {
+  jwt.verify(token, process.env.KEY_USER, async (err, decode) => {
     if (err) {
-      return res.status(400).json({ msg: "invalid token." });
+      return res.status(400).json({ msg: err.message });
     } else {
       req.record.userId = decode.user.id;
       const requestDB = await JWT.findOne({ where: { token } });

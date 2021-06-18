@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const validator = require("../helpers/validator");
-const { checkToken } = require("../middlewares/jwt");
-const createUser = require("../controllers/users/create.userController");
-const getUser = require("../controllers/users/get.userController");
-const updateUser = require("../controllers/users/update.userController");
-const deleteUser = require("../controllers/users/delete.userController");
+const validator = require("../../../helpers/validator");
+const { checkToken } = require("../../../middlewares/jwtAdmin");
+const createUser = require("./create.userController");
+const getUser = require("./get.userController");
+const updateUser = require("./update.userController");
+const deleteUser = require("./delete.userController");
 
 router.post("/no-auth", createUser.validation, validator, createUser.service);
 router.use(checkToken);

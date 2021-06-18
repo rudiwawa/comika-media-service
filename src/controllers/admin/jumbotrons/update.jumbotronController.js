@@ -1,4 +1,4 @@
-const { Jumbotron } = require("../../models");
+const { Jumbotron } = require("../../../models");
 const { body } = require("express-validator");
 
 const service = async function (req, res, next) {

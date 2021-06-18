@@ -1,4 +1,4 @@
-const { Jumbotron } = require("../../models");
+const { Jumbotron } = require("../../../models");
 const service = async function (req, res, next) {
   const payload = {
     img: req.file.path,

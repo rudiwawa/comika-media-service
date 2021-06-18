@@ -1,0 +1,31 @@
+const express = require("express");
+const router = express.Router();
+const { checkToken } = require("../../../middlewares/jwtAdmin");
+const upload = require("../../../services/uploadImage");
+const validator = require("../../../helpers/validator");
+
+const createArticle = require("./create.articleController");
+const getArticle = require("./get.articleController");
+const updateArticle = require("./update.articleController");
+const deleteArticle = require("./delete.articleController");
+
+router.use(checkToken);
+router.post(
+  "/",
+  upload.single("article"),
+  createArticle.validation,
+  validator,
+  createArticle.service
+);
+router.get("/", getArticle.service);
+router.get("/:id", getArticle.service);
+router.put(
+  "/",
+  upload.single("article"),
+  updateArticle.validation,
+  validator,
+  updateArticle.service
+);
+router.delete("/:id", deleteArticle.service);
+
+module.exports = router;

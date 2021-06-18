@@ -1,5 +1,5 @@
-const { User, Role } = require("../../models");
-const sendEmail = require("../../services/sendEmail");
+const { User, Role } = require("../../../models");
+const sendEmail = require("../../../services/sendEmail");
 const { body } = require("express-validator");
 
 const service = async (req, res, next) => {

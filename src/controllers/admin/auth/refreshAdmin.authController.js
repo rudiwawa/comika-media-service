@@ -1,19 +1,21 @@
-const { JWT, Record, User } = require("../../models");
+const { JWT, Record, User } = require("../../../models");
 const jwt = require("jsonwebtoken");
-const { addJWT } = require("../../middlewares/jwt");
+const { addJWT } = require("../../../middlewares/jwtAdmin");
 
 const service = async function (req, res, next) {
   const token = req.get("Authorization");
   if (!token) return res.status(401).json({ msg: "Unauthorized." });
-  jwt.verify(token, process.env.KEY_USER, async (err, decode) => {
+  jwt.verify(token, process.env.KEY, async (err, decode) => {
     if (err) {
-      return res.status(400).json({ msg: "invalid token." });
+      return res.status(400).json({ msg: err.message });
     } else {
+      console.log(decode.user);
       req.record.userId = decode.user.id;
       const requestDB = await JWT.findOne({ where: { token } });
       if (requestDB.revoke) {
         req.record.status = 401;
         req.record.msg = "refresh rejected";
+        console.log(req.record);
         Record.create(req.record);
         return res.status(401).json({ msg: "refresh rejected" });
       } else {
