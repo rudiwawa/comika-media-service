@@ -1,30 +1,25 @@
 "use strict";
-const { Model, Sequelize } = require("sequelize");
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Visitor extends Model {
+  class Share extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Article, Visitor }) {
-      Visitor.belongsTo(Article);
+    static associate({ Share, Article }) {
+      Share.belongsTo(Article);
     }
   }
-  Visitor.init(
+  Share.init(
     {
-      id: {
-        type: DataTypes.UUID,
-        defaultValue: Sequelize.UUIDV4,
-        primaryKey: true,
-      },
       articleId: DataTypes.UUID,
       userId: DataTypes.UUID,
     },
     {
       sequelize,
-      modelName: "Visitor",
+      modelName: "Share",
     }
   );
-  return Visitor;
+  return Share;
 };

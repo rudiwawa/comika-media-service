@@ -14,7 +14,7 @@ const lastFunction = function (req, res) {
     Record.create(req.record);
   } catch (error) {
     req.record.status = 400;
-    req.record.msg = data.error.message;
+    req.record.msg = error.message;
     Record.create(req.record);
     return res.status(400).json({ msg: error.message });
   }

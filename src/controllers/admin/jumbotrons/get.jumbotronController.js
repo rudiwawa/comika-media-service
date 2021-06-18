@@ -9,8 +9,10 @@ const service = async function (req, res, next) {
       where,
       order: [["sequence", "ASC"]],
     });
-    if (req.params.id && !requestDB.length) {
-      res.response = { status: 404, msg: "jumbotron tidak ditemukan" };
+    if (req.params.id) {
+      if (!requestDB.length)
+        res.response = { status: 404, msg: "jumbotron tidak ditemukan" };
+      else res.response = { data: requestDB[0] };
     } else res.response = { data: requestDB };
   } catch (error) {
     res.response = { status: 500, msg: error.message };

@@ -8,9 +8,11 @@ const service = async (req, res, next) => {
       attributes: { exclude: ["password"] },
       where,
     });
-    if (req.params.id && !requestDB.length)
-      res.response = { status: 404, msg: "data tidak ditemukan" };
-    else
+    if (req.params.id) {
+      if (!requestDB.length)
+        res.response = { status: 404, msg: "data tidak ditemukan" };
+      else res.response = { data: requestDB[0] };
+    } else
       res.response = {
         data: requestDB,
       };
