@@ -11,12 +11,12 @@ const upload = require("../../../services/uploadImage");
 
 router.use(checkToken);
 router
-  .post("/", upload.single("jumbotron"), createJumbotron.service)
+  .post("/", upload.single("img"), createJumbotron.service)
   .get("/", getJumbotron.service)
   .get("/:id", getJumbotron.service)
   .put(
     "/",
-    upload.single("jumbotron"),
+    upload.single("img"),
     updateJumbotron.validation,
     validator,
     updateJumbotron.service

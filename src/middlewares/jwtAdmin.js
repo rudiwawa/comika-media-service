@@ -6,10 +6,15 @@ const checkToken = (req, res, next) => {
   if (!token) return res.status(401).json({ msg: "Unauthorized." });
   jwt.verify(token, process.env.KEY, async (err, decode) => {
     if (err) {
-      return res.status(400).json({ msg: "invalid token." });
+      return res.status(400).json({ msg: err.message });
     } else {
       const requestDB = await JWT.findOne({ where: { token } });
-      if (requestDB.revoke) {
+      if (!requestDB) {
+        req.record.status = 401;
+        req.record.msg = "Unauthorized";
+        Record.create(req.record);
+        return res.status(401).json({ msg: "Unauthorized." });
+      } else if (requestDB && requestDB.revoke) {
         req.record.status = 401;
         req.record.msg = "rejected";
         Record.create(req.record);
@@ -26,7 +31,7 @@ const checkToken = (req, res, next) => {
 const addJWT = (user) => {
   delete user.dataValues.password;
   const token = jwt.sign({ user: user.dataValues }, process.env.KEY, {
-    expiresIn: "1h",
+    expiresIn: "24h",
   });
   const response = {
     // ...user.dataValues,

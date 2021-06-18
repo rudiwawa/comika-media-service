@@ -9,7 +9,7 @@ const lastFunction = function (req, res) {
         .status(data.status || 200)
         .json({ msg: data.msg, ...data.etc, data: data.data });
     }
-    req.record.status = data.status || 200;
+    req.record.status = data.status ?? 200;
     req.record.msg = data.msg;
     Record.create(req.record);
   } catch (error) {

@@ -14,6 +14,29 @@ module.exports = (sequelize, DataTypes) => {
       Article.hasMany(Visitor);
       Article.hasMany(Share);
       Article.belongsToMany(User, { through: "likes" });
+      Article.addScope("public", {
+        attributes: {
+          include: [
+            [
+              sequelize.literal(`(
+                SELECT COUNT(*) FROM visitors
+                WHERE article_id = Article.id
+                )`),
+              "viewer",
+            ],
+            [
+              sequelize.literal(`(
+                SELECT COUNT(*) FROM shares
+                WHERE article_id = Article.id
+                )`),
+              "shared",
+            ],
+          ],
+        },
+        where: {
+          isPublish: true,
+        },
+      });
     }
   }
   Article.init(
@@ -27,6 +50,10 @@ module.exports = (sequelize, DataTypes) => {
       title: DataTypes.STRING,
       banner: DataTypes.STRING,
       isPremium: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      isPublish: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },

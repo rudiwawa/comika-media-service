@@ -12,7 +12,7 @@ const deleteArticle = require("./delete.articleController");
 router.use(checkToken);
 router.post(
   "/",
-  upload.single("article"),
+  upload.single("banner"),
   createArticle.validation,
   validator,
   createArticle.service
@@ -21,7 +21,7 @@ router.get("/", getArticle.service);
 router.get("/:id", getArticle.service);
 router.put(
   "/",
-  upload.single("article"),
+  upload.single("banner"),
   updateArticle.validation,
   validator,
   updateArticle.service

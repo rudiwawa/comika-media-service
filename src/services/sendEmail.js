@@ -70,9 +70,10 @@ const send = ({ from, to, subject, html }) => {
   if (to) mailOptions.to = to;
   if (subject) mailOptions.subject = subject;
   if (html) mailOptions.html = createTemplate(html);
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) throw err;
-    console.log("Email sent: " + info.response);
-  });
+  try {
+    // transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.log(error);
+  }
 };
 module.exports = send;

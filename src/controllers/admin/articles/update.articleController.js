@@ -7,9 +7,10 @@ const service = async function (req, res, next) {
     title: body.title,
     content: body.content,
     isPremium: body.isPremium,
+    isPublish: body.isPublish,
     userId: req.auth.id,
   };
-  if (req.file) payload.banner = req.file.path;
+  if (req.file) payload.banner = req.urlApps + req.file.path;
   try {
     const requestDB = await Article.update(payload, { where: { id: body.id } });
     if (requestDB[0]) {
