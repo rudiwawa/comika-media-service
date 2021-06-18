@@ -23,7 +23,7 @@ app.use("/jumbotron", require("./src/routes/jumbotronRoute"));
 app.use(response);
 
 const { sequelize } = require("./src/models");
-sequelize.sync({ force: true });
+// sequelize.sync({ force: true });
 // sequelize.sync();
 
 app.listen(PORT, () => {
