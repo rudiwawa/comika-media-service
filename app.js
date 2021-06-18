@@ -16,7 +16,7 @@ const record = require("./src/middlewares/record");
 const routeAPIadmin = require("./src/routes/admin");
 const routeAPIPublic = require("./src/routes/public");
 
-app.use("/upload", express.static("uploads"));
+app.use("/uploads", express.static("uploads"));
 app.get("/", (req, res) => res.json("WELCOME TO COMIKA MEDIA SERVICE"));
 app.use(record);
 app.use("/api", routeAPIPublic);
@@ -24,7 +24,7 @@ app.use("/api/admin", routeAPIadmin);
 app.use(response);
 
 const { sequelize } = require("./src/models");
-// sequelize.sync({ force: true });
+sequelize.sync({ force: true });
 // sequelize.sync();
 
 app.listen(PORT, () => {
