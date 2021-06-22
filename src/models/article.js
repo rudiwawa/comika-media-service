@@ -20,14 +20,14 @@ module.exports = (sequelize, DataTypes) => {
             [
               sequelize.literal(`(
                 SELECT COUNT(*) FROM visitors
-                WHERE article_id = Article.id
+                WHERE article_id = "Article"."id"
                 )`),
               "viewer",
             ],
             [
               sequelize.literal(`(
                 SELECT COUNT(*) FROM shares
-                WHERE article_id = Article.id
+                WHERE article_id = "Article"."id"
                 )`),
               "shared",
             ],

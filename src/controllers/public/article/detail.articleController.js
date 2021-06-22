@@ -3,7 +3,7 @@ const { Article, Visitor } = require("../../../models");
 const service = async (req, res, next) => {
   try {
     const where = { slug: req.params.id };
-    const requestDB = await Article.findOne({
+    const requestDB = await Article.scope("public").findOne({
       where,
     });
     if (!requestDB) {
