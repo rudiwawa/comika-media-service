@@ -24,6 +24,7 @@ app.use("/api/admin", routeAPIadmin);
 app.use(response);
 
 const { sequelize } = require("./src/models");
+// if (process.env.NODE_ENV == "development")
 // sequelize.sync({ force: true });
 // sequelize.sync();
 

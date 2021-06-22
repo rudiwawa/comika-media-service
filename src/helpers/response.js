@@ -3,7 +3,8 @@ const lastFunction = function (req, res) {
   try {
     const data = res.response;
     if (req.method == "GET" && !data.msg) {
-      res.status(data.status || 200).json(data.data);
+      if (!data.etc) res.status(data.status || 200).json(data.data);
+      else res.status(data.status || 200).json({ ...data.etc });
     } else {
       res
         .status(data.status || 200)

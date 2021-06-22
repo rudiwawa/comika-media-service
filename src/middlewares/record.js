@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
     method: req.method,
     payload: req.body,
     status: 100,
-    userId: "user",
+    userId: null,
   };
   next();
 };

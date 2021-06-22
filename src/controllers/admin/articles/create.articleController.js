@@ -10,7 +10,6 @@ const service = async function (req, res, next) {
     isPublish: body.isPublish,
     userId: req.auth.id,
   };
-  console.log(req.file);
   if (req.file) payload.banner = req.urlApps + req.file.path;
   try {
     const requestDB = await Article.create(payload);
@@ -19,7 +18,10 @@ const service = async function (req, res, next) {
       data: requestDB,
     };
   } catch (error) {
-    res.response = { status: 500, msg: error.message };
+    res.response = {
+      status: 500,
+      msg: error.message,
+    };
   }
   next();
 };

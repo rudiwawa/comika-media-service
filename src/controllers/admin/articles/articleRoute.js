@@ -6,6 +6,7 @@ const validator = require("../../../helpers/validator");
 
 const createArticle = require("./create.articleController");
 const getArticle = require("./get.articleController");
+const getAllArticle = require("./getAll.articleController");
 const updateArticle = require("./update.articleController");
 const deleteArticle = require("./delete.articleController");
 
@@ -17,7 +18,7 @@ router.post(
   validator,
   createArticle.service
 );
-router.get("/", getArticle.service);
+router.get("/", getAllArticle.service);
 router.get("/:id", getArticle.service);
 router.put(
   "/",

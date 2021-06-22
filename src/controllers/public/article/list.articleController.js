@@ -35,8 +35,17 @@ const service = async function (req, res, next) {
           break;
       }
     }
-    order.push(["createdAt", "DESC"]);
+    order.push(["updatedAt", "DESC"]);
     const requestDB = await Article.scope("public").findAll({
+      attributes: [
+        "id",
+        "title",
+        "banner",
+        "slug",
+        "isPremium",
+        "updatedAt",
+        "isPublish",
+      ],
       order,
       limit,
       offset,

@@ -7,16 +7,23 @@ const checkToken = (req, res, next) => {
   jwt.verify(token, process.env.KEY_USER, async (err, decode) => {
     if (err) return res.status(400).json({ msg: err.message });
     else {
-      const requestDB = await JWT.findOne({ where: { token } });
-      if (requestDB.revoke) {
-        req.record.status = 401;
-        req.record.msg = "rejected";
+      try {
+        const requestDB = await JWT.findOne({ where: { token } });
+        if (requestDB.revoke) {
+          req.record.status = 401;
+          req.record.msg = "rejected";
+          Record.create(req.record);
+          return res.status(401).json({ msg: "rejected" });
+        } else {
+          req.record.userId = decode.user.id;
+          req.auth = decode.user;
+          next();
+        }
+      } catch (error) {
+        req.record.status = 500;
+        req.record.msg = error.message;
         Record.create(req.record);
-        return res.status(401).json({ msg: "rejected" });
-      } else {
-        req.record.userId = decode.user.id;
-        req.auth = decode.user;
-        next();
+        return res.status(500).json({ msg: error.message });
       }
     }
   });

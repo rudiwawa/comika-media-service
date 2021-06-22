@@ -47,7 +47,19 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
       },
       userId: DataTypes.UUID,
-      title: DataTypes.STRING,
+      title: {
+        type: DataTypes.STRING,
+        unique: true,
+        set(value) {
+          const slug = value.replace(/[^a-zA-Z0-9]/gi, "-");
+          this.setDataValue("slug", slug);
+          this.setDataValue("title", value);
+        },
+      },
+      slug: {
+        unique: true,
+        type: DataTypes.STRING,
+      },
       banner: DataTypes.STRING,
       isPremium: {
         type: DataTypes.BOOLEAN,

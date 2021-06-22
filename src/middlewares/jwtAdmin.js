@@ -8,21 +8,31 @@ const checkToken = (req, res, next) => {
     if (err) {
       return res.status(400).json({ msg: err.message });
     } else {
-      const requestDB = await JWT.findOne({ where: { token } });
-      if (!requestDB) {
-        req.record.status = 401;
-        req.record.msg = "Unauthorized";
-        Record.create(req.record);
-        return res.status(401).json({ msg: "Unauthorized." });
-      } else if (requestDB && requestDB.revoke) {
-        req.record.status = 401;
-        req.record.msg = "rejected";
-        Record.create(req.record);
-        return res.status(401).json({ msg: "rejected" });
-      } else {
-        req.record.userId = decode.user.id;
-        req.auth = decode.user;
-        next();
+      try {
+        const requestDB = await JWT.findOne({ where: { token } });
+        if (!requestDB) {
+          req.record.status = 401;
+          req.record.msg = "Unauthorized";
+          Record.create(req.record);
+          return res.status(401).json({ msg: "Unauthorized." });
+        } else if (requestDB && requestDB.revoke) {
+          req.record.status = 401;
+          req.record.msg = "rejected";
+          Record.create(req.record);
+          return res.status(401).json({ msg: "rejected" });
+        } else {
+          req.record.userId = decode.user.id;
+          req.auth = decode.user;
+          next();
+        }
+      } catch (error) {
+        // req.record.status = 500;
+        // req.record.msg = error;
+        // Record.create(req.record);
+        // console.log(error);
+        return res
+          .status(500)
+          .json({ msg: error.message });
       }
     }
   });

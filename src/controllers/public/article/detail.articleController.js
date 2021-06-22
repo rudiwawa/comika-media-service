@@ -1,9 +1,9 @@
-const { Article, Visitor, sequelize } = require("../../../models");
+const { Article, Visitor } = require("../../../models");
 
 const service = async (req, res, next) => {
   try {
-    const where = { id: req.params.id };
-    const requestDB = await Article.scope("public").findOne({
+    const where = { slug: req.params.id };
+    const requestDB = await Article.findOne({
       where,
     });
     if (!requestDB) {
@@ -11,7 +11,7 @@ const service = async (req, res, next) => {
     } else {
       const payload = {
         articleId: req.params.id,
-        userId: req.auth ? req.auth.id : "user",
+        userId: req.auth ? req.auth.id : null,
       };
       Visitor.create(payload);
       res.response = { data: requestDB };
