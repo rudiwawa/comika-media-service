@@ -8,6 +8,7 @@ router.use(
   "/jumbotron",
   require("../controllers/public/jumbotron/jumbotronRoute")
 );
+router.use("/account", require("../controllers/public/users/usersRoute"));
 router.use("/article", require("../controllers/public/article/articleRoute"));
 router.get(
   "/dummy",

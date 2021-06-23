@@ -6,6 +6,7 @@ const lastFunction = function (req, res) {
       if (!data.etc) res.status(data.status || 200).json(data.data);
       else res.status(data.status || 200).json({ ...data.etc });
     } else {
+      if (!data.msg) data.msg = "success";
       res
         .status(data.status || 200)
         .json({ msg: data.msg, ...data.etc, data: data.data });
