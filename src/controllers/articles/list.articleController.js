@@ -5,6 +5,8 @@ const service = async function (req, res, next) {
     let limit = 3;
     let offset = 0;
     let order = [];
+    let search = req.query.search ?? ""
+
     if (req.query.limit && req.query.limit > 0) {
       limit = Number(req.query.limit);
     }
@@ -46,6 +48,11 @@ const service = async function (req, res, next) {
         "updatedAt",
         "isPublish",
       ],
+      where: {
+        title: {
+          [Sequelize.Op.substring]: search
+        }
+      },
       order,
       limit,
       offset,
