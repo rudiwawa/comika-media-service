@@ -13,8 +13,8 @@ app.use(cors());
 
 const response = require("./src/helpers/response");
 const record = require("./src/middlewares/record");
-const routeAPIadmin = require("./src/routes/admin");
-const routeAPIPublic = require("./src/routes/public");
+const routeAPIadmin = require("./src/routes/adminRoute");
+const routeAPIPublic = require("./src/routes/publicRoute");
 
 app.use("/uploads", express.static("uploads"));
 app.get("/", (req, res) => res.json("WELCOME TO COMIKA MEDIA SERVICE"));
@@ -26,7 +26,7 @@ app.use(response);
 const { sequelize } = require("./src/models");
 // if (process.env.NODE_ENV == "development")
 // sequelize.sync({ force: true });
-sequelize.sync();
+// sequelize.sync();
 
 app.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);

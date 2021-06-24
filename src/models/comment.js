@@ -1,5 +1,5 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model, Sequelize } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Comment extends Model {
     /**
@@ -14,9 +14,14 @@ module.exports = (sequelize, DataTypes) => {
   }
   Comment.init(
     {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: Sequelize.UUIDV4,
+        primaryKey: true,
+      },
       comment: DataTypes.STRING,
       userId: DataTypes.UUID,
-      articleId: DataTypes.INTEGER,
+      articleId: DataTypes.UUID,
     },
     {
       sequelize,
