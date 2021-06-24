@@ -1,4 +1,6 @@
 const nodemailer = require("nodemailer");
+const { SendEmail } = require("../models");
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -10,8 +12,8 @@ const transporter = nodemailer.createTransport({
 const mailOptions = {
   from: "[no-reply] Register-user <ghanyersa24@gmail.com>",
   to: "ghanyersa24@gmail.com",
-  subject: "Comika Media Info",
-  html: "<h2>Hai</h2>",
+  subject: "COMIKA INFO",
+  body: "<h2>Hai</h2>",
 };
 
 const createTemplate = (content) => {
@@ -65,15 +67,29 @@ const createTemplate = (content) => {
 `;
 };
 
-const send = ({ from, to, subject, html }) => {
-  if (from) mailOptions.from = from;
+const send = async ({ to, subject, body }) => {
   if (to) mailOptions.to = to;
-  if (subject) mailOptions.subject = subject;
-  if (html) mailOptions.html = createTemplate(html);
+  if (subject) {
+    mailOptions.subject = "COMIKA INFO : " + subject;
+    mailOptions.from = "[no-reply] " + subject;
+  }
+  if (body) mailOptions.html = createTemplate(body);
+
+  const recordSendEmail = {
+    email: mailOptions.to,
+    subject: mailOptions.subject,
+    body,
+    success: true,
+  };
   try {
-    // transporter.sendMail(mailOptions);
+    const sendEmail = await transporter.sendMail(mailOptions);
+    SendEmail.create(recordSendEmail);
+    return sendEmail;
   } catch (error) {
-    console.log(error);
+    recordSendEmail.success = false;
+    recordSendEmail.msg = error.message;
+    SendEmail.create(recordSendEmail);
+    throw new Error(`${error.message}`);
   }
 };
 module.exports = send;
