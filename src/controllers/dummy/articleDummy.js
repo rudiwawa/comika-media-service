@@ -4,8 +4,7 @@ const service = async function (req, res, next) {
     {
       id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803350",
       userId: "0734f6b2-6b4c-45b9-be8c-d1aaf6803348",
-      title:
-        "How to fix Firestore Error: PERMISSION_DENIED: Missing or insufficient permissio",
+      title: "How to fix Firestore Error: PERMISSION_DENIED: Missing or insufficient permissio",
       banner: "https://miro.medium.com/max/3000/1*3y3tv36Z55Xro3c4xzcI1A.png",
       isPremium: true,
       isPublish: true,
@@ -41,8 +40,7 @@ const service = async function (req, res, next) {
     {
       id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803354",
       userId: "0734f6b2-6b4c-45b9-be8c-d1aaf6803350",
-      title:
-        "Hacking user perception to make your websites and apps feel faster",
+      title: "Hacking user perception to make your websites and apps feel faster",
       banner: "https://miro.medium.com/max/3000/1*3y3tv36Z55Xro3c4xzcI1A.png",
       isPremium: true,
       isPublish: true,
@@ -50,7 +48,11 @@ const service = async function (req, res, next) {
     },
   ];
   articles.forEach(async (article) => {
-    Article.create(article);
+    try {
+      await Article.create(article);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   });
   next();
 };

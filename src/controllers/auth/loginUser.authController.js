@@ -11,7 +11,6 @@ const service = async function (req, res, next) {
   else {
     const requestDB = await User.findOne({
       where: { email: req.body.email },
-      attributes: ["id", "name", "password", "role"],
     });
     if (requestDB) {
       const validUser = compareSync(req.body.password, requestDB.password);

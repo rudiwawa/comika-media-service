@@ -7,6 +7,7 @@ const jumbotronRoutes = require("../controllers/jumbotrons/routes/public");
 const accountRoutes = require("../controllers/users/routes/public");
 const articleRoutes = require("../controllers/articles/routes/public");
 const commentRoutes = require("../controllers/comments/routes/public");
+const paymentsRoutes = require("../controllers/payments/routes/public");
 
 router.use(ifHasToken);
 router.use("/", authRoutes);
@@ -14,6 +15,7 @@ router.use("/jumbotron", jumbotronRoutes);
 router.use("/account", accountRoutes);
 router.use("/article", articleRoutes);
 router.use("/comment", commentRoutes);
+router.use("/payment", paymentsRoutes);
 router.get(
   "/dummy",
   require("../controllers/dummy/userDummy").service,
