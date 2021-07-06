@@ -9,6 +9,7 @@ const service = async function (req, res, next) {
     isPremium: body.isPremium,
     isPublish: body.isPublish,
     userId: req.auth.id,
+    comikaId: body.comikaId,
   };
   if (req.file) payload.banner = req.urlApps + req.file.path;
   try {
@@ -31,6 +32,7 @@ const validation = [
   body("id", "id tidak boleh kosong").notEmpty(),
   body("title", "title tidak boleh kosong").notEmpty(),
   body("content", "content tidak boleh kosong").notEmpty(),
+  body("comikaId", "comika tidak boleh kosong").notEmpty(),
 ];
 
 module.exports = { service, validation };

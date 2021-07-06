@@ -27,6 +27,15 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: Sequelize.UUIDV4,
       },
       name: DataTypes.STRING,
+      photo: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        get() {
+          if (!this.getDataValue("photo"))
+            return "https://www.comikacomedy.club/wp-content/uploads/2020/06/image1.png";
+          return this.getDataValue("photo");
+        },
+      },
       email: {
         type: DataTypes.STRING,
         validate: {

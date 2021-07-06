@@ -19,6 +19,7 @@ router.use("/payment", paymentsRoutes);
 router.get(
   "/dummy",
   require("../controllers/dummy/userDummy").service,
+  require("../controllers/dummy/comikaDummy").service,
   require("../controllers/dummy/articleDummy").service,
   require("../controllers/dummy/jumbotronDummy").service,
   (req, res, next) => {

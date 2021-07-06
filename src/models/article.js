@@ -7,9 +7,13 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Article, User, Comment, Visitor, Share }) {
+    static associate({ Article, User, Comment, Visitor, Share, Comika }) {
       // define association here
       Article.belongsTo(User);
+      Article.belongsTo(Comika, {
+        as: "creator",
+        foreignKey: "comikaId",
+      });
       Article.hasMany(Comment);
       Article.hasMany(Visitor);
       Article.hasMany(Share);
@@ -33,6 +37,11 @@ module.exports = (sequelize, DataTypes) => {
             ],
           ],
         },
+        include: {
+          as: "creator",
+          model: Comika,
+          attributes: ["id", "name", "photo", "verified"],
+        },
         where: {
           isPublish: true,
         },
@@ -47,6 +56,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
       },
       userId: DataTypes.UUID,
+      comikaId: DataTypes.INTEGER,
       title: {
         type: DataTypes.STRING,
         unique: true,

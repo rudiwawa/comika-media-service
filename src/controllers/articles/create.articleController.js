@@ -6,6 +6,7 @@ const service = async function (req, res, next) {
   const payload = {
     title: body.title,
     content: body.content,
+    comikaId: body.comikaId,
     isPremium: body.isPremium,
     isPublish: body.isPublish,
     userId: req.auth.id,
@@ -35,6 +36,7 @@ const validation = [
       });
     }),
   body("content", "content tidak boleh kosong").notEmpty(),
+  body("comikaId", "comika tidak boleh kosong").notEmpty(),
 ];
 
 module.exports = { service, validation };
