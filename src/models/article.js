@@ -10,10 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate({ Article, User, Comment, Visitor, Share, Comika }) {
       // define association here
       Article.belongsTo(User);
-      Article.belongsTo(Comika, {
-        as: "creator",
-        foreignKey: "comikaId",
-      });
+      Article.belongsTo(Comika);
       Article.hasMany(Comment);
       Article.hasMany(Visitor);
       Article.hasMany(Share);
@@ -38,7 +35,6 @@ module.exports = (sequelize, DataTypes) => {
           ],
         },
         include: {
-          as: "creator",
           model: Comika,
           attributes: ["id", "name", "photo", "verified"],
         },

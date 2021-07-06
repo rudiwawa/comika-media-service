@@ -5,7 +5,7 @@ const service = async function (req, res, next) {
     let limit = 3;
     let offset = 0;
     let order = [];
-    let search = req.query.search ?? ""
+    let search = req.query.search ?? "";
 
     if (req.query.limit && req.query.limit > 0) {
       limit = Number(req.query.limit);
@@ -20,7 +20,7 @@ const service = async function (req, res, next) {
           : "DESC"
         : "DESC";
       switch (req.query.orderBy) {
-        case "viewer":
+        case "popular":
           order.push([Sequelize.literal("viewer"), ordering]);
           break;
         case "shared":
@@ -32,26 +32,19 @@ const service = async function (req, res, next) {
         case "isPremium":
           order.push(["isPremium", ordering]);
           break;
-        case "content":
-          order.push(["content", ordering]);
+        case "createdAt":
+          order.push(["createdAt", ordering]);
           break;
       }
     }
     order.push(["updatedAt", "DESC"]);
     const requestDB = await Article.scope("public").findAll({
-      attributes: [
-        "id",
-        "title",
-        "banner",
-        "slug",
-        "isPremium",
-        "updatedAt",
-        "isPublish",
-      ],
+      attributes: { exclude: ["content", "comikaId", "UserId", "userId", "ComikaId"] },
       where: {
+        isPublish: true,
         title: {
-          [Sequelize.Op.substring]: search
-        }
+          [Sequelize.Op.substring]: search,
+        },
       },
       order,
       limit,

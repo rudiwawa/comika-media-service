@@ -56,8 +56,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(13),
         allowNull: true,
       },
+      birthdate: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+      },
       address: {
-        type: DataTypes.STRING(13),
+        type: DataTypes.STRING(),
         allowNull: true,
       },
       postalCode: {
