@@ -11,7 +11,6 @@ const service = async function (req, res, next) {
       const requestDB = await Article.findAll({
         where,
         include: {
-          as: "creator",
           model: Comika,
           attributes: ["id", "name", "photo", "verified"],
         },

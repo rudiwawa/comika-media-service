@@ -13,7 +13,6 @@ const service = async function (req, res, next) {
     const { rows, count } = await Article.findAndCountAll({
       attributes: ["id", "title", "isPremium", "slug", "isPublish", "updatedAt"],
       include: {
-        as: "creator",
         model: Comika,
         attributes: ["id", "name", "photo", "verified"],
       },
