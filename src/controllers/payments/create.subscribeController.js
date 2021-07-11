@@ -1,4 +1,4 @@
-const MidtransService = require("./midtrans.service");
+const MidtransService = require("./midtransApi.service");
 const { body } = require("express-validator");
 const createInvoice = async function (req, res, next) {
   try {
