@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       orderId: DataTypes.STRING(30),
       userId: DataTypes.UUID,
       package: DataTypes.ENUM(["WEEKLY", "MONTHLY", "YEARLY"]),
-      price: DataTypes.STRING(10),
+      price: DataTypes.INTEGER,
       status: DataTypes.ENUM(["request", "paid"]),
       token: DataTypes.STRING,
       redirectUrl: DataTypes.STRING,

@@ -8,6 +8,7 @@ const accountRoutes = require("../controllers/users/routes/public");
 const articleRoutes = require("../controllers/articles/routes/public");
 const commentRoutes = require("../controllers/comments/routes/public");
 const paymentsRoutes = require("../controllers/payments/routes/public");
+const packageRoutes = require("../controllers/packages/routes/public");
 
 router.use(ifHasToken);
 router.use("/", authRoutes);
@@ -16,6 +17,7 @@ router.use("/account", accountRoutes);
 router.use("/article", articleRoutes);
 router.use("/comment", commentRoutes);
 router.use("/payment", paymentsRoutes);
+router.use("/package", packageRoutes);
 router.get(
   "/dummy",
   require("../controllers/dummy/userDummy").service,

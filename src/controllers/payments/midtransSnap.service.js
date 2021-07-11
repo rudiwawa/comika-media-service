@@ -8,19 +8,19 @@ const snap = new midtransClient.Snap({
 const listPackage = {
   yearly: {
     id: 1,
-    price: 356000,
+    price: 1499900,
     quantity: 1,
     name: "YEARLY",
   },
   monthly: {
     id: 2,
-    price: 30000,
+    price: 124900,
     quantity: 1,
     name: "MONTHLY",
   },
   weekly: {
     id: 3,
-    price: 7000,
+    price: 29900,
     quantity: 1,
     name: "WEEKLY",
   },
