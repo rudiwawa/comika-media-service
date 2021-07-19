@@ -33,7 +33,7 @@ const recordTransaction = async (payload) => {
   }
 };
 
-const successTransaction = (payload) => {
+const successTransaction = async (payload) => {
   recordTransaction(payload);
   const myOrder = await findOrder(payload.orderId);
   const subscriptionActive = generateActivation(myOrder.plan, myOrder.userId);
