@@ -14,7 +14,7 @@ const service = async function (req, res, next) {
       currency: body.currency,
     };
     if (req.body.status_code == 200) {
-      const subscriptionActive = successTransaction(payload);
+      const subscriptionActive = await successTransaction(payload);
       const requestDB = await Subscription.bulkCreate(subscriptionActive);
       res.response = { msg: `plan berhasil diaktifkan`, data: requestDB };
     } else {
@@ -36,12 +36,17 @@ const recordTransaction = async (payload) => {
 };
 
 const successTransaction = async (payload) => {
+  await checkTransaction(payload.trId);
   recordTransaction(payload);
   const myOrder = await findOrder(payload.orderId);
   const subscriptionActive = generateActivation(myOrder.plan, myOrder.userId);
   return subscriptionActive;
 };
 
+const checkTransaction = async (trId) => {
+  const requestDB = await Transaction.findOne({ where: { trId, status: "settlement" } });
+  if (requestDB) throw new Error("data sudah dibayar");
+};
 const findOrder = async (orderId) => {
   try {
     const myOrder = await Order.findOne({ where: { id: orderId } });
