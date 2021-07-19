@@ -10,11 +10,13 @@ const service = async function (req, res, next) {
       code: body.status_code,
       paymentType: body.payment_type,
       orderId: body.order_id,
-      grossAmount: body.grass_amount,
+      grossAmount: Number(body.gross_amount),
       currency: body.currency,
     };
     if (req.body.status_code == 200) {
-      successTransaction(payload);
+      const subscriptionActive = successTransaction(payload);
+      const requestDB = await Subscription.bulkCreate(subscriptionActive);
+      res.response = { msg: `plan berhasil diaktifkan`, data: requestDB };
     } else {
       recordTransaction(payload);
       res.response = { msg: "successfull record pending" };
@@ -37,8 +39,7 @@ const successTransaction = async (payload) => {
   recordTransaction(payload);
   const myOrder = await findOrder(payload.orderId);
   const subscriptionActive = generateActivation(myOrder.plan, myOrder.userId);
-  const requestDB = await Subscription.bulkCreate(subscriptionActive);
-  res.response = { msg: `${myOrder.plan} plan berhasil diaktifkan`, data: requestDB };
+  return subscriptionActive;
 };
 
 const findOrder = async (orderId) => {

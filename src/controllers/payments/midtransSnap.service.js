@@ -31,7 +31,7 @@ const createOrder = async (parameter) => {
     const payload = {
       id: parameter.transaction_details.order_id,
       userId: parameter.customer_details.userId,
-      package: parameter.item_details.name,
+      plan: parameter.item_details.name,
       price: parameter.item_details.price,
     };
     const requestDB = await Order.create(payload);
