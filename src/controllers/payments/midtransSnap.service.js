@@ -1,5 +1,5 @@
 const midtransClient = require("midtrans-client");
-const { Payment } = require("../../models");
+const { Order } = require("../../models");
 const snap = new midtransClient.Snap({
   isProduction: false,
   serverKey: process.env.SERVER_KEY,
@@ -26,18 +26,15 @@ const listPackage = {
   },
 };
 
-const recordPayment = async (parameter, transaction) => {
+const createOrder = async (parameter) => {
   try {
     const payload = {
-      orderId: parameter.transaction_details.order_id,
+      id: parameter.transaction_details.order_id,
       userId: parameter.customer_details.userId,
       package: parameter.item_details.name,
       price: parameter.item_details.price,
-      status: "request",
-      token: transaction.token,
-      redirectUrl: transaction.redirect_url,
     };
-    const requestDB = await Payment.create(payload);
+    const requestDB = await Order.create(payload);
   } catch (error) {
     return Promise.reject(error.message);
   }
@@ -57,7 +54,7 @@ module.exports = async ({ package = "weekly", customer }) => {
   };
   try {
     const transaction = await snap.createTransaction(parameter);
-    await recordPayment(parameter, transaction);
+    await createOrder(parameter);
     return transaction;
   } catch (error) {
     return Promise.reject(error.message);

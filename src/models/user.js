@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ User, ResetPassword, Article, Subscription, Payment }) {
+    static associate({ User, ResetPassword, Article, Subscription }) {
       User.addScope("admin", {
         where: {
           [Sequelize.Op.or]: [{ role: "admin" }, { role: "writer" }],
@@ -16,7 +16,6 @@ module.exports = (sequelize, DataTypes) => {
       });
       User.hasMany(Subscription);
       User.hasMany(Article);
-      User.hasMany(Payment);
       User.hasMany(ResetPassword);
       User.belongsToMany(Article, { through: "likes" });
     }
@@ -33,8 +32,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
         get() {
-          if (!this.getDataValue("photo"))
-            return "https://www.comikacomedy.club/wp-content/uploads/2020/06/image1.png";
+          if (!this.getDataValue("photo")) return "https://www.comikacomedy.club/wp-content/uploads/2020/06/image1.png";
           return this.getDataValue("photo");
         },
       },
