@@ -7,7 +7,7 @@ const lastFunction = function (req, res) {
       else res.status(data.status || 200).json({ ...data.etc });
     } else {
       if (!data.msg) data.msg = "success";
-      res.status(data.status || 200).json({ msg: data.msg, ...data.etc, data: data.data });
+      res.status(data.status || 200).json({ msg: data.msg||"FAILED", ...data.etc, data: data.data });
     }
     req.record.status = data.status ?? 200;
     req.record.msg = req.record.msg ?? data.msg;
