@@ -10,13 +10,13 @@ const service = async (req, res, next) => {
     const article = req.article;
     article.withFlayer = false;
     if (article.isPremium) {
-      if (req.auth && await isUserPremium(req.auth.id)) {
+      if (req.auth && (await isUserPremium(req.auth.id))) {
         res.response = { data: article };
       } else {
         article.withFlayer = true;
         res.response = { data: cannotAccessPremiun(article) };
       }
-    } else res.response = { data: article };
+    } else res.response = { data: { ...article, withFlayer: false } };
   } catch (error) {
     res.response = { status: 500, msg: error.message };
   }
