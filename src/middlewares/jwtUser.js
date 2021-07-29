@@ -5,7 +5,7 @@ const checkToken = (req, res, next) => {
   const token = req.get("Authorization");
   if (!token) return res.status(401).json({ msg: "Unauthorized." });
   jwt.verify(token, process.env.KEY_USER, async (err, decode) => {
-    if (err) return res.status(400).json({ msg: err.message });
+    if (err) return res.status(401).json({ msg: err.message });
     else {
       try {
         const requestDB = await JWT.findOne({ where: { token } });
