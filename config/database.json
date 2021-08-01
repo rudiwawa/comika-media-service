@@ -1,14 +1,21 @@
 {
   "development": {
-    "username": "root",
-    "password": null,
-    "database": "comika-media",
-    "host": "127.0.0.1",
+    "username": "doadmin",
+    "password": "zzb9opin0g9zjmtl",
+    "database": "defaultdb",
+    "host": "comika-media-do-user-9588327-0.b.db.ondigitalocean.com",
     "dialect": "mysql",
+    "port": 25060,
     "define": {
       "paranoid": true,
       "timestamps": true,
       "underscored": true
+    },
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
     }
   },
   "test": {
@@ -19,24 +26,22 @@
     "dialect": "mysql"
   },
   "production": {
-    "url": "postgres://ehqmnizrwgqfsz:2059c4d5aca979d6b216f4a1d6261898e2b1421de9c8903cb861f733c3c4bb53@ec2-3-234-22-132.compute-1.amazonaws.com:5432/d8ph2e4vfim3n2",
-    "username": "ehqmnizrwgqfsz",
-    "password": "2059c4d5aca979d6b216f4a1d6261898e2b1421de9c8903cb861f733c3c4bb53",
-    "database": "d8ph2e4vfim3n2",
-    "host": "ec2-3-234-22-132.compute-1.amazonaws.com",
-    "dialect": "postgres",
-    "port": 5432,
-    "dialectOptions": {
-      "ssl": {
-        "require": true,
-        "rejectUnauthorized": false
-      },
-      "native": true
-    },
+    "username": "doadmin",
+    "password": "zzb9opin0g9zjmtl",
+    "database": "defaultdb",
+    "host": "comika-media-do-user-9588327-0.b.db.ondigitalocean.com",
+    "dialect": "mysql",
+    "port": 25060,
     "define": {
       "paranoid": true,
       "timestamps": true,
       "underscored": true
+    },
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
     }
   }
 }
