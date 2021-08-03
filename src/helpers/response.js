@@ -9,8 +9,8 @@ const lastFunction = function (req, res) {
       if (!data.msg) data.msg = "success";
       res.status(data.status || 200).json({ msg: data.msg||"FAILED", ...data.etc, data: data.data });
     }
-    req.record.status = data.status ?? 200;
-    req.record.msg = req.record.msg ?? data.msg;
+    req.record.status = data.status || 200;
+    req.record.msg = req.record.msg || data.msg;
     Record.create(req.record);
   } catch (error) {
     req.record.status = 400;
