@@ -41,10 +41,7 @@ const service = async function (req, res, next) {
 const setResetPassword = async function (req, res, next) {
   try {
     ResetPassword.destroy({ where: { id: req.body.token } });
-    const requestDB = await User.update(
-      { password: req.body.password },
-      { where: { id: req.body.userId } }
-    );
+    const requestDB = await User.update({ password: req.body.password }, { where: { id: req.body.userId } });
     if (requestDB) {
       res.response = { msg: "password berhasil diperbarui" };
     } else {
@@ -91,7 +88,7 @@ const validationReset = [
 ];
 
 const createEmail = async (code, emailReceiver) => {
-  const linkReset = `http://localhost:3000/reset-password/${code}`;
+  const linkReset = process.env.WEB_FE + `/jangan_lupa_lagi/${code}`;
   const body = `Silahkan klik <a href="${linkReset}">link berikut</a> untuk melakukan reset password atau kunjungi ${linkReset}`;
   const subject = "Reset Password";
   return sendEmail({ to: emailReceiver, subject, body });
