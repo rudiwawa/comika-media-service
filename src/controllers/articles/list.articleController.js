@@ -1,8 +1,8 @@
-const { Article, Sequelize } = require("../../models");
+const { Article, Sequelize, sequelize } = require("../../models");
 
 const service = async function (req, res, next) {
   try {
-    let limit = 3;
+    let limit = 10;
     let offset = 0;
     let order = [];
     let search = req.query.search || "";
@@ -14,11 +14,7 @@ const service = async function (req, res, next) {
       offset = Number(req.query.page - 1) * limit;
     }
     if (req.query.orderBy) {
-      const ordering = req.query.ordering
-        ? req.query.ordering == "ASC"
-          ? req.query.ordering
-          : "DESC"
-        : "DESC";
+      const ordering = req.query.ordering ? (req.query.ordering == "ASC" ? req.query.ordering : "DESC") : "DESC";
       switch (req.query.orderBy) {
         case "popular":
           order.push([Sequelize.literal("viewer"), ordering]);
@@ -39,7 +35,20 @@ const service = async function (req, res, next) {
     }
     order.push(["updatedAt", "DESC"]);
     const requestDB = await Article.scope("public").findAll({
-      attributes: { exclude: ["content", "comikaId", "UserId", "userId", "ComikaId"] },
+      attributes: {
+        exclude: ["content", "comikaId", "UserId", "userId", "ComikaId"],
+        include: req.auth
+          ? [
+              [
+                sequelize.literal(`(
+            SELECT COUNT(*) FROM bookmarks
+            WHERE article_id = "Article"."id" AND user_id = '${req.auth.id}' AND deleted_at IS NULL
+            )`),
+                "bookmarked",
+              ],
+            ]
+          : [[sequelize.literal(`(SELECT '0')`), "bookmarked"]],
+      },
       where: {
         isPublish: true,
         title: {

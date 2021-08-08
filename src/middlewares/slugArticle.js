@@ -1,9 +1,22 @@
-const { Article, Record } = require("../models");
+const { Article, Record, sequelize } = require("../models");
 
 module.exports = async function (req, res, next) {
   try {
     const where = { slug: req.params.slug };
     const requestDB = await Article.scope("public").findOne({
+      attributes: {
+        include: req.auth
+          ? [
+              [
+                sequelize.literal(`(
+            SELECT COUNT(*) FROM bookmarks
+            WHERE article_id = "Article"."id" AND user_id = '${req.auth.id}' AND deleted_at IS NULL
+            )`),
+                "bookmarked",
+              ],
+            ]
+          : [[sequelize.literal(`(SELECT '0')`), "bookmarked"]],
+      },
       where,
     });
     if (!requestDB) {

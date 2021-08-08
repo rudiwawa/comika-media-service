@@ -33,9 +33,7 @@ const ifHasToken = (req, res, next) => {
   const token = req.get("Authorization");
   if (token) {
     jwt.verify(token, process.env.KEY_USER, (err, decode) => {
-      if (err) {
-        // return res.status(400).json({ msg: err.message });
-      } else {
+      if (!err) {
         req.record.userId = decode.user.id;
         req.auth = decode.user;
       }

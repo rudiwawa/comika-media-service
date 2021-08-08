@@ -7,13 +7,14 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Article, User, Comment, Visitor, Share, Comika }) {
+    static associate({ Article, User, Comment, Visitor, Share, Comika, Bookmark }) {
       // define association here
       Article.belongsTo(User);
       Article.belongsTo(Comika);
       Article.hasMany(Comment);
       Article.hasMany(Visitor);
       Article.hasMany(Share);
+      Article.hasMany(Bookmark);
       Article.belongsToMany(User, { through: "likes" });
       Article.addScope("public", {
         attributes: {
