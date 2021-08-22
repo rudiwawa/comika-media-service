@@ -1,7 +1,7 @@
 const midtransClient = require("midtrans-client");
 const { Order } = require("../../models");
 const snap = new midtransClient.Snap({
-  isProduction: false,
+  isProduction: process.env.MIDTRANS_ENV == "production" ? true : false,
   serverKey: process.env.SERVER_KEY,
 });
 
@@ -54,9 +54,11 @@ module.exports = async ({ package = "weekly", customer }) => {
   };
   try {
     const transaction = await snap.createTransaction(parameter);
+    console.log("transaction", transaction);
     await createOrder(parameter);
     return transaction;
   } catch (error) {
+    console.log("error", error);
     return Promise.reject(error.message);
   }
 };
