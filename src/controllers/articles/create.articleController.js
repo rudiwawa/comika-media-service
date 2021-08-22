@@ -9,6 +9,8 @@ const service = async function (req, res, next) {
     comikaId: body.comikaId,
     isPremium: body.isPremium,
     isPublish: body.isPublish,
+    publishedAt: body.publishedAt,
+    attribution: body.attribution,
     userId: req.auth.id,
   };
   if (req.file) payload.banner = req.urlApps + req.file.path;
@@ -27,7 +29,8 @@ const service = async function (req, res, next) {
   next();
 };
 const validation = [
-  body("title", "title tidak boleh kosong").notEmpty()
+  body("title", "title tidak boleh kosong")
+    .notEmpty()
     .custom((value) => {
       return Article.findOne({ where: { title: value } }).then((article) => {
         if (article) {

@@ -1,5 +1,7 @@
 "use strict";
 const { Model, Sequelize } = require("sequelize");
+const { Op } = Sequelize;
+const moment = require("moment");
 module.exports = (sequelize, DataTypes) => {
   class Article extends Model {
     /**
@@ -34,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
               "shared",
             ],
           ],
+          excludes: ["publishedAt"],
         },
         include: {
           model: Comika,
@@ -41,6 +44,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         where: {
           isPublish: true,
+          publishedAt: {
+            [Op.lte]: moment().add(7, "hours"),
+          },
         },
       });
     }
@@ -75,6 +81,18 @@ module.exports = (sequelize, DataTypes) => {
       isPublish: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
+      },
+      publishedAt: {
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.NOW,
+        set(value) {
+          this.setDataValue("publishedAt", moment(value).add(7, "hours"));
+        },
+      },
+      attribution: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null,
       },
       content: DataTypes.TEXT,
     },

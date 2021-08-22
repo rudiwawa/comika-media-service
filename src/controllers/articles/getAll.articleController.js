@@ -11,7 +11,7 @@ const service = async function (req, res, next) {
     let page = req.query.page && req.query.page > 0 ? Number(req.query.page) : 1;
     let offset = page ? (page - 1) * limit : 0;
     const { rows, count } = await Article.findAndCountAll({
-      attributes: ["id", "title", "isPremium", "slug", "isPublish", "updatedAt"],
+      attributes: ["id", "title", "isPremium", "slug", "isPublish", "publishedAt", "updatedAt"],
       include: {
         model: Comika,
         attributes: ["id", "name", "photo", "verified"],

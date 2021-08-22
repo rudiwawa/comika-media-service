@@ -8,6 +8,8 @@ const service = async function (req, res, next) {
     content: body.content,
     isPremium: body.isPremium,
     isPublish: body.isPublish,
+    publishedAt: body.publishedAt,
+    attribution: body.attribution,
     userId: req.auth.id,
     comikaId: body.comikaId,
   };
