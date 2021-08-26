@@ -5,14 +5,18 @@ const userRoutes = require("../controllers/users/routes/admin");
 const articleRoutes = require("../controllers/articles/routes/admin");
 const jumbotronRoutes = require("../controllers/jumbotrons/routes/admin");
 const comikaRoutes = require("../controllers/comika/routes/admin");
+const sourceRoutes = require("../controllers/source/routes/admin");
 const packageRoutes = require("../controllers/packages/routes/admin");
 const subscriptionRoutes = require("../controllers/subscription/routes/admin");
+const storeRoutes = require("../controllers/store/routes/admin");
 
 router.use("/", authRoutes);
 router.use("/users", userRoutes);
 router.use("/article", articleRoutes);
 router.use("/jumbotron", jumbotronRoutes);
 router.use("/comika", comikaRoutes);
+router.use("/source", sourceRoutes);
 router.use("/package", packageRoutes);
 router.use("/subscription", subscriptionRoutes);
+router.use("/store", storeRoutes);
 module.exports = router;
