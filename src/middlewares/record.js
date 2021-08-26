@@ -1,5 +1,5 @@
 module.exports = (req, res, next) => {
-  req.urlApps = req.protocol + "://" + req.get("host") + "/";
+  req.urlApps = req.protocol + "://" + "api.comika.media" + "/";
   req.record = {
     url: req.url + req.originalUrl,
     method: req.method,
