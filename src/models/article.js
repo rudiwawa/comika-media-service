@@ -35,6 +35,13 @@ module.exports = (sequelize, DataTypes) => {
                 )`),
               "shared",
             ],
+            [
+              sequelize.literal(`(
+                SELECT COUNT(*) FROM likes
+                WHERE article_id = "Article"."id"
+                )`),
+              "likes",
+            ],
           ],
           excludes: ["publishedAt"],
         },

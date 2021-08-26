@@ -19,8 +19,18 @@ module.exports = async function (req, res, next) {
             )`),
                 "bookmarked",
               ],
+              [
+                sequelize.literal(`(
+            SELECT COUNT(*) FROM likes
+            WHERE article_id = "Article"."id" AND user_id = '${req.auth.id}'
+            )`),
+                "liked",
+              ],
             ]
-          : [[sequelize.literal(`(SELECT '0')`), "bookmarked"]],
+          : [
+              [sequelize.literal(`(SELECT false)`), "bookmarked"],
+              [sequelize.literal(`(SELECT false)`), "liked"],
+            ],
       },
       where,
     });
