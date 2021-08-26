@@ -1,5 +1,5 @@
 const { Article, Sequelize, sequelize } = require("../../models");
-
+const moment = require("moment");
 const service = async function (req, res, next) {
   try {
     let limit = 10;
@@ -50,7 +50,9 @@ const service = async function (req, res, next) {
           : [[sequelize.literal(`(SELECT '0')`), "bookmarked"]],
       },
       where: {
-        isPublish: true,
+        publishedAt: {
+          [Sequelize.Op.lte]: moment().add(7, "hours"),
+        },
         title: {
           [Sequelize.Op.substring]: search,
         },

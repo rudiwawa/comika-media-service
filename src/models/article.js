@@ -85,9 +85,6 @@ module.exports = (sequelize, DataTypes) => {
       publishedAt: {
         type: DataTypes.DATE,
         defaultValue: Sequelize.NOW,
-        set(value) {
-          this.setDataValue("publishedAt", moment(value).add(7, "hours"));
-        },
       },
       attribution: {
         type: DataTypes.STRING,

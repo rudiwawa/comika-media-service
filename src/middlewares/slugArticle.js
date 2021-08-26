@@ -1,8 +1,13 @@
-const { Article, Record, sequelize } = require("../models");
-
+const { Article, Record, sequelize, Sequelize } = require("../models");
+const moment = require("moment");
 module.exports = async function (req, res, next) {
   try {
-    const where = { slug: req.params.slug };
+    const where = {
+      slug: req.params.slug,
+      publishedAt: {
+        [Sequelize.Op.lte]: moment().add(7, "hours"),
+      },
+    };
     const requestDB = await Article.scope("public").findOne({
       attributes: {
         include: req.auth
@@ -21,9 +26,9 @@ module.exports = async function (req, res, next) {
     });
     if (!requestDB) {
       req.record.status = 404;
-      req.record.msg = `artikel ${req.params.slug} tidak diketahui`;
+      req.record.msg = `artikel ${req.params.slug} tidak ditemukan`;
       Record.create(req.record);
-      return res.status(404).json({ msg: `artikel ${req.params.slug} tidak diketahui` });
+      return res.status(404).json({ msg: `artikel ${req.params.slug} tidak ditemukan` });
     } else {
       req.article = requestDB.dataValues;
       next();

@@ -1,5 +1,5 @@
-const { Bookmark, Article, sequelize } = require("../../../models");
-
+const { Bookmark, Article, sequelize, Sequelize } = require("../../../models");
+const moment = require("moment");
 const service = async function (req, res, next) {
   try {
     const requestDB = await Article.scope("public").findAll({
@@ -14,6 +14,11 @@ const service = async function (req, res, next) {
             "bookmarked",
           ],
         ],
+      },
+      where: {
+        publishedAt: {
+          [Sequelize.Op.lte]: moment().add(7, "hours"),
+        },
       },
       include: [{ model: Bookmark, where: { userId: req.auth.id }, attributes: [] }],
     });
