@@ -12,6 +12,7 @@ const service = async function (req, res, next) {
     attribution: body.attribution,
     userId: req.auth.id,
     comikaId: body.comikaId,
+    tagId: body.tagId,
   };
   if (req.file) payload.banner = req.urlApps + req.file.path;
   try {

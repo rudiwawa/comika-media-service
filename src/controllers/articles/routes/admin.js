@@ -10,23 +10,15 @@ const getAllArticle = require("../getAll.articleController");
 const updateArticle = require("../update.articleController");
 const deleteArticle = require("../delete.articleController");
 
+const tagRouter = require("../tags/routes/admin");
+
 router.use(checkToken);
-router.post(
-  "/",
-  upload.single("banner"),
-  createArticle.validation,
-  validator,
-  createArticle.service
-);
+
+router.post("/", upload.single("banner"), createArticle.validation, validator, createArticle.service);
 router.get("/", getAllArticle.service);
 router.get("/:id", getArticle.service);
-router.put(
-  "/",
-  upload.single("banner"),
-  updateArticle.validation,
-  validator,
-  updateArticle.service
-);
+router.put("/", upload.single("banner"), updateArticle.validation, validator, updateArticle.service);
 router.delete("/:id", deleteArticle.service);
+router.use("/tags", tagRouter);
 
 module.exports = router;

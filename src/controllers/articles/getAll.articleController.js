@@ -1,6 +1,7 @@
 const {
   Article,
   Comika,
+  Tag,
   Sequelize: { Op },
 } = require("../../models");
 
@@ -12,10 +13,16 @@ const service = async function (req, res, next) {
     let offset = page ? (page - 1) * limit : 0;
     const { rows, count } = await Article.findAndCountAll({
       attributes: ["id", "title", "isPremium", "slug", "isPublish", "publishedAt", "updatedAt"],
-      include: {
-        model: Comika,
-        attributes: ["id", "name", "photo", "verified"],
-      },
+      include: [
+        {
+          model: Comika,
+          attributes: ["id", "name", "photo", "verified"],
+        },
+        {
+          model: Tag,
+          attributes: ["name"],
+        },
+      ],
       where: {
         title: {
           [Op.substring]: search,

@@ -9,9 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Article, User, Comment, Visitor, Share, Comika, Bookmark }) {
+    static associate({ Article, User, Tag, Comment, Visitor, Share, Comika, Bookmark }) {
       // define association here
       Article.belongsTo(User);
+      Article.belongsTo(Tag);
       Article.belongsTo(Comika);
       Article.hasMany(Comment);
       Article.hasMany(Visitor);
@@ -79,6 +80,10 @@ module.exports = (sequelize, DataTypes) => {
       slug: {
         unique: true,
         type: DataTypes.STRING,
+      },
+      tagId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
       },
       banner: DataTypes.STRING,
       isPremium: {
