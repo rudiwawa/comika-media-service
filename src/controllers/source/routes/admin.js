@@ -10,7 +10,7 @@ const deleteSource = require("../delete.srcController");
 
 router.use(checkToken);
 router
-  .post("/", [uploadFile.single("src")], createSource.service)
+  .post("/", uploadFile.single("src"), createSource.service)
   .get("/", getSource.service)
   .get("/:id", getSource.service)
   .put("/", uploadFile.single("src"), updateSource.service)
