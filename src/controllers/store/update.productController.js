@@ -11,11 +11,13 @@ const service = async function (req, res, next) {
       name: req.body.name,
       description: req.body.description,
       categoryId: req.body.categoryId,
+      isPublish: req.body.isPublish,
+      publishedAt: req.body.publishedAt,
     };
     const updateProduct = await Product.update(payload, { where: { id: req.body.id } });
     const clearRelation = StoreProductSource.destroy({ where: { productId: req.body.id } });
     const product = await Product.findOne({ where: { id: req.body.id } });
-    product.addSource(req.body.images);
+    product.addImages(req.body.images);
     res.response = { msg: `Source berhasil diubah`, data: req.body };
   } catch (error) {
     res.response = {

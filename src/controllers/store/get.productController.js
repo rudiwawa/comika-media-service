@@ -8,8 +8,8 @@ const service = async function (req, res, next) {
       order: [["createdAt", "desc"]],
       include: [
         {
-          attributes: ["url", "name"],
           model: Source,
+          as: "images",
         },
       ],
     });
