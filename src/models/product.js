@@ -5,8 +5,9 @@ const {
   Sequelize,
 } = require("sequelize");
 const moment = require("moment");
+const currency = require("../helpers/currency");
 module.exports = (sequelize, DataTypes) => {
-  class Item extends Model {
+  class Product extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -26,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  Item.init(
+  Product.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -59,6 +60,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         defaultValue: 0,
       },
+      rupiah: {
+        type: Sequelize.VIRTUAL,
+        get() {
+          return currency.setRupiah(this.getDataValue("price"));
+        },
+      },
     },
     {
       sequelize,
@@ -66,5 +73,5 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "store_products",
     }
   );
-  return Item;
+  return Product;
 };

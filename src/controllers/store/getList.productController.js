@@ -1,4 +1,4 @@
-const { Product, Category, Sequelize, Source, sequelize } = require("../../models");
+const { Product, Category, Sequelize, Source } = require("../../models");
 const service = async function (req, res, next) {
   try {
     let limit = 3;
@@ -25,7 +25,7 @@ const service = async function (req, res, next) {
 
     order.push(["updatedAt", "DESC"]);
     const requestDB = await Product.scope("public").findAll({
-      attributes: { exclude: ["CategoryId", "isPublish", "publishedAt"] },
+      attributes: { exclude: ["CategoryId", "isPublish", "publishedAt", "description"] },
       include: [
         { attributes: ["name", "type"], model: Category },
         { attributes: ["url"], model: Source, as: "images" },
