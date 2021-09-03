@@ -8,9 +8,11 @@ const service = async function (req, res, next) {
       description: req.body.description,
       categoryId: req.body.categoryId,
       price: req.body.price,
+      isPublish: req.body.isPublish,
+      publishedAt: req.body.publishedAt,
     };
     const createProduct = await Product.create(payload);
-    const productToSource = await createProduct.addSource(req.body.images);
+    const productToSource = await createProduct.addImages(req.body.images);
     res.response = {
       msg: `Source berhasil ditambahkan`,
       data: req.body,
