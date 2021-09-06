@@ -13,9 +13,10 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Source, Product, Category }) {
+    static associate({ Source, Product, Category, Cart }) {
       Product.belongsToMany(Source, { through: "store_product_sources", as: "images" });
       Product.belongsTo(Category);
+      Product.hasMany(Cart);
       // define association here
       Product.addScope("public", {
         where: {
