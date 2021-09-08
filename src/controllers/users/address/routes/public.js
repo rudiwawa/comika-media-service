@@ -6,10 +6,7 @@ const updateAddress = require("../update.addressController");
 const deleteAddress = require("../delete.addressController");
 const validator = require("../../../../helpers/validator");
 const { checkToken } = require("../../../../middlewares/jwtUser");
-const getProvince = require("../getProvince.addressController");
-const getCity = require("../getCity.addressController");
 
-router.get("/master/province", getProvince.service).get("/master/city", getCity.service);
 router
   .post("/", checkToken, createAddress.validation, validator, createAddress.service)
   .get("/", checkToken, getAddress.service)

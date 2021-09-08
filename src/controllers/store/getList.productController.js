@@ -25,7 +25,7 @@ const service = async function (req, res, next) {
 
     order.push(["updatedAt", "DESC"]);
     const requestDB = await Product.scope("public").findAll({
-      attributes: { exclude: ["CategoryId", "isPublish", "publishedAt", "description"] },
+      attributes: { exclude: ["CategoryId", "isPublish", "UserId", "publishedAt", "description"] },
       include: [
         { attributes: ["name", "type"], model: Category },
         { attributes: ["url"], model: Source, as: "images" },
