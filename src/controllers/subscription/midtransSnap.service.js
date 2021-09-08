@@ -34,7 +34,7 @@ const createOrder = async (parameter) => {
       plan: parameter.item_details.name,
       price: parameter.item_details.price,
     };
-    const requestDB = await Order.create(payload);
+    const requestDB = Order.create(payload);
   } catch (error) {
     return Promise.reject(error.message);
   }
@@ -55,7 +55,7 @@ module.exports = async ({ package = "weekly", customer }) => {
   try {
     const transaction = await snap.createTransaction(parameter);
     console.log("transaction", transaction);
-    await createOrder(parameter);
+    createOrder(parameter);
     return transaction;
   } catch (error) {
     console.log("error", error);

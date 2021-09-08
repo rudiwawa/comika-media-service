@@ -1,9 +1,20 @@
 const { body } = require("express-validator");
+const { User } = require("../../models");
 const midtransSnapUi = require("./midtransSnap.service");
 
 const service = async function (req, res, next) {
   try {
-    const user = req.auth;
+    const requestData = await User.findOne({ where: { id: req.auth.id } });
+    const user = requestData.dataValues;
+    if (!isProfileComplete(user)) {
+      res.response = {
+        status: 400,
+        msg: "silahkan lengkapi data profile terlebih dahulu",
+        data: { redirect_url: process.env.WEB_FE + "/setting/profile" },
+      };
+      next();
+    }
+    // const user=requestData
     const customerDetails = {
       userId: user.id,
       first_name: user.name,
@@ -19,6 +30,22 @@ const service = async function (req, res, next) {
     res.response = { status: 500, msg: error.message };
   }
   next();
+};
+
+const isProfileComplete = (auth) => {
+  if (
+    !auth.name ||
+    !auth.email ||
+    !auth.phone ||
+    !auth.birthdate ||
+    !auth.address ||
+    !auth.postalCode ||
+    !auth.district ||
+    !auth.city ||
+    !auth.province
+  ) {
+    return false;
+  } else return true;
 };
 
 const validation = [
