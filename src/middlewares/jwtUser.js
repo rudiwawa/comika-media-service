@@ -43,6 +43,7 @@ const ifHasToken = (req, res, next) => {
 };
 const addJWT = (user) => {
   delete user.dataValues.password;
+  delete user.dataValues.secretId;
   const token = jwt.sign({ user: user.dataValues }, process.env.KEY_USER, {
     expiresIn: "24h",
   });

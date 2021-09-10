@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": null,
-    "database": "comika-media_prod",
+    "database": "comika-media",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "define": {
