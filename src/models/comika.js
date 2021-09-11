@@ -22,7 +22,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         unique: true,
       },
-      photo: DataTypes.STRING,
+      photo: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        get() {
+          if (!this.getDataValue("photo")) return "https://pbs.twimg.com/profile_images/1322809384531980289/N15e05wn_400x400.jpg";
+          return this.getDataValue("photo");
+        },
+      },
       verified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
