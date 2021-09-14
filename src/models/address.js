@@ -30,6 +30,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(10),
       postalCode: DataTypes.STRING(5),
       phone: DataTypes.STRING(13),
+      mark: {
+        type: DataTypes.ENUM(["rumah", "kantor"]),
+        defaultValue: "rumah",
+      },
     },
     {
       sequelize,
