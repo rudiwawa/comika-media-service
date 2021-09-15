@@ -1,17 +1,14 @@
-const axios = require("axios");
+const { city } = require("../../../services/rajaongkir.service");
 const service = async function (req, res, next) {
   try {
     if (!req.query.province) throw new Error("parameter provinsi tidak boleh kosong");
-    const {
-      data: { rajaongkir },
-    } = await axios.get(`https://api.rajaongkir.com/starter/city?province=${req.query.province}`, {
-      headers: { key: process.env.KEY_RAJA_ONGKIR },
+    const data = await city({ province: req.query.province });
+    const dataCity = data.map((item) => {
+      return { province_id: item.province_id, city_id: item.city_id, city_name: item.city_name };
     });
-    if (rajaongkir.status.code == 200) {
-      res.response = { data: rajaongkir.results };
-    } else {
-      res.response = { status: 400, msg: "gangguan response" };
-    }
+    res.response = {
+      data: dataCity,
+    };
   } catch (error) {
     res.response = { status: 500, msg: error.message };
   }
