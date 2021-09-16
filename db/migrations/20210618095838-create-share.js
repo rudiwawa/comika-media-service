@@ -1,27 +1,29 @@
-'use strict';
+"use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Shares', {
+    await queryInterface.createTable("shares", {
       id: {
-        allowNull: false,
-        autoIncrement: true,
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
-        type: Sequelize.INTEGER
       },
-      articleId: {
-        type: Sequelize.UUID
+      articleId: Sequelize.UUID,
+      userId: Sequelize.UUID,
+      shareTo: {
+        type: Sequelize.ENUM(["WA", "FB", "LINE", "TWITTER", "LINK"]),
+        defaultValue: "LINK",
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Shares');
-  }
+    await queryInterface.dropTable("Shares");
+  },
 };

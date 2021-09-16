@@ -13,6 +13,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   Jumbotron.init(
     {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER,
+      },
       img: DataTypes.STRING,
       sequence: { type: DataTypes.SMALLINT, defaultValue: 0 },
       link: DataTypes.STRING,

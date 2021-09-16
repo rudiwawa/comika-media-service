@@ -1,48 +1,26 @@
-'use strict';
+"use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Transactions', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      id: {
-        type: Sequelize.UUID
-      },
-      tr_id: {
-        type: Sequelize.UUID
-      },
-      status: {
-        type: Sequelize.STRING
-      },
-      code: {
-        type: Sequelize.STRING
-      },
-      paymentType: {
-        type: Sequelize.STRING
-      },
-      orderId: {
-        type: Sequelize.STRING
-      },
-      grossAmount: {
-        type: Sequelize.INTEGER
-      },
-      currency: {
-        type: Sequelize.STRING
-      },
+    await queryInterface.createTable("transactions", {
+      id: { type: Sequelize.UUID, primaryKey: true, defaultValue: Sequelize.UUIDV4 },
+      trId: Sequelize.UUID,
+      status: Sequelize.STRING("20"),
+      code: Sequelize.STRING(4),
+      paymentType: Sequelize.STRING(30),
+      orderId: Sequelize.STRING(30),
+      grossAmount: Sequelize.INTEGER,
+      currency: Sequelize.STRING(10),
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Transactions');
-  }
+    await queryInterface.dropTable("Transactions");
+  },
 };

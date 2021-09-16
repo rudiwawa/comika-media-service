@@ -1,21 +1,16 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Categories', {
+    await queryInterface.createTable('store_categories', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
+        type: Sequelize.SMALLINT,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        autoIncrement: true,
       },
-      id: {
-        type: Sequelize.SMALLINT
-      },
-      name: {
-        type: Sequelize.STRING
-      },
+      name: Sequelize.STRING(20),
       type: {
-        type: Sequelize.ENUM
+        type: Sequelize.ENUM(["physical", "electronic", "redirect"]),
+        defaultValue: "physical",
       },
       createdAt: {
         allowNull: false,

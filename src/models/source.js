@@ -1,7 +1,7 @@
 "use strict";
 const { Model, Sequelize } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Img extends Model {
+  class Source extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       Source.belongsToMany(Product, { through: "store_product_sources" });
     }
   }
-  Img.init(
+  Source.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -29,5 +29,5 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Source",
     }
   );
-  return Img;
+  return Source;
 };

@@ -1,5 +1,5 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model, Sequelize } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class JWT extends Model {
     /**
@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
   }
   JWT.init(
     {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: Sequelize.UUIDV4,
+        primaryKey: true,
+      },
       userId: DataTypes.UUID,
       token: DataTypes.TEXT,
       revoke: {

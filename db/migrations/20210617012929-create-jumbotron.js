@@ -1,27 +1,35 @@
-'use strict';
+"use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Jumbotrons', {
+    await queryInterface.createTable("jumbotrons", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
-      banner: {
-        type: Sequelize.STRING
+      img: Sequelize.STRING,
+      sequence: { type: Sequelize.SMALLINT, defaultValue: 0 },
+      link: Sequelize.STRING,
+      isPhone: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true,
+      },
+      isDesktop: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Jumbotrons');
-  }
+    await queryInterface.dropTable("Jumbotrons");
+  },
 };

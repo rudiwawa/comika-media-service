@@ -61,6 +61,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         defaultValue: 0,
       },
+      weight: {
+        type: DataTypes.SMALLINT,
+        defaultValue: 1,
+      },
       rupiah: {
         type: Sequelize.VIRTUAL,
         get() {
