@@ -65,7 +65,7 @@ exports.estimateCost = async (payload) => {
     } = await axios.post(`https://pro.rajaongkir.com/api/cost`, payload, {
       headers: { key: process.env.KEY_RAJA_ONGKIR },
     });
-    return { data: formatCostResponse(rajaongkir.results) };
+    return formatCostResponse(rajaongkir.results);
   } catch (error) {
     return error.message;
   }

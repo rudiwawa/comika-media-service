@@ -2,18 +2,15 @@
 const { Model, Sequelize } = require("sequelize");
 const currency = require("../helpers/currency");
 module.exports = (sequelize, DataTypes) => {
-  class Cart extends Model {
+  class CartTemp extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Cart, StoreTransaction, Product }) {
-      Cart.belongsTo(Product);
-      Cart.belongsTo(StoreTransaction);
-    }
+    static associate(model) {}
   }
-  Cart.init(
+  CartTemp.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -24,7 +21,6 @@ module.exports = (sequelize, DataTypes) => {
       userId: DataTypes.UUID,
       name: DataTypes.STRING,
       qty: DataTypes.TINYINT,
-      storeTransactionId: DataTypes.UUID,
       img: DataTypes.STRING,
       weight: DataTypes.INTEGER,
       price: {
@@ -56,9 +52,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Cart",
-      tableName: "store_cart",
+      modelName: "CartTemp",
+      tableName: "store_cart_temp",
     }
   );
-  return Cart;
+  return CartTemp;
 };

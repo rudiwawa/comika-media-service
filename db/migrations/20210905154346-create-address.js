@@ -7,14 +7,14 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
       },
-      userId: Sequelize.UUID,
+      user_id: Sequelize.UUID,
       name: Sequelize.STRING(100),
       address: Sequelize.STRING,
-      provinceId: Sequelize.SMALLINT,
+      province_id: Sequelize.SMALLINT,
       province: Sequelize.STRING(50),
-      cityId: Sequelize.SMALLINT,
+      city_id: Sequelize.SMALLINT,
       city: Sequelize.STRING(50),
-      subdistrictId: Sequelize.SMALLINT,
+      subdistrict_id: Sequelize.SMALLINT,
       subdistrict: Sequelize.STRING(50),
       type: Sequelize.STRING(10),
       postalCode: Sequelize.STRING(5),
@@ -23,11 +23,11 @@ module.exports = {
         type: Sequelize.ENUM(["rumah", "kantor"]),
         defaultValue: "rumah",
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
       },

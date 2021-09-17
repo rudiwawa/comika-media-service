@@ -10,6 +10,6 @@ router
   .get("/master-province", getProvince.service)
   .get("/master-city", getCity.service)
   .get("/master-subdistrict", getSubdistrict.service)
-  .get("/estimate-cost", getCost.validation, validator, getCost.service);
+  .get("/estimate-cost", getCost.service);
 
 module.exports = router;
