@@ -21,6 +21,7 @@ router
     (req, res, next) => {
       req.body.id = req.auth.id;
       req.body.role = req.auth.role;
+      req.body.email = req.auth.email;
       next();
     },
     updateUserController.validation,
