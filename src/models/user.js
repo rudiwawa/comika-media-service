@@ -35,7 +35,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
         get() {
-          if (!this.getDataValue("photo")) return "https://pbs.twimg.com/profile_images/1322809384531980289/N15e05wn_400x400.jpg";
+          if (!this.getDataValue("photo"))
+            return "https://pbs.twimg.com/profile_images/1322809384531980289/N15e05wn_400x400.jpg";
           return this.getDataValue("photo");
         },
       },
@@ -71,15 +72,27 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(5),
         allowNull: true,
       },
-      district: {
+      provinceId: {
+        type: DataTypes.SMALLINT,
+        allowNull: true,
+      },
+      province: {
         type: DataTypes.STRING(50),
+        allowNull: true,
+      },
+      cityId: {
+        type: DataTypes.SMALLINT,
         allowNull: true,
       },
       city: {
         type: DataTypes.STRING(50),
         allowNull: true,
       },
-      province: {
+      subdistrictId: {
+        type: DataTypes.SMALLINT,
+        allowNull: true,
+      },
+      subdistrict: {
         type: DataTypes.STRING(50),
         allowNull: true,
       },

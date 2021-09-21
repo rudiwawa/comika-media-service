@@ -4,7 +4,7 @@ const service = async function (req, res, next) {
     if (!req.query.province) throw new Error("parameter provinsi tidak boleh kosong");
     const data = await city({ province: req.query.province });
     const dataCity = data.map((item) => {
-      return { province_id: item.province_id, city_id: item.city_id, city_name: item.city_name };
+      return { province_id: item.province_id, city_id: item.city_id, city_name: item.city_name, type: item.type };
     });
     res.response = {
       data: dataCity,

@@ -13,7 +13,7 @@ const service = async function (req, res, next) {
       provinceId: location.province_id,
       province: location.province,
       cityId: location.city_id,
-      city: location.city_name,
+      city: location.type + " " + location.city,
       subdistrictId: location.subdistrict_id,
       subdistrict: location.subdistrict_name,
       type: location.type,

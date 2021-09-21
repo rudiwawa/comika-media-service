@@ -26,14 +26,8 @@ const listPackage = {
   },
 };
 
-const createOrder = async (parameter) => {
+const createOrder = async (payload) => {
   try {
-    const payload = {
-      id: parameter.transaction_details.order_id,
-      userId: parameter.customer_details.userId,
-      plan: parameter.item_details.name,
-      price: parameter.item_details.price,
-    };
     const requestDB = Order.create(payload);
   } catch (error) {
     return Promise.reject(error.message);
@@ -55,7 +49,14 @@ module.exports = async ({ package = "weekly", customer }) => {
   try {
     const transaction = await snap.createTransaction(parameter);
     console.log("transaction", transaction);
-    createOrder(parameter);
+    const dataOrder = {
+      id: parameter.transaction_details.order_id,
+      userId: parameter.customer_details.userId,
+      plan: parameter.item_details.name,
+      price: parameter.item_details.price,
+      url: transaction.redirect_url,
+    };
+    createOrder(dataOrder);
     return transaction;
   } catch (error) {
     console.log("error", error);

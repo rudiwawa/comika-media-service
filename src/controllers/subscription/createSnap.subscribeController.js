@@ -12,20 +12,21 @@ const service = async function (req, res, next) {
         msg: "silahkan lengkapi data profile terlebih dahulu",
         data: { redirect_url: process.env.WEB_FE + "/setting/profile" },
       };
-      next();
+    } else {
+      throw new Error("API UNDER MAINTENANCE");
+      // const user=requestData
+      const customerDetails = {
+        userId: user.id,
+        first_name: user.name,
+        email: user.email,
+        phone: user.phone,
+      };
+      const requestMidtrans = await midtransSnapUi({
+        package: req.body.package,
+        customer: customerDetails,
+      });
+      res.response = { data: requestMidtrans };
     }
-    // const user=requestData
-    const customerDetails = {
-      userId: user.id,
-      first_name: user.name,
-      email: user.email,
-      phone: user.phone,
-    };
-    const requestMidtrans = await midtransSnapUi({
-      package: req.body.package,
-      customer: customerDetails,
-    });
-    res.response = { data: requestMidtrans };
   } catch (error) {
     res.response = { status: 500, msg: error.message };
   }
@@ -40,7 +41,7 @@ const isProfileComplete = (auth) => {
     !auth.birthdate ||
     !auth.address ||
     !auth.postalCode ||
-    !auth.district ||
+    !auth.subdistrict ||
     !auth.city ||
     !auth.province
   ) {

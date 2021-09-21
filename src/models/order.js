@@ -18,6 +18,8 @@ module.exports = (sequelize, DataTypes) => {
       plan: DataTypes.ENUM(["WEEKLY", "MONTHLY", "YEARLY"]),
       price: DataTypes.INTEGER,
       userId: DataTypes.UUID,
+      url: DataTypes.STRING,
+      status: { type: DataTypes.ENUM(["pending", "success", "expired"]), defaultValue: "pending" },
     },
     {
       sequelize,

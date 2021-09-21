@@ -3,7 +3,7 @@ const { User } = require("../../models");
 const service = async function (req, res, next) {
   try {
     const requestDB = await User.findOne({
-      attributes: { exclude: ["password"] },
+      attributes: { exclude: ["password", "secretId"] },
       where: { id: req.auth.id },
     });
     if (requestDB) {
