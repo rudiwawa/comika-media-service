@@ -43,7 +43,7 @@ const validation = [
   body("subdistrictId", "Data kecamatan tidak boleh kosong").notEmpty(),
   body("postalCode", "Kode pos tidak boleh kosong").notEmpty(),
   body("phone", "No. Telepon lengkap tidak boleh kosong").notEmpty(),
-  body("mark", "tanda lokasi wajib diisi").notEmpty().isIn(["rumah", "kantor"]).withMessage("data lokasi tidak sesuai"),
+  body("mark", "tanda lokasi wajib diisi").notEmpty(),
 ];
 
 module.exports = { service, validation };

@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       postalCode: DataTypes.STRING(5),
       phone: DataTypes.STRING(13),
       mark: {
-        type: DataTypes.ENUM(["rumah", "kantor"]),
+        type: DataTypes.STRING(50),
         defaultValue: "rumah",
       },
       active: {

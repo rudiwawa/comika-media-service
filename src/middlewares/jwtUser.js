@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { JWT } = require("../models");
+const { JWT, Record } = require("../models");
 
 const checkToken = (req, res, next) => {
   const token = req.get("Authorization");
@@ -9,6 +9,12 @@ const checkToken = (req, res, next) => {
     else {
       try {
         const requestDB = await JWT.findOne({ where: { token } });
+        if (!requestDB) {
+          req.record.status = 401;
+          req.record.msg = "Unauthorized";
+          Record.create(req.record);
+          return res.status(401).json({ msg: "Unauthorized." });
+        }
         if (requestDB.revoke) {
           req.record.status = 401;
           req.record.msg = "rejected";

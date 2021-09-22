@@ -5,7 +5,7 @@ const service = async function (req, res, next) {
   try {
     const { auth, body } = req;
     const location = await subdistrict({ id: req.body.subdistrictId });
-    if (!location.subdistrict_id) throw new Error("data kota tidak sesuai");
+    if (!location.subdistrict_id) throw new Error("data kecamatan tidak sesuai");
     const payload = {
       userId: auth.id,
       name: body.name,
@@ -38,7 +38,7 @@ const validation = [
   body("subdistrictId", "Data kecamatan tidak boleh kosong").notEmpty(),
   body("postalCode", "Kode pos tidak boleh kosong").notEmpty(),
   body("phone", "No. Telepon lengkap tidak boleh kosong").notEmpty(),
-  body("mark", "tanda lokasi wajib diisi").notEmpty().isIn(["rumah", "kantor"]).withMessage("data lokasi tidak sesuai"),
+  body("mark", "tanda lokasi wajib diisi").notEmpty(),
 ];
 
 module.exports = { service, validation };
