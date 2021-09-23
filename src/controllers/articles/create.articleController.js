@@ -37,7 +37,8 @@ const validation = [
           return Promise.reject("Judul sudah digunakan");
         }
       });
-    }),
+    })
+    ,
   body("content", "content tidak boleh kosong").notEmpty(),
   body("comikaId", "comika tidak boleh kosong").notEmpty(),
 ];

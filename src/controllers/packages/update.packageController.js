@@ -1,4 +1,7 @@
-const { Package } = require("../../models");
+const {
+  Package,
+  Sequelize: { Op },
+} = require("../../models");
 const { body } = require("express-validator");
 const moment = require("moment");
 const service = async function (req, res, next) {
@@ -12,17 +15,18 @@ const service = async function (req, res, next) {
     availableTo: body.availableTo,
   };
   try {
-    const requestDB = await Package.create(payload);
-    res.response = { msg: "Paket berhasil dibuat", data: requestDB };
+    const requestDB = await Package.update(payload, { where: { id: body.id } });
+    res.response = { msg: "Paket berhasil diperbarui", data: requestDB };
   } catch (error) {
     res.response = { status: 500, msg: error.message };
   }
   next();
 };
 const validation = [
+  body("id").notEmpty("id tidak boleh kosong"),
   body("name").notEmpty().withMessage("nama paket tidak boleh kosong"),
-  body("code").custom(async (value) => {
-    return Package.findOne({ where: { code: value } }).then((response) => {
+  body("code").custom(async (value, { req }) => {
+    return Package.findOne({ where: { code: value, id: { [Op.ne]: req.body.id } } }).then((response) => {
       if (response) return new Promise.reject("Kode paket sudah digunakan");
     });
   }),

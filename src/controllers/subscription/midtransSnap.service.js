@@ -5,27 +5,6 @@ const snap = new midtransClient.Snap({
   serverKey: process.env.SERVER_KEY,
 });
 
-const listPackage = {
-  yearly: {
-    id: 1,
-    price: 1499900,
-    quantity: 1,
-    name: "YEARLY",
-  },
-  monthly: {
-    id: 2,
-    price: 124900,
-    quantity: 1,
-    name: "MONTHLY",
-  },
-  weekly: {
-    id: 3,
-    price: 29900,
-    quantity: 1,
-    name: "WEEKLY",
-  },
-};
-
 const createOrder = async (payload) => {
   try {
     const requestDB = Order.create(payload);
@@ -34,21 +13,26 @@ const createOrder = async (payload) => {
   }
 };
 
-module.exports = async ({ package = "weekly", customer }) => {
+module.exports = async ({ package, customer }) => {
   let parameter = {
     transaction_details: {
-      order_id: listPackage[package].name + "-" + Date.now(),
-      gross_amount: listPackage[package].price,
+      order_id: package.code.toUpperCase() + "-" + Date.now(),
+      gross_amount: package.price,
     },
     credit_card: {
       secure: true,
     },
     customer_details: customer,
-    item_details: listPackage[package],
+    item_details: {
+      id: package.id,
+      price: package.price,
+      quantity: 1,
+      name: package.name,
+    },
   };
   try {
     const transaction = await snap.createTransaction(parameter);
-    console.log("transaction", transaction);
+    // console.log("transaction", transaction);
     const dataOrder = {
       id: parameter.transaction_details.order_id,
       userId: parameter.customer_details.userId,

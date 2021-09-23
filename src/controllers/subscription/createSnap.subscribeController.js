@@ -1,5 +1,5 @@
 const { body } = require("express-validator");
-const { User } = require("../../models");
+const { User, Package } = require("../../models");
 const midtransSnapUi = require("./midtransSnap.service");
 
 const service = async function (req, res, next) {
@@ -13,8 +13,9 @@ const service = async function (req, res, next) {
         data: { redirect_url: process.env.WEB_FE + "/setting/profile" },
       };
     } else {
-      throw new Error("API UNDER MAINTENANCE");
+      // throw new Error("API UNDER MAINTENANCE");
       // const user=requestData
+      // return res.json(req.subscription);
       const customerDetails = {
         userId: user.id,
         first_name: user.name,
@@ -22,7 +23,7 @@ const service = async function (req, res, next) {
         phone: user.phone,
       };
       const requestMidtrans = await midtransSnapUi({
-        package: req.body.package,
+        package: req.subscription,
         customer: customerDetails,
       });
       res.response = { data: requestMidtrans };
@@ -53,7 +54,14 @@ const validation = [
   body("package")
     .notEmpty()
     .withMessage("silahkan pilih subscription plan terlebih dahulu")
-    .isIn(["weekly", "monthly", "yearly"])
-    .withMessage("paket harus sesuai dengan yang tersedia"),
+    .custom(async (value, { req }) => {
+      const requestDB = await Package.scope("public").findOne({
+        attributes: ["id", "code", "name", "price", "longTime", "rupiah"],
+        where: { id: value },
+      });
+      if (!requestDB) throw new Error("subscription plan tidak ditemukan");
+      req.subscription = requestDB;
+      return true;
+    }),
 ];
 module.exports = { service, validation };
