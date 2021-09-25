@@ -10,10 +10,7 @@ module.exports = {
         code: "MSK",
         price: 20000,
         long_time: 7,
-        description: `<ul> 
-                            <li>Konten eksklusif yang tidak ada di versi gratis</li> 
-                            <li>Baca artikel tanpa terpotong selama seminggu</li> 
-                        </ul>`,
+        description: `Konten eksklusif yang tidak ada di versi gratis~Baca artikel tanpa terpotong selama seminggu`,
         published_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         available_to: moment().add(1, "months").format("YYYY-MM-DD HH:mm:ss"),
         created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -25,10 +22,7 @@ module.exports = {
         code: "BT",
         price: 50000,
         long_time: 30,
-        description: `<ul> 
-                            <li>Konten eksklusif yang tidak ada di versi gratis</li> 
-                            <li>Baca artikel tanpa terpotong selama sebulan</li> 
-                        </ul>`,
+        description: `Konten eksklusif yang tidak ada di versi gratis~Baca artikel tanpa terpotong selama sebulan`,
         published_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         available_to: moment().add(1, "months").format("YYYY-MM-DD HH:mm:ss"),
         created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -40,10 +34,7 @@ module.exports = {
         code: "TA",
         price: 500000,
         long_time: 365,
-        description: `<ul> 
-                            <li>Konten eksklusif yang tidak ada di versi gratis</li> 
-                            <li>Baca artikel tanpa terpotong selama setahun</li> 
-                        </ul>`,
+        description: `Konten eksklusif yang tidak ada di versi gratis~Baca artikel tanpa terpotong selama setahun`,
         published_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         available_to: moment().add(1, "months").format("YYYY-MM-DD HH:mm:ss"),
         created_at: moment().format("YYYY-MM-DD HH:mm:ss"),

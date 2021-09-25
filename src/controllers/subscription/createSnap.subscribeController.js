@@ -26,10 +26,10 @@ const service = async function (req, res, next) {
         package: req.subscription,
         customer: customerDetails,
       });
-      res.response = { data: requestMidtrans };
+      res.response = { msg: `${req.auth.name} membeli paket subscription`, data: requestMidtrans };
     }
   } catch (error) {
-    res.response = { status: 500, msg: error.message };
+    res.response = { status: 500, msg: error.toString() };
   }
   next();
 };

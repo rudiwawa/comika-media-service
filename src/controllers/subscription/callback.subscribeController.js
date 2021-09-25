@@ -1,25 +1,28 @@
-const { Subscription, Transaction, Order } = require("../../models");
-const moment = require("moment");
-const { v4: uuidv4 } = require("uuid");
+const { Subscription, Order } = require("../../models");
+const generateActivation = require("./generateActivation.service");
 const service = async function (req, res, next) {
   try {
     const body = req.body;
-    const payload = {
-      trId: body.transaction_id,
-      status: body.transaction_status,
-      code: body.status_code,
-      paymentType: body.payment_type,
-      orderId: body.order_id,
-      grossAmount: Number(body.gross_amount),
-      currency: body.currency,
-    };
-    if (req.body.status_code == 200) {
-      const subscriptionActive = await successTransaction(payload);
-      const requestDB = await Subscription.bulkCreate(subscriptionActive);
-      res.response = { msg: `plan berhasil diaktifkan`, data: requestDB };
+    const where = { id: body.order_id };
+    const dataOrder = await Order.findOne({ where });
+    if (dataOrder) {
+      if (dataOrder.status === "settlementa") {
+        res.response = { status: 400, msg: `order ${dataOrder.id} sudah dibayar` };
+      } else {
+        const payload = {
+          status: body.transaction_status,
+          paymentType: body.payment_type,
+        };
+        Order.update(payload, { where });
+        if (req.body.status_code == 200) {
+          const listActivation = await generateActivation(dataOrder.userId, dataOrder.longTime);
+          res.response = { msg: `plan ${dataOrder.plan} berhasil diaktifkan`, data: listActivation };
+        } else {
+          res.response = { msg: "Ok", data: { id: body.order_id, ...payload } };
+        }
+      }
     } else {
-      recordTransaction(payload);
-      res.response = { msg: "successfull record pending" };
+      res.response = { status: 404, msg: "order tidak ditemukan" };
     }
   } catch (error) {
     res.response = { status: 500, msg: error.message };
@@ -27,58 +30,4 @@ const service = async function (req, res, next) {
   next();
 };
 
-const recordTransaction = async (payload) => {
-  try {
-    const requestDB = await Transaction.create(payload);
-  } catch (error) {
-    return new Promise.reject(error);
-  }
-};
-
-const successTransaction = async (payload) => {
-  await checkTransaction(payload.trId);
-  recordTransaction(payload);
-  const myOrder = await findOrder(payload.orderId);
-  const subscriptionActive = generateActivation(myOrder.plan, myOrder.userId);
-  return subscriptionActive;
-};
-
-const checkTransaction = async (trId) => {
-  const requestDB = await Transaction.findOne({ where: { trId, status: "settlement" } });
-  if (requestDB) throw new Error("data sudah dibayar");
-};
-const findOrder = async (orderId) => {
-  try {
-    const myOrder = await Order.findOne({ where: { id: orderId } });
-    if (myOrder) return myOrder;
-    else return new Promise.reject("order not found");
-  } catch (error) {
-    return new Promise.reject(error.message);
-  }
-};
-
-const generateActivation = (plan, authId) => {
-  switch (plan) {
-    case "YEARLY":
-      return setAvalaibleOn(authId, 365);
-    case "MONTHLY":
-      return setAvalaibleOn(authId, 30);
-    case "WEEKLY":
-      return setAvalaibleOn(authId, 7);
-    default:
-      return setAvalaibleOn(authId, 0);
-  }
-};
-
-const setAvalaibleOn = (userId, day = 0) => {
-  const setPayload = [];
-  for (let index = 0; index < day; index++) {
-    setPayload.push({
-      id: uuidv4(),
-      userId,
-      availableOn: moment().add(index, "days"),
-    });
-  }
-  return setPayload;
-};
 module.exports = { service };

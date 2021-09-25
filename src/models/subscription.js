@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Subscription",
+      tableName:"subscription_list"
     }
   );
   return Subscription;

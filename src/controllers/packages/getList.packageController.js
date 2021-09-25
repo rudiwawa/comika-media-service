@@ -2,7 +2,7 @@ const { Package } = require("../../models");
 const service = async function (req, res, next) {
   try {
     const requestDB = await Package.scope("public").findAll({
-      attributes: ["id", "name", "price", "rupiah", "description"],
+      attributes: ["id", "name", "price", "rupiah", "longTime", "description"],
     });
     if (req.params.id) {
       if (requestDB.length) {

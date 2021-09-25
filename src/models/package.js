@@ -13,7 +13,8 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Package }) {
+    static associate({ Package, Order }) {
+      Package.hasMany(Order);
       Package.addScope("public", {
         where: {
           publishedAt: {
@@ -43,7 +44,15 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       longTime: DataTypes.SMALLINT,
-      description: DataTypes.STRING,
+      description: {
+        type: Sequelize.TEXT,
+        get() {
+          return this.getDataValue("description").split("~");
+        },
+        set(val) {
+          this.setDataValue("description", val.join("~"));
+        },
+      },
       publishedAt: {
         type: DataTypes.DATE,
         defaultValue: Sequelize.NOW,

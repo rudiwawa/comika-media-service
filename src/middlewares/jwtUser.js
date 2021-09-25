@@ -22,6 +22,8 @@ const checkToken = (req, res, next) => {
           return res.status(401).json({ msg: "rejected" });
         } else {
           req.record.userId = decode.user.id;
+          req.record.name = decode.user.name;
+          req.record.email = decode.user.email;
           req.auth = decode.user;
           next();
         }
@@ -41,6 +43,8 @@ const ifHasToken = (req, res, next) => {
     jwt.verify(token, process.env.KEY_USER, (err, decode) => {
       if (!err) {
         req.record.userId = decode.user.id;
+        req.record.name = decode.user.name;
+        req.record.email = decode.user.email;
         req.auth = decode.user;
       }
     });
