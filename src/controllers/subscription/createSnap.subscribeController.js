@@ -1,6 +1,7 @@
 const { body } = require("express-validator");
 const { User, Package } = require("../../models");
 const midtransSnapUi = require("./midtransSnap.service");
+const sendEmail = require("../../services/sendEmail");
 
 const service = async function (req, res, next) {
   try {
@@ -27,6 +28,7 @@ const service = async function (req, res, next) {
         customer: customerDetails,
       });
       res.response = { msg: `${req.auth.name} membeli paket subscription`, data: requestMidtrans };
+      sendEmail({ to: user.email, subject: "SUBSCRIBE", body: bodyEmail(user.name, requestMidtrans.redirect_url) });
     }
   } catch (error) {
     res.response = { status: 500, msg: error.toString() };
@@ -48,6 +50,17 @@ const isProfileComplete = (auth) => {
   ) {
     return false;
   } else return true;
+};
+
+const bodyEmail = (name, link) => {
+  return `<p>Hai ${name}, Selesaikan pembayaran untuk aktivasi sebagai member PREMIUM Comika Media dengan klik link berikut</p>
+  <center style="margin-top: 30px;">
+      <a href="${link}" class="card" style="padding:20px 50px">KLIK DISINI</a>
+      <br>
+      <br>
+      <div>ATAU</div>
+      <a href="${link}">${link}</a>
+  </center>`;
 };
 
 const validation = [

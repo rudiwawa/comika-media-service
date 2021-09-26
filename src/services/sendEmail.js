@@ -30,7 +30,8 @@ const createTemplate = (content) => {
         padding: 0;
     }
     #header,
-    #footer {
+    #footer,
+    .card  {
         height: 100px;
         background-color: #006bc1;
         text-align: center;
