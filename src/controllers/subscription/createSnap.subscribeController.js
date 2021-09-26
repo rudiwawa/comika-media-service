@@ -68,6 +68,14 @@ const validation = [
     .notEmpty()
     .withMessage("silahkan pilih subscription plan terlebih dahulu")
     .custom(async (value, { req }) => {
+      value =
+        value == "weekly"
+          ? "3d4d4d47-a2f3-48a7-a3b2-0a2e910038e5"
+          : value == "monthly"
+          ? "3d4d4d47-a2f3-49a7-a3b2-0a2e910038e5"
+          : value == "yearly"
+          ? "3d4d4d47-a2f3-48a7-a3c2-0a2e910038e5"
+          : value;
       const requestDB = await Package.scope("public").findOne({
         attributes: ["id", "code", "name", "price", "longTime", "rupiah"],
         where: { id: value },
