@@ -12,6 +12,7 @@ const service = async function (req, res, next) {
     publishedAt: body.publishedAt,
     attribution: body.attribution,
     userId: req.auth.id,
+    tagId: body.tagId,
   };
   if (req.file) payload.banner = req.urlApps + req.file.path;
   try {
@@ -37,8 +38,7 @@ const validation = [
           return Promise.reject("Judul sudah digunakan");
         }
       });
-    })
-    ,
+    }),
   body("content", "content tidak boleh kosong").notEmpty(),
   body("comikaId", "comika tidak boleh kosong").notEmpty(),
 ];
