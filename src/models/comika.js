@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
         get() {
-          if (!this.getDataValue("photo")) return "https://pbs.twimg.com/profile_images/1322809384531980289/N15e05wn_400x400.jpg";
+          if (!this.getDataValue("photo")) return "https://api.comika.media/uploads/comika/icon.png";
           return this.getDataValue("photo");
         },
       },

@@ -37,7 +37,7 @@ Redaksi Comikamedia
 `;
 };
 const validation = [
-  body("name", "nama tidak boleh kosong").notEmpty(),
+  body("name", "nama tidak boleh kosong").notEmpty().trim().escape(),
   body("email", "email tidak boleh kosong")
     .notEmpty()
     .isEmail()
@@ -51,7 +51,9 @@ const validation = [
       } else {
         return true;
       }
-    }),
-  body("password", "password tidak boleh kosong").notEmpty(),
+    })
+    .trim()
+    .escape(),
+  body("password", "password tidak boleh kosong").notEmpty().trim().escape(),
 ];
 module.exports = { service, validation };

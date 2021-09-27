@@ -7,5 +7,7 @@ module.exports = (req, res, next) => {
     status: 100,
     userId: null,
   };
+  req.urlApps = req.urlApps + "/";
+
   next();
 };
