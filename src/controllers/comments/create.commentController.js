@@ -23,8 +23,6 @@ const validation = [
     .notEmpty()
     .withMessage("komentar tidak boleh kosong")
     .isLength({ min: 10 })
-    .withMessage("komentar minimal 10 karakter")
-    .trim()
-    .escape(),
+    .withMessage("komentar minimal 10 karakter"),
 ];
 module.exports = { service, validation };

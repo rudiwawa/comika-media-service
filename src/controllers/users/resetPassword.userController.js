@@ -72,15 +72,11 @@ const validationReset = [
       } catch (error) {
         throw new Error(error.message);
       }
-    })
-    .trim()
-    .escape(),
+    }),
   body("password", "password tidak boleh kosong")
     .notEmpty()
     .isLength({ min: 8 })
-    .withMessage("password minimal 8 karakter")
-    .trim()
-    .escape(),
+    .withMessage("password minimal 8 karakter"),
   body("passwordConfirmation", "password konfirmasi tidak boleh kosong")
     .notEmpty()
     .custom((value, { req }) => {
@@ -88,9 +84,7 @@ const validationReset = [
         throw new Error("password konfirmasi tidak cocok");
       }
       return true;
-    })
-    .trim()
-    .escape(),
+    }),
 ];
 
 const createEmail = async (code, emailReceiver) => {
