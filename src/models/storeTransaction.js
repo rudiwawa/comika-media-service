@@ -24,13 +24,25 @@ module.exports = (sequelize, DataTypes) => {
       code: {
         type: DataTypes.STRING,
       },
-      userId: DataTypes.UUID,
+      userId: {
+        type: DataTypes.UUID,
+      },
       addressId: DataTypes.UUID,
       name: DataTypes.STRING(100),
       address: DataTypes.STRING,
       province: DataTypes.STRING(50),
       city: DataTypes.STRING(50),
-      subdistrict: DataTypes.STRING(50),
+      subdistrict: {
+        type: DataTypes.STRING(50),
+        set(val) {
+          const timestamp = "" + Date.now();
+          const courier = this.getDataValue("courier").replace(/[ \a\i\u\o\e]/gi, "");
+          const subdistrict = val.replace(/[ \a\i\u\o\e]/gi, "").toUpperCase();
+          const code = courier + timestamp.substr(0, 7) + subdistrict + timestamp.substr(7);
+          this.setDataValue("code", code);
+          this.setDataValue("subdistrict", val);
+        },
+      },
       postalCode: DataTypes.STRING(5),
       phone: DataTypes.STRING(13),
       mark: {
@@ -39,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       weight: DataTypes.SMALLINT,
       courier: DataTypes.STRING(10),
-      items: DataTypes.TINYINT,
+      qty: DataTypes.TINYINT,
       delivery: DataTypes.INTEGER,
       deliveryRp: {
         type: DataTypes.VIRTUAL,
@@ -47,7 +59,9 @@ module.exports = (sequelize, DataTypes) => {
           return currency.setRupiah(this.getDataValue("delivery"));
         },
       },
-      total: DataTypes.INTEGER,
+      total: {
+        type: DataTypes.INTEGER,
+      },
       totalRp: {
         type: DataTypes.VIRTUAL,
         get() {

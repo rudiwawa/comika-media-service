@@ -51,10 +51,11 @@ exports.subdistrict = async ({ id, city }) => {
   }
 };
 
-exports.estimateCost = async (payload) => {
+exports.estimateCost = async (destination, weight = 1) => {
   try {
     payload = {
-      ...payload,
+      destination,
+      weight,
       origin: "152",
       originType: "city",
       destinationType: "subdistrict",
