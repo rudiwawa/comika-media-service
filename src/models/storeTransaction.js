@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(50),
         set(val) {
           const timestamp = "" + Date.now();
-          const courier = this.getDataValue("courier").replace(/[ \a\i\u\o\e]/gi, "");
+          const courier = (this.getDataValue("courier") + "COMIKAMEDIA").replace(/[ \a\i\u\o\e]/gi, "");
           const subdistrict = val.replace(/[ \a\i\u\o\e]/gi, "").toUpperCase();
           const code = courier + timestamp.substr(0, 7) + subdistrict + timestamp.substr(7);
           this.setDataValue("code", code);
@@ -46,12 +46,19 @@ module.exports = (sequelize, DataTypes) => {
       postalCode: DataTypes.STRING(5),
       phone: DataTypes.STRING(13),
       mark: {
-        type: DataTypes.ENUM(["rumah", "kantor"]),
+        type: DataTypes.STRING(50),
         defaultValue: "rumah",
       },
       weight: DataTypes.SMALLINT,
       courier: DataTypes.STRING(10),
       qty: DataTypes.TINYINT,
+      subtotal: DataTypes.INTEGER,
+      subtotalRp: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return currency.setRupiah(this.getDataValue("subtotal"));
+        },
+      },
       delivery: DataTypes.INTEGER,
       deliveryRp: {
         type: DataTypes.VIRTUAL,
@@ -70,6 +77,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       status: {
         type: DataTypes.ENUM(["pending", "success", "expired"]),
+        defaultValue: "pending",
       },
     },
     {

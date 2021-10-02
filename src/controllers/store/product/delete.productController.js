@@ -1,4 +1,4 @@
-const { Product } = require("../../models");
+const { Product } = require("../../../models");
 const service = async function (req, res, next) {
   try {
     if (!req.params.id) throw new Error("id tidak boleh kosong");

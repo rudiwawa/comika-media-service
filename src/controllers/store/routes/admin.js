@@ -3,10 +3,11 @@ const router = express.Router();
 const validator = require("../../../helpers/validator");
 const uploadFile = require("../../../services/uploadImage");
 const { checkToken } = require("../../../middlewares/jwtAdmin");
-const createProduct = require("../create.productController");
-const getProduct = require("../get.productController");
-const updateProduct = require("../update.productController");
-const deleteProduct = require("../delete.productController");
+// Product
+const createProduct = require("../product/create.productController");
+const getProduct = require("../product/get.productController");
+const updateProduct = require("../product/update.productController");
+const deleteProduct = require("../product/delete.productController");
 // Category
 const createCategory = require("../category/create.categoryController");
 const getCategory = require("../category/get.categoryController");

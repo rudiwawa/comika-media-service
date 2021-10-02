@@ -1,5 +1,5 @@
 const { body } = require("express-validator");
-const { User, Package } = require("../../models");
+const { User, Product } = require("../../models");
 const midtransSnapUi = require("./midtransSnap.service");
 const sendEmail = require("../../services/sendEmail");
 
@@ -17,15 +17,10 @@ const service = async function (req, res, next) {
       // throw new Error("API UNDER MAINTENANCE");
       // const user=requestData
       // return res.json(req.subscription);
-      const customerDetails = {
-        userId: user.id,
-        first_name: user.name,
-        email: user.email,
-        phone: user.phone,
-      };
+
       const requestMidtrans = await midtransSnapUi({
         package: req.subscription,
-        customer: customerDetails,
+        user,
       });
       res.response = { msg: `${req.auth.name} membeli paket subscription`, data: requestMidtrans };
       sendEmail({ to: user.email, subject: "SUBSCRIBE", body: bodyEmail(user.name, requestMidtrans.redirect_url) });
@@ -68,15 +63,7 @@ const validation = [
     .notEmpty()
     .withMessage("silahkan pilih subscription plan terlebih dahulu")
     .custom(async (value, { req }) => {
-      value =
-        value == "weekly"
-          ? "3d4d4d47-a2f3-48a7-a3b2-0a2e910038e5"
-          : value == "monthly"
-          ? "3d4d4d47-a2f3-49a7-a3b2-0a2e910038e5"
-          : value == "yearly"
-          ? "3d4d4d47-a2f3-48a7-a3c2-0a2e910038e5"
-          : value;
-      const requestDB = await Package.scope("public").findOne({
+      const requestDB = await Product.scope("subscription").findOne({
         attributes: ["id", "code", "name", "price", "longTime", "rupiah"],
         where: { id: value },
       });

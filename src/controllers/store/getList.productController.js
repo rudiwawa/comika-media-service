@@ -1,4 +1,4 @@
-const { Product, Category, Sequelize, Source } = require("../../models");
+const { Product, Category, StoreProductSource, Source, Sequelize } = require("../../models");
 const service = async function (req, res, next) {
   try {
     let limit = 3;
@@ -12,10 +12,10 @@ const service = async function (req, res, next) {
     if (req.query.page && req.query.page > 0) {
       offset = Number(req.query.page - 1) * limit;
     }
-    if (req.query.orderBy) {
-      const ordering = req.query.ordering ? (req.query.ordering == "ASC" ? req.query.ordering : "DESC") : "DESC";
-      order.push([req.query.orderBy, ordering]);
-    }
+    // if (req.query.orderBy) {
+    //   const ordering = req.query.ordering ? (req.query.ordering == "ASC" ? req.query.ordering : "DESC") : "DESC";
+    //   order.push([req.query.orderBy, ordering]);
+    // }
     const where = {
       name: {
         [Sequelize.Op.substring]: search,
@@ -24,12 +24,10 @@ const service = async function (req, res, next) {
     if (req.query.category) where.categoryId = req.query.category;
 
     order.push(["updatedAt", "DESC"]);
-    const requestDB = await Product.scope("public").findAll({
-      attributes: { exclude: ["CategoryId", "isPublish", "UserId", "publishedAt", "description"] },
-      include: [
-        { attributes: ["name", "type"], model: Category },
-        { attributes: ["url"], model: Source, as: "images" },
-      ],
+    const requestDB = await Product.scope("product").findAll({
+      attributes: {
+        exclude: ["type", "CategoryId", "description", "sequence", "capacity", "isPublish", "availableTo"],
+      },
       where,
       order,
       limit,

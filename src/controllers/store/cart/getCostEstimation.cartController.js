@@ -28,7 +28,7 @@ const getAddressItem = async (userId, listProduct = []) => {
         [Sequelize.fn("sum", Sequelize.col("weight")), "weight"],
         [Sequelize.fn("sum", Sequelize.col("total")), "subtotal"],
       ],
-      where: { userId, qty: { [Op.gt]: 0 }, productId: { [Op.in]: listProduct } },
+      where: { userId, qty: { [Op.gt]: 0 }, id: { [Op.in]: listProduct } },
     }),
   ]);
   const detail = product.dataValues;

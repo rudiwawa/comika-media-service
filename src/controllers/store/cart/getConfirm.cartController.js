@@ -5,7 +5,7 @@ const {
 
 const service = async (req, res, next) => {
   try {
-    const where = { userId: req.auth.id,qty: { [Op.gt]: 0 }, productId: { [Op.in]: req.body.product } };
+    const where = { userId: req.auth.id,qty: { [Op.gt]: 0 }, id: { [Op.in]: req.body.product } };
     const requestDB = await CartTemp.findAll({ where });
     res.response = { data: requestDB };
   } catch (error) {

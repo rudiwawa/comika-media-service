@@ -20,15 +20,5 @@ router.use("/comment", commentRoutes);
 router.use("/payment", paymentsRoutes);
 router.use("/package", packageRoutes);
 router.use("/store", storeRoutes);
-router.get(
-  "/dummy",
-  require("../controllers/dummy/userDummy").service,
-  require("../controllers/dummy/comikaDummy").service,
-  require("../controllers/dummy/articleDummy").service,
-  require("../controllers/dummy/jumbotronDummy").service,
-  (req, res, next) => {
-    res.response = { msg: "DUMMY API" };
-    next();
-  }
-);
+
 module.exports = router;

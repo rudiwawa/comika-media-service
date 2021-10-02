@@ -2,7 +2,7 @@ const {
   Product,
   StoreProductSource,
   Sequelize: { Op },
-} = require("../../models");
+} = require("../../../models");
 const { body } = require("express-validator");
 
 const service = async function (req, res, next) {

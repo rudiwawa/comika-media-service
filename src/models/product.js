@@ -13,18 +13,49 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Source, Product, Category, Cart }) {
-      Product.belongsToMany(Source, { through: "store_product_sources", as: "images" });
+    static associate({ Source, Product, Category, Cart, StoreProductSource }) {
+      Product.hasMany(StoreProductSource, { as: "images" });
       Product.belongsTo(Category);
-      Product.hasMany(Cart);
+      // Product.hasMany(Cart);
       // define association here
-      Product.addScope("public", {
+      Product.addScope("subscription", {
         where: {
+          type: "subscription",
           isPublish: true,
           publishedAt: {
             [Op.lte]: moment().add(7, "hours"),
           },
+          availableTo: {
+            [Op.gte]: moment().add(7, "hours"),
+          },
         },
+      });
+      Product.addScope("product", {
+        where: {
+          type: "product",
+          isPublish: true,
+          publishedAt: {
+            [Op.lte]: moment().add(7, "hours"),
+          },
+          availableTo: {
+            [Op.gte]: moment().add(7, "hours"),
+          },
+        },
+        include: [
+          { attributes: ["name", "type"], model: Category },
+          {
+            attributes: ["thumbnail"],
+            model: StoreProductSource,
+            as: "images",
+            order: [["thumbnail", "DESC"]],
+            include: {
+              as: "source",
+              model: Source,
+              attributes: ["url", "name"],
+            },
+          },
+        ],
+        order: [[{ model: StoreProductSource, as: "images" }, "thumbnail", "DESC"]],
       });
     }
   }
@@ -43,12 +74,33 @@ module.exports = (sequelize, DataTypes) => {
           this.setDataValue("name", value);
         },
       },
+      type: {
+        type: DataTypes.ENUM(["product", "subscription", "ongkir"]),
+      },
       slug: {
         unique: true,
         type: DataTypes.STRING,
       },
       categoryId: DataTypes.SMALLINT,
       description: DataTypes.TEXT,
+      price: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
+      capacity: {
+        type: DataTypes.SMALLINT,
+        defaultValue: 1,
+      },
+      sequence: {
+        type: DataTypes.TINYINT,
+        defaultValue: 0,
+      },
+      rupiah: {
+        type: Sequelize.VIRTUAL,
+        get() {
+          return currency.setRupiah(this.getDataValue("price"));
+        },
+      },
       isPublish: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
@@ -57,25 +109,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         defaultValue: Sequelize.NOW,
       },
-      price: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0,
-      },
-      weight: {
-        type: DataTypes.SMALLINT,
-        defaultValue: 1,
-      },
-      rupiah: {
-        type: Sequelize.VIRTUAL,
-        get() {
-          return currency.setRupiah(this.getDataValue("price"));
-        },
+      availableTo: {
+        type: DataTypes.DATE,
+        defaultValue: Sequelize.NOW,
       },
     },
     {
       sequelize,
       modelName: "Product",
-      tableName: "store_products",
     }
   );
   return Product;

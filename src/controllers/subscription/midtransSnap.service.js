@@ -7,7 +7,7 @@ const {
 const moment = require("moment");
 const snap = new midtransClient.Snap({
   isProduction: process.env.MIDTRANS_ENV == "production" ? true : false,
-  serverKey: process.env.SERVER_KEY,
+  serverKey: process.env.MIDTRANS_ENV == "production" ? process.env.MIDTRANS_KEY : process.env.MIDTRANS_KEY_DEV,
 });
 
 const createOrder = async (payload) => {
@@ -18,7 +18,7 @@ const createOrder = async (payload) => {
   }
 };
 
-module.exports = async ({ package, customer }) => {
+module.exports = async ({ package, user }) => {
   let parameter = {
     transaction_details: {
       order_id: package.code.toUpperCase() + "-" + Date.now(),
@@ -27,7 +27,12 @@ module.exports = async ({ package, customer }) => {
     credit_card: {
       secure: true,
     },
-    customer_details: customer,
+    customer_details: {
+      userId: user.id,
+      first_name: user.name,
+      email: user.email,
+      phone: user.phone,
+    },
     item_details: {
       id: package.id,
       price: package.price,
@@ -39,7 +44,10 @@ module.exports = async ({ package, customer }) => {
     const subscriptionLatest = await Subscription.count({
       where: { userId: customer.userId, availableOn: { [Op.gte]: moment() } },
     });
-    if (subscriptionLatest > 7) throw new Error(`Kamu masih mempunyai ${subscriptionLatest} hari, Perpanjang subscription hanya bisa dilakukan pada 7 hari terakhir.`);
+    if (subscriptionLatest > 7)
+      throw new Error(
+        `Kamu masih mempunyai ${subscriptionLatest} hari, Perpanjang subscription hanya bisa dilakukan pada 7 hari terakhir.`
+      );
     const transaction = await snap.createTransaction(parameter);
     const dataOrder = {
       id: parameter.transaction_details.order_id,

@@ -1,4 +1,4 @@
-const { Product, Source } = require("../../models");
+const { Product, Source } = require("../../../models");
 const service = async function (req, res, next) {
   try {
     const where = {};
