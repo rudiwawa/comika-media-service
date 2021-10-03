@@ -5,8 +5,8 @@ const {
 
 const service = async (req, res, next) => {
   try {
-    const where = { userId: req.auth.id,qty: { [Op.gt]: 0 }, id: { [Op.in]: req.body.product } };
-    const requestDB = await CartTemp.findAll({ where });
+    const where = { userId: req.auth.id,qty: { [Op.gt]: 0 }, id: { [Op.in]: req.query.product } };
+    const requestDB = await CartTemp.scope("carty").findAll({ where });
     res.response = { data: requestDB };
   } catch (error) {
     res.response = { status: 500, msg: error.message };

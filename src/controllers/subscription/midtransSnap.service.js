@@ -1,6 +1,7 @@
 const midtransClient = require("midtrans-client");
 const {
   Order,
+  OrderDetails,
   Subscription,
   Sequelize: { Op },
 } = require("../../models");
@@ -10,19 +11,32 @@ const snap = new midtransClient.Snap({
   serverKey: process.env.MIDTRANS_ENV == "production" ? process.env.MIDTRANS_KEY : process.env.MIDTRANS_KEY_DEV,
 });
 
-const createOrder = async (payload) => {
+const createOrder = async (payload, subscription) => {
   try {
-    const requestDB = Order.create(payload);
+    payload.details = [
+      {
+        productId: subscription.id,
+        name: subscription.name,
+        type: "subscription",
+        quantity: 1,
+        capacity: subscription.longTime,
+        price: subscription.price,
+        total: subscription.price * 1,
+      },
+    ];
+    const requestDB = Order.create(payload, {
+      include: [{ model: OrderDetails, as: "details" }],
+    });
   } catch (error) {
     return Promise.reject(error.message);
   }
 };
 
-module.exports = async ({ package, user }) => {
+module.exports = async ({ subscription, user }) => {
   let parameter = {
     transaction_details: {
-      order_id: package.code.toUpperCase() + "-" + Date.now(),
-      gross_amount: package.price,
+      order_id: subscription.code.toUpperCase() + "-" + Date.now(),
+      gross_amount: subscription.price,
     },
     credit_card: {
       secure: true,
@@ -34,15 +48,15 @@ module.exports = async ({ package, user }) => {
       phone: user.phone,
     },
     item_details: {
-      id: package.id,
-      price: package.price,
+      id: subscription.id,
+      price: subscription.price,
       quantity: 1,
-      name: package.name,
+      name: subscription.name,
     },
   };
   try {
     const subscriptionLatest = await Subscription.count({
-      where: { userId: customer.userId, availableOn: { [Op.gte]: moment() } },
+      where: { userId: user.id, availableOn: { [Op.gte]: moment() } },
     });
     if (subscriptionLatest > 7)
       throw new Error(
@@ -50,16 +64,13 @@ module.exports = async ({ package, user }) => {
       );
     const transaction = await snap.createTransaction(parameter);
     const dataOrder = {
-      id: parameter.transaction_details.order_id,
-      userId: customer.userId,
-      plan: package.name,
-      price: package.price,
+      code: parameter.transaction_details.order_id,
+      userId: user.id,
+      price: subscription.price,
       token: transaction.token,
       url: transaction.redirect_url,
-      longTime: package.longTime,
-      packageId: package.id,
     };
-    createOrder(dataOrder);
+    createOrder(dataOrder, subscription);
     return transaction;
   } catch (error) {
     return Promise.reject(error.message);

@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate({ Package, Order }) {
-      Package.hasMany(Order);
+      // Package.hasMany(Order);
       Package.addScope("public", {
         where: {
           publishedAt: {

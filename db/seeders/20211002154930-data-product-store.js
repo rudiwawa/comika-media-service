@@ -8,6 +8,7 @@ module.exports = {
         {
           id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803350",
           name: "Katarsis",
+          slug: "katarsis",
           price: 60000,
           capacity: 300,
           type: "product",
@@ -21,6 +22,7 @@ module.exports = {
         {
           id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803351",
           name: "Kelana",
+          slug: "kelana",
           price: 30000,
           capacity: 400,
           type: "product",
@@ -34,6 +36,7 @@ module.exports = {
         {
           id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803352",
           name: "Daftar Polisi",
+          slug: "daftar-polisi",
           price: 20000,
           capacity: 400,
           type: "product",
@@ -47,6 +50,7 @@ module.exports = {
         {
           id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803353",
           name: "Ayah Ikhlas",
+          slug: "ayah-ikhlas",
           price: 70000,
           capacity: 700,
           type: "product",

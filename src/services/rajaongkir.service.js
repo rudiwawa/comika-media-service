@@ -66,13 +66,15 @@ exports.estimateCost = async (destination, weight = 1) => {
     } = await axios.post(`https://pro.rajaongkir.com/api/cost`, payload, {
       headers: { key: process.env.KEY_RAJA_ONGKIR },
     });
-    return formatCostResponse(rajaongkir.results);
+    const { results, origin_details, destination_details } = rajaongkir;
+    const fromTo = origin_details.city_name + " - " + destination_details.subdistrict_name;
+    return formatCostResponse(results, fromTo);
   } catch (error) {
     return error.message;
   }
 };
 
-const formatCostResponse = (data) => {
+const formatCostResponse = (data, fromTo) => {
   let listEstimate = [];
   let idx = 0;
   data.forEach((ekspedisi) => {
@@ -86,6 +88,7 @@ const formatCostResponse = (data) => {
         estDay: item.cost[0].etd,
         estDate: estimateDate(item.cost[0].etd),
         note: item.cost[0].note,
+        fromTo,
       };
       listEstimate.push(dataEstimate);
       idx++;

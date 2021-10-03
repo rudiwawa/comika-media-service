@@ -8,7 +8,31 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(model) {}
+    static associate({ CartTemp, Product }) {
+      CartTemp.belongsTo(Product);
+      CartTemp.addScope("summary", {
+        attributes: [
+          [Sequelize.fn("sum", Sequelize.col("qty")), "qty"],
+          [Sequelize.fn("sum", Sequelize.literal("Product.capacity * CartTemp.qty")), "weight"],
+          [Sequelize.fn("sum", Sequelize.literal("CartTemp.qty * Product.price")), "subtotal"],
+        ],
+        include: { model: Product, attributes: [] },
+      });
+      CartTemp.addScope("cart", {
+        attributes: {
+          exclude: ["createdAt", "updatedAt", "deletedAt", "ProductId", "userId"],
+          include: [
+            [Sequelize.col("Product.name"), "name"],
+            [Sequelize.literal("Product.capacity * CartTemp.qty"), "weight"],
+            [Sequelize.literal("Product.price"), "price"],
+            [Sequelize.literal("CONCAT('Rp ',FORMAT(Product.price,0))"), "priceRp"],
+            [Sequelize.literal("CartTemp.qty * Product.price"), "total"],
+            [Sequelize.literal("CONCAT('Rp ',FORMAT(CartTemp.qty * Product.price,0))"), "totalRp"],
+          ],
+        },
+        include: { model: Product, attributes: [] },
+      });
+    }
   }
   CartTemp.init(
     {
@@ -19,36 +43,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       productId: DataTypes.UUID,
       userId: DataTypes.UUID,
-      name: DataTypes.STRING,
       qty: DataTypes.TINYINT,
       img: DataTypes.STRING,
-      weight: DataTypes.INTEGER,
-      price: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0,
-        validate: {
-          min: 0,
-        },
-      },
-      priceRp: {
-        type: Sequelize.VIRTUAL,
-        get() {
-          return currency.setRupiah(this.getDataValue("price"));
-        },
-      },
-      total: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0,
-        validate: {
-          min: 0,
-        },
-      },
-      totalRp: {
-        type: Sequelize.VIRTUAL,
-        get() {
-          return currency.setRupiah(this.getDataValue("total"));
-        },
-      },
+      note: DataTypes.STRING,
     },
     {
       sequelize,

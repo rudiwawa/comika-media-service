@@ -11,8 +11,8 @@ exports.setRupiah = (nominal) => {
     rupiah = split[0].substr(0, sisa),
     ribuan = split[0].substr(sisa).match(/\d{3}/gi);
   if (ribuan) {
-    const separator = sisa ? "." : "";
-    rupiah += separator + ribuan.join(".");
+    const separator = sisa ? "," : "";
+    rupiah += separator + ribuan.join(",");
   }
   rupiah = split[1] ? rupiah + "," + split[1] : rupiah;
   if (positive) return "Rp " + rupiah;
@@ -20,7 +20,7 @@ exports.setRupiah = (nominal) => {
 };
 
 const getRupiah = (rupiah = 0) => {
-  let angka = rupiah.replace("Rp. ", "").replace(/\./g, "").replace(/\-/g, "");
+  let angka = rupiah.replace("Rp ", "").replace(/\./g, "").replace(/\-/g, "");
   if (rupiah.substr(0, 1) == "-") return angka * -1;
   return (angka -= 0);
 };

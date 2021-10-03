@@ -1,31 +1,35 @@
 const {
-  StoreTransaction,
+  Order,
+  orderDetails,
+  OrderDelivery,
   CartTemp,
   Cart,
+  Product,
   Sequelize: { Op },
   sequelize,
 } = require("../../models");
 const { estimateCost } = require("../../services/rajaongkir.service");
 const { getAddressItem } = require("./cart/getCostEstimation.cartController");
 const midtransSnapUi = require("./midtransSnap.service");
-const { body } = require("express-validator");
+const { body, query } = require("express-validator");
 const { v4: uuidv4 } = require("uuid");
 
 const service = async function (req, res, next) {
   try {
-    const listProduct = req.body.product;
-    const { detail, address } = await getAddressItem(req.auth.id, listProduct);
+    const arrCartTemp = req.query.product;
+    const { detail, address } = await getAddressItem(req.auth.id, arrCartTemp);
     if (address && detail.qty) {
       const listEstimateCost = await estimateCost(address.subdistrictId, detail.weight);
       const courier = listEstimateCost[req.body.courierId];
       if (!courier) throw new Error("Kurir tidak ditemukan");
-      const payload = {
-        weight: detail.weight,
-        qty: detail.qty,
-        subtotal: detail.subtotal,
-        ...address,
-      };
-      res.response = await transactionHandler(req.auth, payload, courier, listProduct);
+      const listItem = await CartTemp.scope("cart").findAll({
+        where: { userId: req.auth.id, id: { [Op.in]: arrCartTemp } },
+      });
+      if (!listItem.length) {
+        res.response = { status: 404, msg: "Keranjang sedang kosong" };
+      } else {
+        res.response = await transactionHandler({ user: req.auth, address, courier, items: listItem, arrCartTemp });
+      }
     } else if (address && !detail.qty) {
       res.response = { status: 400, msg: "keranjang sedang kosong" };
     } else {
@@ -38,38 +42,12 @@ const service = async function (req, res, next) {
 };
 
 // TRANSACTION START
-const transactionHandler = async (user, payload, courier, listProduct) => {
+const transactionHandler = async ({ user, address, courier, items, arrCartTemp }) => {
   const t = await sequelize.transaction();
   try {
-    payload.courier = courier.service;
-    payload.delivery = courier.cost;
-    payload.total = parseInt(courier.cost) + parseInt(payload.subtotal);
-    const transaction = await StoreTransaction.create(payload, { transaction: t });
-    const products = await CartTemp.findAll({
-      where: { userId: user.id, qty: { [Op.gt]: 0 }, id: { [Op.in]: listProduct } },
-    });
-    if (!products.length) {
-      return { status: 404, msg: "Keranjang sedang kosong" };
-    }
-    let listCart = products.map((item) => {
-      item.destroy({ transaction: t });
-      return {
-        quantity: item.dataValues.qty,
-        type: "product",
-        storeTransactionId: transaction.id,
-        ...item.dataValues,
-      };
-    });
-    listCart.push({
-      id: uuidv4(),
-      name: courier.service,
-      quantity: 1,
-      price: courier.cost,
-      type: "ongkir",
-    });
-    const data = await Cart.bulkCreate(listCart, { transaction: t });
-    const requestMidtrans = await getSnapUi(transaction.code, user, listCart, payload.total);
-    // await t.commit();
+    const code = generateCode(user.name, courier.service, address.subdistrict);
+    const requestMidtrans = await midtransSnapUi({ user, items, address, code, courier });
+    CartTemp.destroy({ where: { id: { [Op.in]: arrCartTemp } } });
     return { msg: "silahkan lanjutkan pembayaran", data: requestMidtrans };
   } catch (error) {
     await t.rollback();
@@ -77,13 +55,28 @@ const transactionHandler = async (user, payload, courier, listProduct) => {
   }
 };
 
-const getSnapUi = async (transactionCode, customer, items, total) => {
-  return await midtransSnapUi({ customer, items, total, transactionCode });
+const generateCode = (name, courier, subdistrict) => {
+  const timestamp = "" + Date.now();
+  const parseName = aiueo(name.split(" ")[0]);
+  const parseCourier = aiueo(courier);
+  const parseSubdistrict = aiueo(subdistrict);
+  const code =
+    parseCourier +
+    timestamp.substr(6, 9) +
+    "-" +
+    parseName +
+    timestamp.substr(0, 6) +
+    "-" +
+    parseSubdistrict +
+    timestamp.substr(9);
+  return code;
 };
 
 const validation = [
   body("courierId", "Kurir tidak boleh kosong").notEmpty(),
-  body("product", "produk tidak boleh kosong").notEmpty().isLength({ min: 1 }),
+  query("product", "produk tidak boleh kosong").notEmpty().isLength({ min: 1 }),
 ];
+
+const aiueo = (val) => val.replace(/[ \a\i\u\o\e]/gi, "").toUpperCase();
 
 module.exports = { service, validation };

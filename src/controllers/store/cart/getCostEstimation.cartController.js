@@ -10,7 +10,7 @@ const { getActive } = require("../../users/address/activeAddress.service");
 
 const service = async function (req, res, next) {
   try {
-    const { detail, address } = await getAddressItem(req.auth.id, req.body.product);
+    const { detail, address } = await getAddressItem(req.auth.id, req.query.product);
     const estimateDelivery = await estimateCost(address.subdistrictId, detail.weight);
     res.response = { etc: { detail, address, estimateDelivery } };
   } catch (error) {
@@ -22,12 +22,7 @@ const service = async function (req, res, next) {
 const getAddressItem = async (userId, listProduct = []) => {
   let [address, product] = await Promise.all([
     getActive(userId),
-    CartTemp.findOne({
-      attributes: [
-        [Sequelize.fn("sum", Sequelize.col("qty")), "qty"],
-        [Sequelize.fn("sum", Sequelize.col("weight")), "weight"],
-        [Sequelize.fn("sum", Sequelize.col("total")), "subtotal"],
-      ],
+    CartTemp.scope("summary").findOne({
       where: { userId, qty: { [Op.gt]: 0 }, id: { [Op.in]: listProduct } },
     }),
   ]);

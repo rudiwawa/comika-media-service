@@ -7,8 +7,9 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ User, Order, OrderDetails }) {
-      Order.hasMany(OrderDetails);
+    static associate({ User, Order, OrderDetails, OrderDelivery }) {
+      Order.hasMany(OrderDetails, { as: "details" });
+      Order.hasOne(OrderDelivery);
       Order.belongsTo(User);
     }
   }
@@ -20,10 +21,11 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
       },
       type: {
-        type: DataTypes.ENUM(["subscribe", "store"]),
+        type: DataTypes.ENUM(["subscription", "store"]),
+        defaultValue: "subscription",
       },
       code: {
-        type: DataTypes.STRING(30),
+        type: DataTypes.STRING(50),
         unique: true,
       },
       price: DataTypes.INTEGER,

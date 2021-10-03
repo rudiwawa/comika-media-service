@@ -16,10 +16,8 @@ const service = async function (req, res, next) {
     } else {
       // throw new Error("API UNDER MAINTENANCE");
       // const user=requestData
-      // return res.json(req.subscription);
-
       const requestMidtrans = await midtransSnapUi({
-        package: req.subscription,
+        subscription: req.subscription.dataValues,
         user,
       });
       res.response = { msg: `${req.auth.name} membeli paket subscription`, data: requestMidtrans };
@@ -64,12 +62,18 @@ const validation = [
     .withMessage("silahkan pilih subscription plan terlebih dahulu")
     .custom(async (value, { req }) => {
       const requestDB = await Product.scope("subscription").findOne({
-        attributes: ["id", "code", "name", "price", "longTime", "rupiah"],
+        attributes: ["id", "name", "price", ["capacity", "longTime"], "rupiah"],
         where: { id: value },
       });
       if (!requestDB) throw new Error("subscription plan tidak ditemukan");
+      requestDB.dataValues.code = generateCode(requestDB.name);
       req.subscription = requestDB;
       return true;
     }),
 ];
+const generateCode = (name) => {
+  name = name.replace(/[^\w\s]/gi, " ");
+  const arrName = name.split(/ /g);
+  return arrName.map((item) => item.substring(0, 1)).join("");
+};
 module.exports = { service, validation };

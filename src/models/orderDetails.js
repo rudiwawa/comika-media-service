@@ -21,10 +21,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       orderId: DataTypes.UUID,
       productId: DataTypes.UUID,
-      userId: DataTypes.UUID,
       name: DataTypes.STRING,
       type: {
-        type: DataTypes.ENUM(["product", "subscribe", "ongkir"]),
+        type: DataTypes.ENUM(["product", "subscription", "ongkir"]),
       },
       quantity: DataTypes.INTEGER,
       capacity: DataTypes.INTEGER,

@@ -10,12 +10,8 @@ const service = async function (req, res, next) {
       productId: product.id,
       userId: auth.id,
       note: body.note,
-      name: product.name,
-      img: product.images[0].url,
-      weight: body.qty * product.weight,
+      img: product.images[0].source.url,
       qty: body.qty,
-      price: product.price,
-      total: body.qty * product.price,
     };
     const [cart, created] = await CartTemp.findOrCreate({ where, defaults: payload });
     if (created) {
@@ -24,16 +20,12 @@ const service = async function (req, res, next) {
       if (body.update) cart.qty = body.qty;
       else cart.qty += body.qty;
       cart.note = body.note;
-      cart.name = product.name;
-      cart.price = product.price;
-      cart.weight = cart.qty * product.weight;
-      cart.total = cart.qty * product.price;
-      cart.img = product.images[0].url;
+      cart.img = product.images[0].source.url;
       await cart.save();
       const action = body.update > 0 ? "mengubah" : "menambah";
       if (body.qty > 0) {
         res.response = {
-          msg: `berhasil ${action} menjadi ${cart.qty} buah` + product.name + " ke keranjang",
+          msg: `berhasil ${action} menjadi ${cart.qty} buah ` + product.name + " ke keranjang",
           data: cart,
         };
       } else if (body.update && body.qty == 0) {
