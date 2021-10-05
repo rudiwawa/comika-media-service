@@ -94,7 +94,6 @@ module.exports = async ({ code, user, items, courier, address }) => {
       subtotal,
       delivery: courier.cost,
       total,
-      status: "pending",
     };
     createOrder(dataOrder, list, dataOrderDelivery);
     return transaction;

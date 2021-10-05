@@ -5,7 +5,7 @@ const {
 const moment = require("moment");
 const { v4: uuidv4 } = require("uuid");
 
-const generateActivation = async (userId, day = 0) => {
+const generateActivation = async (userId, day = 0, t) => {
   const startDate = await getStartSubscribe(userId);
   const listActivation = [];
   for (let index = 0; index < day; index++) {
@@ -15,7 +15,7 @@ const generateActivation = async (userId, day = 0) => {
       availableOn: moment(startDate).add(7, "hours").add(index, "days"),
     });
   }
-  const requestDB = await Subscription.bulkCreate(listActivation);
+  const requestDB = await Subscription.bulkCreate(listActivation, { transaction: t });
   return requestDB;
 };
 

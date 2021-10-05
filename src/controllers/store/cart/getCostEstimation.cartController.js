@@ -10,7 +10,14 @@ const { getActive } = require("../../users/address/activeAddress.service");
 
 const service = async function (req, res, next) {
   try {
-    const { detail, address } = await getAddressItem(req.auth.id, req.query.product);
+    let listProduct = req.query.product;
+    if (typeof listProduct === "string") {
+      listProduct = [listProduct];
+    }
+    if (!listProduct) {
+      return res.status(400).json({ msg: "kerenjang produk tidak boleh kosong" });
+    }
+    const { detail, address } = await getAddressItem(req.auth.id, listProduct);
     const estimateDelivery = await estimateCost(address.subdistrictId, detail.weight);
     res.response = { etc: { detail, address, estimateDelivery } };
   } catch (error) {
@@ -23,7 +30,8 @@ const getAddressItem = async (userId, listProduct = []) => {
   let [address, product] = await Promise.all([
     getActive(userId),
     CartTemp.scope("summary").findOne({
-      where: { userId, qty: { [Op.gt]: 0 }, id: { [Op.in]: listProduct } },
+      where: { qty: { [Op.gt]: 0 }, id: { [Op.in]: listProduct } },
+      group: ["user_id"],
     }),
   ]);
   const detail = product.dataValues;

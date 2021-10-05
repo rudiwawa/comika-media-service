@@ -1,10 +1,5 @@
 const {
-  Order,
-  orderDetails,
-  OrderDelivery,
   CartTemp,
-  Cart,
-  Product,
   Sequelize: { Op },
   sequelize,
 } = require("../../models");
@@ -12,7 +7,6 @@ const { estimateCost } = require("../../services/rajaongkir.service");
 const { getAddressItem } = require("./cart/getCostEstimation.cartController");
 const midtransSnapUi = require("./midtransSnap.service");
 const { body, query } = require("express-validator");
-const { v4: uuidv4 } = require("uuid");
 
 const service = async function (req, res, next) {
   try {

@@ -42,6 +42,7 @@ module.exports = (sequelize, DataTypes) => {
           return currency.setRupiah(this.getDataValue("total"));
         },
       },
+      note: DataTypes.STRING,
     },
     {
       sequelize,

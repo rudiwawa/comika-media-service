@@ -61,10 +61,6 @@ module.exports = (sequelize, DataTypes) => {
           return currency.setRupiah(this.getDataValue("total"));
         },
       },
-      status: {
-        type: DataTypes.ENUM(["pending", "success", "expired"]),
-        defaultValue: "pending",
-      },
     },
     {
       sequelize,
