@@ -41,6 +41,14 @@ const createTemplate = (content) => {
     #header>h1 {
         padding-top: 30px;
     }
+    .btn {
+      background-color: #0265b6;
+      height: 50px;
+      padding: 10px 20px;
+      color: white;
+      border-radius: 4px;
+    }
+
     #footer {
         background-color: #0265b6;
         height: 50px;

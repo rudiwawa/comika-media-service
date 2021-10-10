@@ -7,6 +7,7 @@ const { estimateCost } = require("../../services/rajaongkir.service");
 const { getAddressItem } = require("./cart/getCostEstimation.cartController");
 const midtransSnapUi = require("./midtransSnap.service");
 const { body, query } = require("express-validator");
+const notification = require("./notification.service");
 
 const service = async function (req, res, next) {
   try {
@@ -42,6 +43,7 @@ const transactionHandler = async ({ user, address, courier, items, arrCartTemp }
     const code = generateCode(user.name, courier.service, address.subdistrict);
     const requestMidtrans = await midtransSnapUi({ user, items, address, code, courier });
     CartTemp.destroy({ where: { id: { [Op.in]: arrCartTemp } } });
+    notification(user.email, items, requestMidtrans.link);
     return { msg: "silahkan lanjutkan pembayaran", data: requestMidtrans };
   } catch (error) {
     await t.rollback();

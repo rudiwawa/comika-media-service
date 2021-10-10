@@ -1,5 +1,4 @@
 const { CartTemp } = require("../../../models");
-
 const service = async function (req, res, next) {
   try {
     if (req.body.qty < 0) throw new Error("Kuantitas tidak diperbolehkan");
@@ -17,8 +16,9 @@ const service = async function (req, res, next) {
     if (created) {
       res.response = { msg: product.name + " berhasil ditambahkan ke keranjang", data: payload };
     } else {
-      if (body.update) cart.qty = body.qty;
-      else cart.qty += body.qty;
+      if (body.update) {
+        if (body.qty) cart.qty = body.qty;
+      } else cart.qty += body.qty;
       cart.note = body.note;
       cart.img = product.images[0].source.url;
       await cart.save();
