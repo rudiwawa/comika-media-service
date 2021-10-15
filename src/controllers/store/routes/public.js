@@ -7,6 +7,8 @@ const getCartController = require("../cart/get.cartController");
 const getConfirmCartController = require("../cart/getConfirm.cartController");
 const getCostEstimatation = require("../cart/getCostEstimation.cartController");
 const checkoutController = require("../checkout.storeController");
+const historyController = require("../history.transactionController");
+const detailHistoryController = require("../detailHistory.transactionController");
 const slugProduct = require("../../../middlewares/slugProduct");
 const locationRoutes = require("../location/routes/public");
 const validator = require("../../../helpers/validator");
@@ -20,5 +22,7 @@ router.get("/cart", checkToken, getCartController.service);
 router.get("/cart-estimation", getCostEstimatation.service);
 router.post("/cart-checkout", checkoutController.validation, validator, checkToken, checkoutController.service);
 router.get("/confirm-cart", checkToken, getConfirmCartController.service);
+router.get("/history-buy", checkToken, historyController.service);
+router.get("/history-buy/:id", checkToken, detailHistoryController.service);
 
 module.exports = router;
