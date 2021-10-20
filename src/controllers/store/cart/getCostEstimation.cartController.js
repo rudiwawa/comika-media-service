@@ -34,6 +34,9 @@ const getAddressItem = async (userId, listProduct = []) => {
       group: ["user_id"],
     }),
   ]);
+  if (!product) {
+    throw new Error("Produk tidak ditemukan dalam keranjang");
+  }
   const detail = product.dataValues;
   address = address.dataValues;
   address.addressId = address.id;

@@ -17,7 +17,7 @@ const service = async function (req, res, next) {
       res.response = { msg: product.name + " berhasil ditambahkan ke keranjang", data: payload };
     } else {
       if (body.update) {
-        if (body.qty) cart.qty = body.qty;
+        if (body.qty >= 0) cart.qty = body.qty;
       } else cart.qty += body.qty;
       cart.note = body.note;
       cart.img = product.images[0].source.url;
