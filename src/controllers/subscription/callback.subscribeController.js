@@ -41,7 +41,7 @@ const paymentSuccess = async (dataOrder, t) => {
     notification(
       { id: dataOrder.userId },
       dataOrder.code,
-      `Pembelian paket subscription ${dataOrder.code} selama ${dataOrder.details[0].capacity} hari seharga berhasil diterima, selamat menikmati konten-konten premium Comika Media.`
+      `Pembelian paket subscription ${dataOrder.code} selama ${dataOrder.details[0].capacity} hari berhasil diterima, selamat menikmati konten-konten premium Comika Media.`
     );
     return await callbackSubscribe(dataOrder, t);
   } else if (orderType === "store") {
