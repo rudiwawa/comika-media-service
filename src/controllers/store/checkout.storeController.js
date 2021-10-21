@@ -42,8 +42,9 @@ const transactionHandler = async ({ user, address, courier, items, arrCartTemp }
   try {
     const code = generateCode(user.name, courier.service, address.subdistrict);
     const requestMidtrans = await midtransSnapUi({ user, items, address, code, courier });
-    CartTemp.destroy({ where: { id: { [Op.in]: arrCartTemp } } });
-    notification(user.email, items, requestMidtrans.link);
+    await CartTemp.destroy({ where: { id: { [Op.in]: arrCartTemp } } });
+    console.log(requestMidtrans);
+    notification(user, items, requestMidtrans.redirect_url);
     return { msg: "silahkan lanjutkan pembayaran", data: requestMidtrans };
   } catch (error) {
     await t.rollback();

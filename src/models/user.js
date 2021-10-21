@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ User, ResetPassword, Address, Article, Subscription, Bookmark }) {
+    static associate({ User, ResetPassword, Address, Article, Subscription, Bookmark, Notification }) {
       User.addScope("admin", {
         where: {
           [Sequelize.Op.or]: [{ role: "admin" }, { role: "writer" }],
@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(Address);
       User.hasMany(Subscription);
       User.hasMany(Article);
+      User.hasMany(Notification);
       User.hasMany(ResetPassword);
       User.belongsToMany(Article, { through: "likes" });
       User.hasMany(Bookmark);

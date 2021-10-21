@@ -1,4 +1,5 @@
 const sendEmail = require("../../services/sendEmail");
+const notification = require("../../services/sendNotification");
 const { setRupiah } = require("../../helpers/currency");
 const template = (products, link) => {
   let qty = 0;
@@ -15,6 +16,7 @@ const template = (products, link) => {
             </thead>
             <tbody>
                 ${products.map((item, i) => {
+                  item = item.dataValues;
                   qty += Number(item.qty);
                   total += Number(item.qty * item.price);
                   return `<tr>
@@ -39,7 +41,7 @@ const template = (products, link) => {
         <p>Pembayarannya bisa klik tombol berikut
             <br>
             <br>
-            <a href="${link}" target="_blank" class="btn">LINK INI</a>
+            <a href="${link}" target="_blank" class="btn" style="background-color: #0265b6;height: 50px; padding: 10px 20px;color: white;border-radius: 4px;">LINK INI</a>
             <br>
             <br>
             atau <a href="${link}" target="_blank">${link}</a>
@@ -47,7 +49,8 @@ const template = (products, link) => {
     </center>`;
 };
 
-module.exports = (to, products, link) => {
+module.exports = (user, products, link) => {
   const body = template(products, link);
-  sendEmail(to, "INVOICE STORE", body);
+  sendEmail(user.email, "INVOICE STORE", body);
+  notification.create(user.id, "INVOICE STORE", body);
 };

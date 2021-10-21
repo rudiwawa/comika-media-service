@@ -2,6 +2,7 @@ const { body } = require("express-validator");
 const { User, Product } = require("../../models");
 const midtransSnapUi = require("./midtransSnap.service");
 const sendEmail = require("../../services/sendEmail");
+const sendNotification = require("../../services/sendNotification");
 
 const service = async function (req, res, next) {
   try {
@@ -21,7 +22,9 @@ const service = async function (req, res, next) {
         user,
       });
       res.response = { msg: `${req.auth.name} membeli paket subscription`, data: requestMidtrans };
-      sendEmail({ to: user.email, subject: "SUBSCRIBE", body: bodyEmail(user.name, requestMidtrans.redirect_url) });
+      const bodyNotif = bodyEmail(user.name, requestMidtrans.redirect_url);
+      sendEmail({ to: user.email, subject: "PEMBELIAN MEMBER", body: bodyNotif });
+      sendNotification.create(user.id, "PEMBELIAN MEMBER", bodyNotif);
     }
   } catch (error) {
     res.response = { status: 500, msg: error.toString() };
