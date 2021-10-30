@@ -61,12 +61,40 @@ module.exports = {
           created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
           updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
+        {
+          id: "0734f6b2-6b4c-45b9-be8c-d1aaf6903373",
+          name: "Ongkir",
+          slug: "ongkir",
+          price: 0,
+          capacity: 1,
+          type: "ongkir",
+          description: null,
+          is_publish: false,
+          published_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+          available_to: moment().add(5, "years").format("YYYY-MM-DD HH:mm:ss"),
+          created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+          updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+        },
+        {
+          id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803373",
+          name: "Discount",
+          slug: "discount",
+          price: 0,
+          capacity: 1,
+          type: "discount",
+          description: null,
+          is_publish: false,
+          published_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+          available_to: moment().add(5, "years").format("YYYY-MM-DD HH:mm:ss"),
+          created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+          updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+        },
       ],
       {}
     );
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete("products", { type: "product" }, {});
+    await queryInterface.bulkDelete("products", {}, {});
   },
 };

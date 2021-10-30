@@ -20,13 +20,14 @@ const service = async function (req, res, next) {
       name: {
         [Sequelize.Op.substring]: search,
       },
+      type: "product",
     };
     if (req.query.category) where.categoryId = req.query.category;
 
     order.push(["updatedAt", "DESC"]);
     const requestDB = await Product.scope("product").findAll({
       attributes: {
-        exclude: ["type", "CategoryId", "description", "sequence", "capacity", "isPublish", "availableTo"],
+        exclude: ["CategoryId", "description", "sequence", "capacity", "isPublish", "availableTo"],
       },
       where,
       order,

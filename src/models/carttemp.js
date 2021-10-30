@@ -46,6 +46,10 @@ module.exports = (sequelize, DataTypes) => {
       qty: DataTypes.TINYINT,
       img: DataTypes.STRING,
       note: DataTypes.STRING,
+      type: {
+        type: DataTypes.ENUM(["product", "subscription", "ongkir", "discount"]),
+        defaultValue: "product",
+      },
     },
     {
       sequelize,

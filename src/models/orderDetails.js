@@ -23,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
       productId: DataTypes.UUID,
       name: DataTypes.STRING,
       type: {
-        type: DataTypes.ENUM(["product", "subscription", "ongkir"]),
+        type: DataTypes.ENUM(["product", "subscription", "ongkir", "discount"]),
+        defaultValue: "subscription",
       },
       quantity: DataTypes.INTEGER,
       capacity: DataTypes.INTEGER,

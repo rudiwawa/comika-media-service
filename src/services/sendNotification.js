@@ -1,6 +1,6 @@
 const { Notification } = require("../models");
 
-const create = async function (userId, title, description, type) {
+const create = async function (userId, title, description, type, orderId) {
   try {
     const payload = {
       title,
@@ -12,6 +12,7 @@ const create = async function (userId, title, description, type) {
       descriptionHtml: description.replace(/  /gi, "").replace(/\n/gi, ""),
       userId,
       img: null,
+      orderId,
     };
     switch (type) {
       case "subscribe":

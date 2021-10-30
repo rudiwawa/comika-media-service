@@ -7,8 +7,8 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Source, Product }) {
-      Source.belongsToMany(Product, { through: "store_product_sources" });
+    static associate({ Source, StoreProductSource }) {
+      Source.hasMany(StoreProductSource);
     }
   }
   Source.init(

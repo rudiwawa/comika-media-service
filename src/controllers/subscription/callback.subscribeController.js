@@ -48,7 +48,8 @@ const paymentSuccess = async (dataOrder, t) => {
     notification(
       { id: dataOrder.userId },
       dataOrder.code,
-      `Pembelian item store ${dataOrder.code} berhasil diterima, selamat menikmati merchandise Comika Media.`
+      `Pembelian item store ${dataOrder.code} berhasil diterima, selamat menikmati merchandise Comika Media.`,
+      orderType
     );
     return { msg: `transaksi ${dataOrder.code} berhasil dibayar` };
   } else {
@@ -56,8 +57,8 @@ const paymentSuccess = async (dataOrder, t) => {
   }
 };
 
-const notification = (user, orderId, msg) => {
-  sendNotification.create(user.id, `PEMBAYARAN ${orderId.toUpperCase()} BERHASIL`, msg);
+const notification = (user, orderId, msg, type) => {
+  sendNotification.create(user.id, `PEMBAYARAN ${orderId.toUpperCase()} BERHASIL`, msg, type, orderId);
   // sendEmail({ to: user.email, subject: `PEMBAYARAN ${orderId.toUpperCase()} BERHASIL`, body: msg });
 };
 

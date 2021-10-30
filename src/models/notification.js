@@ -26,7 +26,24 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      type: {
+        type: DataTypes.ENUM(["transaksi", "promo", "informasi"]),
+        defaultValue: "transaksi",
+      },
+      typeIcon: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          switch (this.getDataValue("type")) {
+            case "promo":
+              return "https://api.comika.media/uploads/comika/promo.png";
+            case "informasi":
+            default:
+              return "https://api.comika.media/uploads/comika/informasi.png";
+          }
+        },
+      },
       userId: DataTypes.UUID,
+      orderId: DataTypes.UUID,
     },
     {
       sequelize,

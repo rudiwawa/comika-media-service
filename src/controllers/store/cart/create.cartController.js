@@ -5,23 +5,30 @@ const service = async function (req, res, next) {
     if (req.body.qty === 0 && !req.body.update) throw new Error("Kuantitas tidak boleh 0");
     const { body, product, auth } = req;
     const where = { productId: product.id, userId: auth.id };
-    const payload = {
+    let payload = {
       productId: product.id,
       userId: auth.id,
       note: body.note,
       img: product.images[0].source.url,
       qty: body.qty,
+      type: product.type,
     };
+    if (product.type === "subscription") {
+      payload.qty = 1;
+      payload.note = null;
+    }
     const [cart, created] = await CartTemp.findOrCreate({ where, defaults: payload });
     if (created) {
       res.response = { msg: product.name + " berhasil ditambahkan ke keranjang", data: payload };
     } else {
-      if (body.update) {
-        if (body.qty >= 0) cart.qty = body.qty;
-      } else cart.qty += body.qty;
-      cart.note = body.note;
-      cart.img = product.images[0].source.url;
-      await cart.save();
+      if (product.type === "product") {
+        if (body.update) {
+          if (body.qty >= 0) cart.qty = body.qty;
+        } else cart.qty += body.qty;
+        cart.note = body.note;
+        cart.img = product.images[0].source.url;
+        await cart.save();
+      }
       const action = body.update > 0 ? "mengubah" : "menambah";
       if (body.qty > 0) {
         res.response = {

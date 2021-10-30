@@ -7,7 +7,7 @@ module.exports = async function (req, res, next) {
     if (req.params.id) where.id = req.params.id;
     const requestDB = await Product.scope("product").findAll({
       attributes: {
-        exclude: ["type", "CategoryId", "sequence", "isPublish", "availableTo"],
+        exclude: ["CategoryId", "sequence", "isPublish", "availableTo"],
       },
       where,
     });

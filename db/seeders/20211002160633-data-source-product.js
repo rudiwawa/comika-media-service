@@ -81,17 +81,33 @@ module.exports = {
           created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
           updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
+        {
+          product_id: "3d4d4d47-a2f3-48a7-a3b2-0a2e910038e5",
+          source_id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803351",
+          thumbnail: true,
+          created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+          updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+        },
+        {
+          product_id: "3d4d4d47-a2f3-49a7-a3b2-0a2e910038e5",
+          source_id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803351",
+          thumbnail: true,
+          created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+          updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+        },
+        {
+          product_id: "3d4d4d47-a2f3-48a7-a3c2-0a2e910038e5",
+          source_id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803351",
+          thumbnail: true,
+          created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+          updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+        },
       ],
       {}
     );
   },
 
   down: async (queryInterface, Sequelize) => {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+    await queryInterface.bulkDelete("store_product_sources", null, {});
   },
 };

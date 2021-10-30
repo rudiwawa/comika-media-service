@@ -14,7 +14,11 @@ const service = async (req, res, next) => {
     }
     const where = { userId: req.auth.id, qty: { [Op.gt]: 0 }, id: { [Op.in]: listProduct } };
     const requestDB = await CartTemp.scope("cart").findAll({ where });
-    res.response = { data: requestDB };
+    let showAddress = false;
+    requestDB.map((item) => {
+      if (item.type === "product") showAddress = true;
+    });
+    res.response = { data: { showAddress: showAddress, cart: requestDB } };
   } catch (error) {
     res.response = { status: 500, msg: error.message };
   }

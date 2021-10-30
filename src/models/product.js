@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       Product.addScope("product", {
         where: {
-          type: "product",
+          [Op.or]: [{ type: "product" }, { type: "subscription" }],
           isPublish: true,
           publishedAt: {
             [Op.lte]: moment().add(7, "hours"),
@@ -75,7 +75,8 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       type: {
-        type: DataTypes.ENUM(["product", "subscription", "ongkir"]),
+        type: DataTypes.ENUM(["product", "subscription", "ongkir", "discount"]),
+        defaultValue: "subscription",
       },
       slug: {
         unique: true,
