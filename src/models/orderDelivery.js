@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       orderId: DataTypes.UUID,
       addressId: DataTypes.UUID,
+      noResi: DataTypes.STRING(100),
       name: DataTypes.STRING(100),
       address: DataTypes.STRING,
       province: DataTypes.STRING(50),
@@ -39,6 +40,10 @@ module.exports = (sequelize, DataTypes) => {
       courier: DataTypes.STRING(10),
       qty: DataTypes.TINYINT,
       subtotal: DataTypes.INTEGER,
+      status: {
+        type: DataTypes.ENUM(["pending", "sending", "accepting", "rejecting"]),
+        defaultValue: "pending",
+      },
       subtotalRp: {
         type: DataTypes.VIRTUAL,
         get() {

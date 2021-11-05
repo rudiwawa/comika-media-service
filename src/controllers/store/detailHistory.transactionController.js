@@ -17,7 +17,8 @@ const service = async function (req, res, next) {
       ],
       where: { code: req.params.id },
     });
-    res.response = { data: requestDB };
+    if (requestDB) res.response = { data: requestDB };
+    else res.response = { status: 404, msg: "historty transaks tidak ditemukan" };
   } catch (error) {
     res.response = { status: 500, msg: error.toString() };
   }

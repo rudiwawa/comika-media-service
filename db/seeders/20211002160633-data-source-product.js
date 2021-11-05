@@ -15,24 +15,28 @@ module.exports = {
         {
           product_id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803350",
           source_id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803349",
+          thumbnail: false,
           created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
           updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
         {
           product_id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803350",
           source_id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803350",
+          thumbnail: false,
           created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
           updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
         {
           product_id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803350",
           source_id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803351",
+          thumbnail: false,
           created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
           updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
         {
           product_id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803351",
           source_id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803348",
+          thumbnail: false,
           created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
           updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
@@ -46,18 +50,21 @@ module.exports = {
         {
           product_id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803351",
           source_id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803350",
+          thumbnail: false,
           created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
           updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
         {
           product_id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803352",
           source_id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803351",
+          thumbnail: false,
           created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
           updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
         {
           product_id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803352",
           source_id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803348",
+          thumbnail: false,
           created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
           updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
@@ -71,6 +78,7 @@ module.exports = {
         {
           product_id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803353",
           source_id: "0734f6b2-6b4c-45b9-be8c-d1aaf6803350",
+          thumbnail: false,
           created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
           updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
