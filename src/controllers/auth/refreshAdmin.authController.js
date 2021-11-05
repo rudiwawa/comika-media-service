@@ -9,13 +9,11 @@ const service = async function (req, res, next) {
     if (err) {
       return res.status(400).json({ msg: err.message });
     } else {
-      console.log(decode.user);
       req.record.userId = decode.user.id;
       const requestDB = await JWT.findOne({ where: { token } });
       if (requestDB.revoke) {
         req.record.status = 401;
         req.record.msg = "refresh rejected";
-        console.log(req.record);
         Record.create(req.record);
         return res.status(401).json({ msg: "refresh rejected" });
       } else {

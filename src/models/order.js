@@ -1,5 +1,6 @@
 "use strict";
 const { Model, Sequelize } = require("sequelize");
+const { setRupiah } = require("../helpers/currency");
 module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
     /**
@@ -29,6 +30,12 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
       },
       price: DataTypes.INTEGER,
+      priceRp: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return setRupiah(this.getDataValue("price"));
+        },
+      },
       token: DataTypes.UUID,
       url: DataTypes.STRING,
       status: { type: DataTypes.STRING(30), defaultValue: "pending" },

@@ -1,6 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const moment = require("moment");
+const { setRupiah } = require("../helpers/currency");
 module.exports = (sequelize, DataTypes) => {
   class Promo extends Model {
     /**
@@ -8,8 +9,9 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate({ Promo }) {
       // define association here
+      Promo.addScope("active", {});
     }
   }
   Promo.init(
@@ -60,6 +62,13 @@ module.exports = (sequelize, DataTypes) => {
         get() {
           const discount = this.getDataValue("discount");
           return discount <= 1 ? discount * 100 : discount;
+        },
+      },
+      discountRp: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          if (this.getDataValue("type") === "nominal") return setRupiah(this.getDataValue("discount"));
+          else return setRupiah(0);
         },
       },
     },

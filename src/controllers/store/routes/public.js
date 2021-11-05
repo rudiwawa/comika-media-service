@@ -20,7 +20,7 @@ router.use("/ongkir", checkToken, locationRoutes);
 router.post("/add-cart/:id", checkToken, slugProduct, createCartController.service);
 router.get("/cart", checkToken, getCartController.service);
 router.get("/cart-estimation", getCostEstimatation.service);
-router.post("/cart-checkout", checkoutController.validation, validator, checkToken, checkoutController.service);
+router.post("/cart-checkout", checkToken, checkoutController.validation, validator, checkoutController.service);
 router.get("/confirm-cart", checkToken, getConfirmCartController.service);
 router.get("/history-buy", checkToken, historyController.service);
 router.get("/history-buy/:id", checkToken, detailHistoryController.service);

@@ -3,32 +3,53 @@ const {
   Sequelize: { Op },
   sequelize,
 } = require("../../models");
+const { v4: uuidv4 } = require("uuid");
 const { estimateCost } = require("../../services/rajaongkir.service");
 const { getAddressItem } = require("./cart/getCostEstimation.cartController");
-const midtransSnapUi = require("./midtransSnap.service");
+const midtransCheckout = require("./midtransCheckout.service");
+const midtransSubscribe = require("../subscription/midtransSubscribe.service");
 const { body, query } = require("express-validator");
 const notification = require("./notification.service");
+const confirmCart = require("./cart/cart.service");
 
 const service = async function (req, res, next) {
   try {
-    const arrCartTemp = req.query.product;
-    const { detail, address } = await getAddressItem(req.auth.id, arrCartTemp);
-    if (address && detail.qty) {
-      const listEstimateCost = await estimateCost(address.subdistrictId, detail.weight);
-      const courier = listEstimateCost[req.body.courierId];
-      if (!courier) throw new Error("Kurir tidak ditemukan");
-      const listItem = await CartTemp.scope("cart").findAll({
-        where: { userId: req.auth.id, id: { [Op.in]: arrCartTemp } },
-      });
-      if (!listItem.length) {
-        res.response = { status: 404, msg: "Keranjang sedang kosong" };
+    let listProduct = req.query.product;
+    if (typeof listProduct === "string") {
+      listProduct = [listProduct];
+    }
+    const promoCode = req.query.promo;
+    const courierId = req.body.courierId;
+    let check = await confirmCart(req.auth.id, listProduct, promoCode);
+    if (!check.cart.length) {
+      throw new Error("Keranjang sedang kosong");
+    }
+    if (check.showAddress) {
+      const { detail, address } = await getAddressItem(req.auth.id, listProduct);
+      if (address && detail.qty) {
+        const listEstimateCost = await estimateCost(address.subdistrictId, detail.weight);
+        const courier = listEstimateCost[courierId];
+        if (!courier) {
+          throw new Error("Kurir tidak ditemukan");
+        }
+        check.cart = addOngkirToCart(check.cart, courier);
+        if (check.promo) {
+          check.cart.push(check.promo);
+        }
+        res.response = await transactionHandler(req.auth, check.cart, address);
+      } else if (address && !detail.qty) {
+        res.response = { status: 400, msg: "keranjang sedang kosong" };
       } else {
-        res.response = await transactionHandler({ user: req.auth, address, courier, items: listItem, arrCartTemp });
+        if (check.promo) {
+          check.cart.push(check.promo);
+        }
+        res.response = { status: 400, msg: "silahkan mengisi alamat terlebih dahulu" };
       }
-    } else if (address && !detail.qty) {
-      res.response = { status: 400, msg: "keranjang sedang kosong" };
     } else {
-      res.response = { status: 400, msg: "silahkan mengisi alamat terlebih dahulu" };
+      if (check.promo) {
+        check.cart.push(check.promo);
+      }
+      res.response = await transactionHandler(req.auth, check.cart);
     }
   } catch (error) {
     res.response = { status: 500, msg: error.message };
@@ -36,36 +57,43 @@ const service = async function (req, res, next) {
   next();
 };
 
+const addOngkirToCart = (cart, ongkir) => {
+  cart.push({
+    id: uuidv4(),
+    productId: "0734f6b2-6b4c-45b9-be8c-d1aaf6903373",
+    qty: 1,
+    img: "http://api.comika.media/uploads/comika/icon.png",
+    note: null,
+    type: "ongkir",
+    category: "Nominal",
+    name: `ONGKIR ${ongkir.fromTo}`,
+    weight: 0,
+    price: ongkir.cost,
+    capacity: 0,
+    total: ongkir.cost,
+    service: ongkir.service,
+  });
+  return cart;
+};
 // TRANSACTION START
-const transactionHandler = async ({ user, address, courier, items, arrCartTemp }) => {
-  const t = await sequelize.transaction();
-  try {
-    const code = generateCode(user.name, courier.service, address.subdistrict);
-    const requestMidtrans = await midtransSnapUi({ user, items, address, code, courier });
-    await CartTemp.destroy({ where: { id: { [Op.in]: arrCartTemp } } });
-    console.log(requestMidtrans);
-    notification(user, items, requestMidtrans.redirect_url);
-    return { msg: "silahkan lanjutkan pembayaran", data: requestMidtrans };
-  } catch (error) {
-    await t.rollback();
-    return { status: 500, msg: error.message };
-  }
+const transactionHandler = async (user, listCart, address = null) => {
+  const code = generateCode(user.name);
+  let listProduct = [];
+  listCart.map((item) => {
+    if (item.type == "product" || item.type == "subscription") listProduct.push(item.id);
+  });
+  const { requestMidtrans, createOrders } = await midtransCheckout(code, user, listCart, address);
+  // await CartTemp.destroy({ where: { id: { [Op.in]: listProduct } } });
+  console.log();
+  const dataOrder = createOrders.dataValues;
+  notification(user, listCart, requestMidtrans.redirect_url, dataOrder);
+  return { msg: "silahkan lanjutkan pembayaran", data: requestMidtrans };
 };
 
-const generateCode = (name, courier, subdistrict) => {
+const generateCode = (name) => {
   const timestamp = "" + Date.now();
   const parseName = aiueo(name.split(" ")[0]);
-  const parseCourier = aiueo(courier);
-  const parseSubdistrict = aiueo(subdistrict);
-  const code =
-    parseCourier +
-    timestamp.substr(6, 9) +
-    "-" +
-    parseName +
-    timestamp.substr(0, 6) +
-    "-" +
-    parseSubdistrict +
-    timestamp.substr(9);
+  const code = timestamp.substr(6, 9) + parseName + timestamp.substr(0, 6) + parseName + timestamp.substr(9);
   return code;
 };
 

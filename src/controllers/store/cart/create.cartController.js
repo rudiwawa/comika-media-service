@@ -21,14 +21,16 @@ const service = async function (req, res, next) {
     if (created) {
       res.response = { msg: product.name + " berhasil ditambahkan ke keranjang", data: payload };
     } else {
-      if (product.type === "product") {
-        if (body.update) {
+      if (body.update) {
+        if (product.type === "product") {
           if (body.qty >= 0) cart.qty = body.qty;
-        } else cart.qty += body.qty;
-        cart.note = body.note;
-        cart.img = product.images[0].source.url;
-        await cart.save();
-      }
+        } else {
+          if (body.qty == 0 || body.qty == 1) cart.qty = body.qty;
+        }
+      } else cart.qty += body.qty;
+      cart.note = body.note;
+      cart.img = product.images[0].source.url;
+      await cart.save();
       const action = body.update > 0 ? "mengubah" : "menambah";
       if (body.qty > 0) {
         res.response = {

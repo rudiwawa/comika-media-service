@@ -35,7 +35,7 @@ const createOrder = async (payload, subscription) => {
 module.exports = async ({ subscription, user }) => {
   let parameter = {
     transaction_details: {
-      order_id: subscription.code.toUpperCase() + "-" + Date.now(),
+      order_id: subscription.slug.toUpperCase() + "-" + Date.now(),
       gross_amount: subscription.price,
     },
     credit_card: {

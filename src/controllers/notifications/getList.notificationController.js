@@ -2,18 +2,12 @@ const { Notification } = require("../../models");
 
 const service = async function (req, res, next) {
   try {
-    let attributes = ["id", "img", "title", "isRead", "createdAt"];
     let limit = 10;
     let offset = 0;
     let order = [];
-    const where = { userId: req.auth.id };
-
-    if (req.query.id) {
-      where.id = req.query.id;
-      attributes.push(["description_html", "description"]);
-      Notification.update({ isRead: true }, { where });
-    } else {
-      attributes.push("description");
+    const where = { userId: req.auth.id, type: "informasi" };
+    if (req.query.type) {
+      where.type = req.query.type;
     }
     if (req.query.limit && req.query.limit > 0) {
       limit = Number(req.query.limit);
@@ -23,13 +17,13 @@ const service = async function (req, res, next) {
     }
     order.push(["updatedAt", "DESC"]);
     const requestDB = await Notification.findAll({
-      attributes,
+      attributes: ["id", "img", "title", "isRead", "createdAt", "type", "typeIcon", "description"],
       where,
       order,
       limit,
       offset,
     });
-    res.response = { data: req.query.id ? requestDB[0] : requestDB };
+    res.response = { data: requestDB };
   } catch (error) {
     res.response = { status: 500, msg: error.message };
   }

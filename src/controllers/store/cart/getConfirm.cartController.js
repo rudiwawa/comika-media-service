@@ -1,24 +1,11 @@
-const {
-  CartTemp,
-  Sequelize: { Op },
-} = require("../../../models");
-
+const confirmCart = require("./cart.service");
 const service = async (req, res, next) => {
   try {
     let listProduct = req.query.product;
-    if (typeof listProduct === "string") {
-      listProduct = [listProduct];
-    }
-    if (!listProduct) {
-      return res.status(400).json({ msg: "kerenjang produk tidak boleh kosong" });
-    }
-    const where = { userId: req.auth.id, qty: { [Op.gt]: 0 }, id: { [Op.in]: listProduct } };
-    const requestDB = await CartTemp.scope("cart").findAll({ where });
-    let showAddress = false;
-    requestDB.map((item) => {
-      if (item.type === "product") showAddress = true;
-    });
-    res.response = { data: { showAddress: showAddress, cart: requestDB } };
+    const promoCode = req.query.promo;
+    const { showAddress, cart, promo } = await confirmCart(req.auth.id, listProduct, promoCode);
+    if (promo) cart.push(promo);
+    res.response = { data: { showAddress, cart } };
   } catch (error) {
     res.response = { status: 500, msg: error.message };
   }

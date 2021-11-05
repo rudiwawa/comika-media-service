@@ -22,7 +22,7 @@ const service = async function (req, res, next) {
       },
       type: "product",
     };
-    if (req.query.category) where.categoryId = req.query.category;
+    if (req.query.category) where.category = req.query.category;
 
     order.push(["updatedAt", "DESC"]);
     const requestDB = await Product.scope("product").findAll({

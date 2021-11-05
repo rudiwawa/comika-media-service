@@ -11,6 +11,7 @@ const paymentsRoutes = require("../controllers/subscription/routes/public");
 const packageRoutes = require("../controllers/packages/routes/public");
 const storeRoutes = require("../controllers/store/routes/public");
 const notifRoutes = require("../controllers/notifications/routes/public");
+const promoRoutes = require("../controllers/promo/routes/public");
 
 router.use(ifHasToken);
 router.use("/", authRoutes);
@@ -22,5 +23,6 @@ router.use("/payment", paymentsRoutes);
 router.use("/package", packageRoutes);
 router.use("/store", storeRoutes);
 router.use("/notification", notifRoutes);
+router.use("/promo", promoRoutes);
 
 module.exports = router;

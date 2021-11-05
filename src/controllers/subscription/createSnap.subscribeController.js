@@ -1,6 +1,6 @@
 const { body } = require("express-validator");
 const { User, Product } = require("../../models");
-const midtransSnapUi = require("./midtransSnap.service");
+const midtransSnapUi = require("./midtransSubscribe.service");
 const sendEmail = require("../../services/sendEmail");
 const sendNotification = require("../../services/sendNotification");
 

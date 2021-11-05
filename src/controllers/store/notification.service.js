@@ -49,8 +49,15 @@ const template = (products, link) => {
     </center>`;
 };
 
-module.exports = (user, products, link) => {
-  const body = template(products, link);
-  sendEmail(user.email, "INVOICE STORE", body);
-  notification.create(user.id, "INVOICE STORE", body);
+module.exports = (user, products, link, dataOrder) => {
+  //   const body = template(products, link);
+  //   sendEmail(user.email, "INVOICE STORE", null);
+  const description = generateDescription(dataOrder);
+  notification.create(user.id, "INVOICE STORE", description, dataOrder.type, dataOrder.id);
+};
+
+const generateDescription = (dataOrder) => {
+  return `Segera selesaikan transaksi ${dataOrder.code} senilai ${setRupiah(
+    dataOrder.price
+  )} dan dapatkan keseruan lainnya.`;
 };

@@ -8,14 +8,14 @@ const create = async function (userId, title, description, type, orderId) {
         .replace(/(<([^>]+)>)/gi, "")
         .replace(/  /gi, "")
         .replace(/\n/gi, "")
-        .substring(0, 100),
+        .substring(0, 120),
       descriptionHtml: description.replace(/  /gi, "").replace(/\n/gi, ""),
       userId,
       img: null,
       orderId,
     };
     switch (type) {
-      case "subscribe":
+      case "subscription":
         break;
       default:
         payload.img = "https://api.comika.media/uploads/comika/icon.png";

@@ -13,11 +13,23 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Source, Product, Category, Cart, StoreProductSource }) {
+    static associate({ Source, Product, StoreProductSource }) {
       Product.hasMany(StoreProductSource, { as: "images" });
-      Product.belongsTo(Category);
+      // Product.belongsTo(Category);
       // Product.hasMany(Cart);
       // define association here
+      Product.addScope("promo", {
+        where: {
+          type: "discount",
+          isPublish: true,
+          publishedAt: {
+            [Op.lte]: moment().add(7, "hours"),
+          },
+          availableTo: {
+            [Op.gte]: moment().add(7, "hours"),
+          },
+        },
+      });
       Product.addScope("subscription", {
         where: {
           type: "subscription",
@@ -42,7 +54,6 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
         include: [
-          { attributes: ["name", "type"], model: Category },
           {
             attributes: ["thumbnail"],
             model: StoreProductSource,
@@ -82,11 +93,17 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         type: DataTypes.STRING,
       },
-      categoryId: DataTypes.SMALLINT,
+      category: { type: DataTypes.ENUM(["Digital Produk", "Merchandise", "Online", "Percent", "Nominal"]) },
       description: DataTypes.TEXT,
       price: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
+        get() {
+          if (this.getDataValue("category") == "Percent") {
+            return Number(this.getDataValue("price")) / 100;
+          }
+          return this.getDataValue("price");
+        },
       },
       capacity: {
         type: DataTypes.SMALLINT,
@@ -99,6 +116,9 @@ module.exports = (sequelize, DataTypes) => {
       rupiah: {
         type: Sequelize.VIRTUAL,
         get() {
+          if (this.getDataValue("category") == "Percent") {
+            return currency.setRupiah(0);
+          }
           return currency.setRupiah(this.getDataValue("price"));
         },
       },
