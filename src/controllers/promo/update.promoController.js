@@ -1,10 +1,14 @@
-const { Product } = require("../../models");
+const {
+  Product,
+  Sequelize: { Op },
+} = require("../../models");
 const { body } = require("express-validator");
 const moment = require("moment");
 
 const service = async function (req, res, next) {
   try {
     const { body } = req;
+    const where = { id: body.id };
     const payload = {
       name: body.name,
       type: "discount",
@@ -18,7 +22,7 @@ const service = async function (req, res, next) {
       publishedAt: body.publishedAt,
       availableTo: body.availableTo,
     };
-    const requestDB = await Product.create(payload);
+    const requestDB = await Product.update(payload, { where });
     res.response = { msg: "promo berhasil disimpan", data: requestDB };
   } catch (error) {
     res.response = { msg: error.toString(), status: 500 };
@@ -27,15 +31,18 @@ const service = async function (req, res, next) {
 };
 
 const validation = [
+  body("id", "id tidak boleh kosong").notEmpty(),
   body("name", "nama produk tidak boleh kosong").notEmpty(),
   body("code", "kode tidak boleh kosong")
     .notEmpty()
-    .custom((value) => {
-      return Product.findOne({ where: { slug: value, type: "discount" } }).then((promo) => {
-        if (promo) {
-          return Promise.reject("kode promo sudah digunakan");
-        }
-      });
+    .custom((value, { req }) => {
+      return Product.scope("promo")
+        .findOne({ where: { slug: value, type: "discount", id: { [Op.ne]: req.body.id } } })
+        .then((promo) => {
+          if (promo) {
+            return Promise.reject("kode promo sudah digunakan");
+          }
+        });
     }),
   body("price", "harga produk tidak boleh kosong")
     .notEmpty()

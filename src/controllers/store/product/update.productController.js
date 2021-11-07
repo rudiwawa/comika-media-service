@@ -10,6 +10,7 @@ const service = async function (req, res, next) {
     const payload = {
       name: req.body.name,
       description: req.body.description,
+      type: "product",
       categoryId: req.body.categoryId,
       isPublish: req.body.isPublish,
       publishedAt: req.body.publishedAt,
@@ -31,11 +32,13 @@ const service = async function (req, res, next) {
 const validation = [
   body("name", "name tidak boleh kosong").notEmpty(),
   body().custom((body) => {
-    return Product.findOne({ where: { name: body.name, id: { [Op.ne]: body.id } } }).then((product) => {
-      if (product) {
-        return Promise.reject("nama item sudah digunakan");
+    return Product.findOne({ where: { name: body.name, type: "product", id: { [Op.ne]: body.id } } }).then(
+      (product) => {
+        if (product) {
+          return Promise.reject("nama item sudah digunakan");
+        }
       }
-    });
+    );
   }),
   body("id", "id tidak boleh kosong").notEmpty(),
   body("price", "harga produk tidak boleh kosong").notEmpty(),

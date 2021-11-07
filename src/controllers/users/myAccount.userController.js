@@ -1,10 +1,28 @@
-const { User } = require("../../models");
+const {
+  User,
+  Subscription,
+  Sequelize,
+  Sequelize: { Op },
+} = require("../../models");
+const moment = require("moment");
 
 const service = async function (req, res, next) {
   try {
     const requestDB = await User.findOne({
-      attributes: { exclude: ["password", "secretId"] },
+      attributes: {
+        exclude: ["password", "secretId"],
+        include: [[Sequelize.fn("COUNT", Sequelize.col("Subscriptions.id")), "premiumDay"]],
+      },
       where: { id: req.auth.id },
+      include: {
+        attributes: [],
+        model: Subscription,
+        where: {
+          availableOn: {
+            [Op.gte]: moment(),
+          },
+        },
+      },
     });
     if (requestDB) {
       res.response = { data: requestDB };
