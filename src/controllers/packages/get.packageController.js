@@ -1,11 +1,26 @@
-const { Package } = require("../../models");
+const { Product } = require("../../models");
 const service = async function (req, res, next) {
   try {
-    const where = {};
+    const where = { type: "subscription" };
     if (req.params.id) where.id = req.params.id;
-    const requestDB = await Package.findAll({ where });
+    const requestDB = await Product.findAll({
+      attributes: [
+        "id",
+        "name",
+        ["slug", "code"],
+        "price",
+        "rupiah",
+        ["capacity", "longTime"],
+        "description",
+        "isPublish",
+        "publishedAt",
+        "availableTo",
+      ],
+      where,
+    });
     if (req.params.id) {
       if (requestDB.length) {
+        requestDB[0].dataValues.description = requestDB[0].dataValues.description.split("~");
         res.response = {
           data: requestDB[0],
         };

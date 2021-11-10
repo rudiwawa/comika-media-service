@@ -1,22 +1,12 @@
-const { Product, Source } = require("../../../models");
+const { Product } = require("../../../models");
 const service = async function (req, res, next) {
   try {
-    const where = {};
-    if (req.params.id) where.id = req.params.id;
+    const where = { type: "product" };
     const requestDB = await Product.findAll({
       where,
       order: [["createdAt", "desc"]],
-      include: [
-        {
-          model: Source,
-          as: "images",
-        },
-      ],
     });
-    if (where.id) {
-      if (requestDB.length) res.response = { data: requestDB[0] };
-      else res.response = { status: 404, msg: "Produk tidak ditemukan" };
-    } else res.response = { data: requestDB };
+    res.response = { data: requestDB };
   } catch (error) {
     res.response = {
       status: 500,

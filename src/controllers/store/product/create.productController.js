@@ -1,4 +1,4 @@
-const { Product } = require("../../../models");
+const { Product, StoreProductSource } = require("../../../models");
 const { body } = require("express-validator");
 
 const service = async function (req, res, next) {
@@ -13,7 +13,15 @@ const service = async function (req, res, next) {
       publishedAt: req.body.publishedAt,
     };
     const createProduct = await Product.create(payload);
-    createProduct.addImages(req.body.images);
+    console.log(createProduct);
+    const payloadImage = req.body.images.map((item) => {
+      item.product_id = createProduct.dataValues.id;
+      item.source_id = item.sourceId;
+      delete item.sourceId;
+      return item;
+    });
+    console.log(payloadImage);
+    await StoreProductSource.bulkCreate(payloadImage);
     res.response = {
       msg: `Source berhasil ditambahkan`,
       data: req.body,
@@ -21,7 +29,7 @@ const service = async function (req, res, next) {
   } catch (error) {
     res.response = {
       status: 500,
-      msg: error.response,
+      msg: error.message,
     };
   }
   next();

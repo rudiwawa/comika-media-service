@@ -6,6 +6,7 @@ const { checkToken } = require("../../../middlewares/jwtAdmin");
 // Product
 const createProduct = require("../product/create.productController");
 const getProduct = require("../product/get.productController");
+const getDetailProduct = require("../product/getDetail.productController");
 const updateProduct = require("../product/update.productController");
 const deleteProduct = require("../product/delete.productController");
 // Category
@@ -18,7 +19,7 @@ router.use(checkToken);
 router
   .post("/", createProduct.validation, validator, createProduct.service)
   .get("/", getProduct.service)
-  .get("/:id", getProduct.service)
+  .get("/:id", getDetailProduct.service)
   .put("/", updateProduct.validation, validator, updateProduct.service)
   .delete("/:id", deleteProduct.service);
 

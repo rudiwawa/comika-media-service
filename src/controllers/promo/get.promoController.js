@@ -2,7 +2,7 @@ const { Product } = require("../../models");
 
 const service = async function (req, res, next) {
   try {
-    const where = {};
+    const where = { type: "discount" };
     if (req.params.id) {
       where.id = req.params.id;
     }
@@ -15,6 +15,7 @@ const service = async function (req, res, next) {
         "category",
         "description",
         "price",
+        "rupiah",
         "isPublish",
         "publishedAt",
         "availableTo",

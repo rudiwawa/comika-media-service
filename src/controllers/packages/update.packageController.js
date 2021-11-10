@@ -1,5 +1,5 @@
 const {
-  Package,
+  Product,
   Sequelize: { Op },
 } = require("../../models");
 const { body } = require("express-validator");
@@ -8,14 +8,18 @@ const service = async function (req, res, next) {
   const { body } = req;
   const payload = {
     name: body.name,
+    type: body.type,
+    slug: body.code,
+    description: body.description.join("~"),
     price: body.price,
-    longTime: body.longTime,
-    description: body.description,
+    capacity: body.longTime,
+    sequence: body.sequence,
+    isPublish: body.isPublish,
     publishedAt: body.publishedAt,
     availableTo: body.availableTo,
   };
   try {
-    const requestDB = await Package.update(payload, { where: { id: body.id } });
+    const requestDB = await Product.update(payload, { where: { id: body.id } });
     res.response = { msg: "Paket berhasil diperbarui", data: requestDB };
   } catch (error) {
     res.response = { status: 500, msg: error.message };
@@ -23,10 +27,10 @@ const service = async function (req, res, next) {
   next();
 };
 const validation = [
-  body("id").notEmpty("id tidak boleh kosong"),
+  body("id", "id tidak boleh kosong").notEmpty(),
   body("name").notEmpty().withMessage("nama paket tidak boleh kosong"),
   body("code").custom(async (value, { req }) => {
-    return Package.findOne({ where: { code: value, id: { [Op.ne]: req.body.id } } }).then((response) => {
+    return Product.findOne({ where: { slug: value, id: { [Op.ne]: req.body.id } } }).then((response) => {
       if (response) return new Promise.reject("Kode paket sudah digunakan");
     });
   }),
@@ -34,7 +38,7 @@ const validation = [
     .notEmpty()
     .isInt({ min: 1 })
     .withMessage("lama waktu minimal 1 hari"),
-  body("description", "deskripsi tidak boleh kosong").notEmpty(),
+  body("description", "deskripsi tidak boleh kosong").isLength({ min: 1 }),
   body("price", "harga tidak boleh kosong")
     .notEmpty()
     .isInt({ min: 1 })
@@ -43,7 +47,8 @@ const validation = [
   body("availableTo", "batas publish tidak boleh kosong")
     .notEmpty()
     .custom((value, { req }) => {
-      if (moment(value).diff(moment(req.body.publishedAt)) > 0) {
+      console.log(moment(value).diff(moment(req.body.publishedAt)), "-------------–");
+      if (moment(value).diff(moment(req.body.publishedAt)) < 0) {
         throw new Error("batas publish harus lebih besar dari pada jadwal publish");
       }
       return true;

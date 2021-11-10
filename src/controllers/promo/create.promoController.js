@@ -12,7 +12,7 @@ const service = async function (req, res, next) {
       category: body.category,
       description: body.description,
       price: body.price,
-      capacity: 99999,
+      capacity: 999,
       sequnce: 0,
       isPublish: body.isPublish,
       publishedAt: body.publishedAt,
@@ -43,6 +43,7 @@ const validation = [
       if (req.body.category == "Percent") {
         if (value > 100) throw new Error("Persentase tidak boleh lebih dari 100%");
       }
+      return true;
     })
     .isInt({ min: 0 })
     .withMessage("diskon tidak boleh kurang dari 0"),
@@ -53,7 +54,7 @@ const validation = [
     .notEmpty()
     .custom((value, { req }) => {
       const diff = moment(value).diff(moment(req.body.publishedAt));
-      if (diff > 0) throw new Error("waktu batas promo harus lebih besar dari waktu aktif");
+      if (diff < 0) throw new Error("waktu batas promo harus lebih besar dari waktu aktif");
       return true;
     }),
 ];

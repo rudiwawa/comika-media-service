@@ -19,7 +19,7 @@ const service = async function (req, res, next) {
     const clearRelation = StoreProductSource.destroy({ where: { productId: req.body.id } });
     const product = await Product.findOne({ where: { id: req.body.id } });
     product.addImages(req.body.images);
-    res.response = { msg: `Source berhasil diubah`, data: req.body };
+    res.response = { msg: `Produk store berhasil diubah`, data: req.body };
   } catch (error) {
     res.response = {
       status: 500,
@@ -42,9 +42,9 @@ const validation = [
   }),
   body("id", "id tidak boleh kosong").notEmpty(),
   body("price", "harga produk tidak boleh kosong").notEmpty(),
-  body("categoryId", "kategori tidak boleh kosong").notEmpty(),
+  body("category", "kategori tidak boleh kosong").notEmpty(),
   body("description", "deskripsi produk tidak boleh kosong").notEmpty(),
-  body("images", "gambar tidak boleh kosong").isArray({ min: 1 }),
+  // body("images", "gambar tidak boleh kosong").isArray({ min: 1 }),
 ];
 
 module.exports = { service, validation };
