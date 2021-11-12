@@ -3,7 +3,7 @@ const { setRupiah } = require("../../helpers/currency");
 const { v4: uuidv5 } = require("uuid");
 
 const getPromoByCode = async function (code) {
-  const requestDB = await Product.scope("promo").findOne({
+  const requestDB = await Product.scope("promoActive").findOne({
     where: { slug: code },
   });
   if (requestDB) {

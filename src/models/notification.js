@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       title: DataTypes.STRING,
       img: DataTypes.STRING,
+      imgDetail: DataTypes.STRING,
       description: DataTypes.TEXT,
       descriptionHtml: DataTypes.TEXT,
       isRead: {
@@ -31,6 +32,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM(["transaksi", "promo", "informasi"]),
         defaultValue: "transaksi",
       },
+      userId: {
+        type: DataTypes.UUID,
+      },
+      orderId: DataTypes.UUID,
       typeIcon: {
         type: DataTypes.VIRTUAL,
         get() {
@@ -43,8 +48,6 @@ module.exports = (sequelize, DataTypes) => {
           }
         },
       },
-      userId: DataTypes.UUID,
-      orderId: DataTypes.UUID,
     },
     {
       sequelize,

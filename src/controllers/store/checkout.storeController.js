@@ -27,6 +27,7 @@ const service = async function (req, res, next) {
     if (check.showAddress) {
       const { detail, address } = await getAddressItem(req.auth.id, listProduct);
       if (address && detail.qty) {
+        if (!courierId) throw new Error("Kurir tidak boleh kosong");
         const listEstimateCost = await estimateCost(address.subdistrictId, detail.weight);
         const courier = listEstimateCost[courierId];
         if (!courier) {
@@ -91,16 +92,12 @@ const transactionHandler = async (user, listCart, address = null) => {
 };
 
 const generateCode = (name) => {
-  const timestamp = "" + Date.now();
   const parseName = aiueo(name.split(" ")[0]);
-  const code = timestamp.substr(6, 9) + parseName + timestamp.substr(0, 6) + parseName + timestamp.substr(9);
+  const code = moment().format("ssmm-hhD") + `${parseName}-` + moment().format("MMYY");
   return code;
 };
 
-const validation = [
-  body("courierId", "Kurir tidak boleh kosong").notEmpty(),
-  query("product", "produk tidak boleh kosong").notEmpty().isLength({ min: 1 }),
-];
+const validation = [body("courierId"), query("product", "produk tidak boleh kosong").notEmpty().isLength({ min: 1 })];
 
 const aiueo = (val) => val.replace(/[ \a\i\u\o\e]/gi, "").toUpperCase();
 

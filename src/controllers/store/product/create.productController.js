@@ -13,7 +13,6 @@ const service = async function (req, res, next) {
       publishedAt: req.body.publishedAt,
     };
     const createProduct = await Product.create(payload);
-    console.log(createProduct);
     const payloadImage = req.body.images.map((item) => {
       item.product_id = createProduct.dataValues.id;
       item.source_id = item.sourceId;

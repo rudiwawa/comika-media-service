@@ -15,6 +15,9 @@ const create = async function (userId, title, description, type, orderId) {
       orderId,
     };
     switch (type) {
+      case "store":
+        payload.img = "https://api.comika.media/uploads/comika/surprice.jpeg";
+        break;
       case "subscription":
         break;
       default:

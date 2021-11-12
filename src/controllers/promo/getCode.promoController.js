@@ -5,7 +5,7 @@ const service = async function (req, res, next) {
     const where = {
       slug: req.params.code,
     };
-    const requestDB = await Product.scope("promo").findOne({
+    const requestDB = await Product.scope("promoActive").findOne({
       attributes: ["id", "name", ["slug", "code"], "category", "price", "rupiah"],
       where,
     });

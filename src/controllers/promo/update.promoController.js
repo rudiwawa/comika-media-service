@@ -36,7 +36,7 @@ const validation = [
   body("code", "kode tidak boleh kosong")
     .notEmpty()
     .custom((value, { req }) => {
-      return Product.scope("promo")
+      return Product.scope("promoActive")
         .findOne({ where: { slug: value, type: "discount", id: { [Op.ne]: req.body.id } } })
         .then((promo) => {
           if (promo) {

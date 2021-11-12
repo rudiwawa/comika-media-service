@@ -21,6 +21,24 @@ module.exports = (sequelize, DataTypes) => {
       Product.addScope("promo", {
         where: {
           type: "discount",
+        },
+        include: [
+          {
+            attributes: ["thumbnail"],
+            model: StoreProductSource,
+            as: "images",
+            order: [["thumbnail", "DESC"]],
+            include: {
+              as: "source",
+              model: Source,
+              attributes: ["url", "name"],
+            },
+          },
+        ],
+      });
+      Product.addScope("promoActive", {
+        where: {
+          type: "discount",
           isPublish: true,
           publishedAt: {
             [Op.lte]: moment().add(7, "hours"),
