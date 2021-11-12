@@ -9,7 +9,6 @@ const service = async (req, res, next) => {
     email: body.email,
     password: "comika-media",
     role: body.role,
-    gender: body.gender,
     phone: body.phone,
     address: body.address,
     postalCode: body.postalCode,
@@ -42,7 +41,6 @@ const validation = [
         }
       });
     }),
-  body("gender").isIn(["L", "P"]).withMessage("gender hanya bernilai L/P"),
   body("phone", "phone tidak boleh kosong")
     .notEmpty()
     .isLength({ min: 12, max: 13 })
