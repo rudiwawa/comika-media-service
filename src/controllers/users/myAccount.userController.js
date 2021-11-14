@@ -11,18 +11,25 @@ const service = async function (req, res, next) {
     const requestDB = await User.findOne({
       attributes: {
         exclude: ["password", "secretId"],
-        include: [[Sequelize.fn("COUNT", Sequelize.col("Subscriptions.id")), "premiumDay"]],
+        include: [
+          [Sequelize.literal("(select if (count(Subscriptions.id)>0,true,false))"), "isPremium"],
+          // [Sequelize.fn("COUNT", Sequelize.col("Subscriptions.id")), "premiumDay"],
+          [Sequelize.fn("MAX", Sequelize.col("Subscriptions.available_on")), "lastPremiumDate"],
+        ],
       },
       where: { id: req.auth.id },
-      include: {
-        attributes: [],
-        model: Subscription,
-        where: {
-          availableOn: {
-            [Op.gte]: moment(),
+      include: [
+        {
+          attributes: [],
+          model: Subscription,
+          required: false,
+          where: {
+            availableOn: {
+              [Op.gte]: moment(),
+            },
           },
         },
-      },
+      ],
     });
     if (requestDB) {
       res.response = { data: requestDB };

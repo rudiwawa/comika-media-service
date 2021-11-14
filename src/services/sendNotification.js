@@ -1,6 +1,6 @@
 const { Notification } = require("../models");
 
-const create = async function (userId, title, description, type, orderId) {
+const create = async function (userId, title, description, img, orderId) {
   try {
     const payload = {
       title,
@@ -11,19 +11,10 @@ const create = async function (userId, title, description, type, orderId) {
         .substring(0, 120),
       descriptionHtml: description.replace(/  /gi, "").replace(/\n/gi, ""),
       userId,
-      img: null,
+      type: "transaksi",
+      img: img || "https://api.comika.media/uploads/comika/checkout.png",
       orderId,
     };
-    switch (type) {
-      case "store":
-        payload.img = "https://api.comika.media/uploads/comika/surprice.jpeg";
-        break;
-      case "subscription":
-        break;
-      default:
-        payload.img = "https://api.comika.media/uploads/comika/icon.png";
-        break;
-    }
     return await Notification.create(payload);
   } catch (error) {
     throw new Error(error.toString());

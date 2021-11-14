@@ -1,3 +1,4 @@
+const { orderBy } = require("lodash");
 const { Notification, Order, OrderDetails } = require("../../models");
 
 const service = async function (req, res, next) {
@@ -16,6 +17,7 @@ const service = async function (req, res, next) {
           },
         },
       ],
+      order: [[Order, "details", "type", "ASC"]],
     });
     if (requestDB) {
       Notification.update({ isRead: true }, { where });

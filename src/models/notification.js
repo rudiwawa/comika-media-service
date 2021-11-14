@@ -21,7 +21,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       title: DataTypes.STRING,
       img: DataTypes.STRING,
-      imgDetail: DataTypes.STRING,
       description: DataTypes.TEXT,
       descriptionHtml: DataTypes.TEXT,
       isRead: {
@@ -42,6 +41,8 @@ module.exports = (sequelize, DataTypes) => {
           switch (this.getDataValue("type")) {
             case "promo":
               return "https://api.comika.media/uploads/comika/promo.png";
+            case "transaksi":
+              return "https://api.comika.media/uploads/comika/transaksi.png";
             case "informasi":
             default:
               return "https://api.comika.media/uploads/comika/informasi.png";

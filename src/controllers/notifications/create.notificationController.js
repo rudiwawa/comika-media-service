@@ -18,8 +18,7 @@ const service = async function (req, res, next) {
         return {
           id: uuidv4(),
           title: masterNotification.name.toUpperCase(),
-          img,
-          imgDetail: masterNotification.images[0].source.url || "https://api.comika.media/uploads/comika/icon.png",
+          img: masterNotification.images[0].source.url || "https://api.comika.media/uploads/comika/icon.png",
           description: masterNotification.description
             .replace(/(<([^>]+)>)/gi, "")
             .replace(/  /gi, "")

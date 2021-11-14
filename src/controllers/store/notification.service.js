@@ -53,7 +53,8 @@ module.exports = (user, products, link, dataOrder) => {
   //   const body = template(products, link);
   //   sendEmail(user.email, "INVOICE STORE", null);
   const description = generateDescription(dataOrder);
-  notification.create(user.id, "INVOICE STORE", description, dataOrder.type, dataOrder.id);
+  const img = "https://api.comika.media/uploads/comika/checkout.png";
+  notification.create(user.id, "INVOICE STORE", description, img, dataOrder.id);
 };
 
 const generateDescription = (dataOrder) => {

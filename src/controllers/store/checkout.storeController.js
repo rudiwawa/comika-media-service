@@ -84,8 +84,7 @@ const transactionHandler = async (user, listCart, address = null) => {
     if (item.type == "product" || item.type == "subscription") listProduct.push(item.id);
   });
   const { requestMidtrans, createOrders } = await midtransCheckout(code, user, listCart, address);
-  // await CartTemp.destroy({ where: { id: { [Op.in]: listProduct } } });
-  console.log();
+  await CartTemp.destroy({ where: { id: { [Op.in]: listProduct } } });
   const dataOrder = createOrders.dataValues;
   notification(user, listCart, requestMidtrans.redirect_url, dataOrder);
   return { msg: "silahkan lanjutkan pembayaran", data: requestMidtrans };
