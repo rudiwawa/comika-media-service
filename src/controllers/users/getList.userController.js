@@ -3,12 +3,14 @@ const { User } = require("../../models");
 const service = async function (req, res, next) {
   try {
     let attributes = ["id", "name", "email", "phone", "birthdate"];
+    const where = { role: "user" };
     if (req.params.id) {
       attributes = [...attributes, "photo", "address", "postalCode", "province", "city", "subdistrict"];
+      where.id = req.params.id;
     }
     const requestDB = await User.findAll({
       attributes,
-      where: { role: "user" },
+      where,
     });
     if (req.params.id) {
       if (requestDB) {

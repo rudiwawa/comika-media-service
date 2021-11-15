@@ -7,7 +7,7 @@ const service = async (req, res, next) => {
   const payload = {
     name: body.name,
     email: body.email,
-    password: "comika-media",
+    password: body.password,
     role: body.role,
     phone: body.phone,
     address: body.address,
@@ -45,9 +45,7 @@ const validation = [
     .notEmpty()
     .isLength({ min: 12, max: 13 })
     .withMessage("phone minimal 12 dan maksimal 13 karakter"),
-  body("role")
-    .isIn(["admin", "writer", "user"])
-    .withMessage("role tidak sesuai"),
+  body("role").isIn(["admin", "writer", "user"]).withMessage("role tidak sesuai"),
 ];
 
 const greeting = (name, role) => {

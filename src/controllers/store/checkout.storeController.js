@@ -7,8 +7,8 @@ const { v4: uuidv4 } = require("uuid");
 const { estimateCost } = require("../../services/rajaongkir.service");
 const { getAddressItem } = require("./cart/getCostEstimation.cartController");
 const midtransCheckout = require("./midtransCheckout.service");
-const midtransSubscribe = require("../subscription/midtransSubscribe.service");
-const { body, query } = require("express-validator");
+const moment = require("moment");
+const { query } = require("express-validator");
 const notification = require("./notification.service");
 const confirmCart = require("./cart/cart.service");
 
@@ -27,7 +27,7 @@ const service = async function (req, res, next) {
     if (check.showAddress) {
       const { detail, address } = await getAddressItem(req.auth.id, listProduct);
       if (address && detail.qty) {
-        if (!courierId) throw new Error("Kurir tidak boleh kosong");
+        if (courierId == null || courierId == undefined) throw new Error("Kurir tidak boleh kosong");
         const listEstimateCost = await estimateCost(address.subdistrictId, detail.weight);
         const courier = listEstimateCost[courierId];
         if (!courier) {
@@ -96,7 +96,7 @@ const generateCode = (name) => {
   return code;
 };
 
-const validation = [body("courierId"), query("product", "produk tidak boleh kosong").notEmpty().isLength({ min: 1 })];
+const validation = [query("product", "produk tidak boleh kosong").notEmpty().isLength({ min: 1 })];
 
 const aiueo = (val) => val.replace(/[ \a\i\u\o\e]/gi, "").toUpperCase();
 

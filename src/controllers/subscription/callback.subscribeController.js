@@ -15,7 +15,22 @@ const service = async function (req, res, next) {
       };
       await Order.update(payload, { where, transaction: t });
       if (req.body.status_code == 200) {
-        res.response = await paymentSuccess(dataOrder, t);
+        let longTimeSubscription = 0;
+        dataOrder.details.map((item) => {
+          if (item.type === "subscription") {
+            longTimeSubscription += Number(item.capacity);
+          }
+        });
+        if (longTimeSubscription > 0) {
+          await callbackSubscribe(dataOrder.userId, longTimeSubscription, t);
+        }
+
+        notification(
+          { id: dataOrder.userId, orderId: dataOrder.id },
+          dataOrder.code,
+          `Pembayaran dengan kode transaksi ${dataOrder.code} hari berhasil diterima, Terima kasih atas kepercayaan terhadap Comika Media.`
+        );
+        res.response = { msg: "PEMBAYARAN " + dataOrder.code + " BERHASIL DITERIMA" };
       } else {
         res.response = { status: 400, msg: "transaction " + req.body.transaction_status, data: payload };
       }
@@ -29,36 +44,13 @@ const service = async function (req, res, next) {
   next();
 };
 
-const callbackSubscribe = async (dataOrder, t) => {
-  const longTime = dataOrder.details.map((order) => order.capacity).reduce((a, b) => a + b, 0);
-  await generateActivation(dataOrder.userId, longTime, t);
-  return { msg: `plan ${dataOrder.code} berhasil diaktifkan` };
+const callbackSubscribe = async (userId, longTime, t) => {
+  await generateActivation(userId, longTime, t);
 };
 
-const paymentSuccess = async (dataOrder, t) => {
-  const orderType = dataOrder.type;
-  if (orderType === "subscription") {
-    notification(
-      { id: dataOrder.userId },
-      dataOrder.code,
-      `Pembelian paket subscription ${dataOrder.code} selama ${dataOrder.details[0].capacity} hari berhasil diterima, selamat menikmati konten-konten premium Comika Media.`
-    );
-    return await callbackSubscribe(dataOrder, t);
-  } else if (orderType === "store") {
-    notification(
-      { id: dataOrder.userId },
-      dataOrder.code,
-      `Pembelian item store ${dataOrder.code} berhasil diterima, selamat menikmati merchandise Comika Media.`
-    );
-    return { msg: `transaksi ${dataOrder.code} berhasil dibayar` };
-  } else {
-    return { status: 400, msg: "tipe transaksi tidak sesuai" };
-  }
-};
-
-const notification = (user, orderId, msg) => {
+const notification = (user, orderCode, msg) => {
   const img = "https://api.comika.media/uploads/comika/settlement.png";
-  sendNotification.create(user.id, `PEMBAYARAN ${orderId.toUpperCase()} BERHASIL`, msg, img, orderId);
+  sendNotification.create(user.id, `PEMBAYARAN ${orderCode.toUpperCase()} BERHASIL`, msg, img, user.orderId);
   // sendEmail({ to: user.email, subject: `PEMBAYARAN ${orderId.toUpperCase()} BERHASIL`, body: msg });
 };
 
