@@ -11,6 +11,7 @@ const subscriptionRoutes = require("../controllers/subscription/routes/admin");
 const storeRoutes = require("../controllers/store/routes/admin");
 const promoRoutes = require("../controllers/promo/routes/admin");
 const notifRoutes = require("../controllers/notifications/routes/admin");
+const reportRoutes = require("../controllers/report/routes/admin");
 
 router.use("/", authRoutes);
 router.use("/users", userRoutes);
@@ -23,4 +24,5 @@ router.use("/subscription", subscriptionRoutes);
 router.use("/store", storeRoutes);
 router.use("/promo", promoRoutes);
 router.use("/notification", notifRoutes);
+router.use("/report", reportRoutes);
 module.exports = router;

@@ -44,7 +44,7 @@ const validation = [
     .withMessage("email tidak valid")
     .custom(async (value) => {
       const user = await User.findOne({
-        where: { email: value, role: "user" },
+        where: { email: value },
       });
       if (user) {
         return Promise.reject("E-mail already in use");
