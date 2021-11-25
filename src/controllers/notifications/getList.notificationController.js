@@ -7,7 +7,10 @@ const service = async function (req, res, next) {
   try {
     let limit = 10;
     let offset = 0;
-    let order = [];
+    let order = [
+      ["isRead", "ASC"],
+      ["createdAt", "ASC"],
+    ];
     const where = { userId: req.auth.id };
     if (req.query.type == "transaksi") {
       where.type = req.query.type;
@@ -20,7 +23,6 @@ const service = async function (req, res, next) {
     if (req.query.page && req.query.page > 0) {
       offset = Number(req.query.page - 1) * limit;
     }
-    order.push(["updatedAt", "DESC"]);
     const requestDB = await Notification.findAll({
       attributes: ["id", "img", "title", "isRead", "createdAt", "type", "typeIcon", "description"],
       where,

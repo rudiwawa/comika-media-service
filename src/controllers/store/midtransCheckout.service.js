@@ -34,6 +34,7 @@ const setupItemDetail = (listCart) => {
       total: item.total,
       type: item.type,
       img: item.img,
+      note: item.note,
     };
   });
   const total = subtotal + parseInt(courierCost);
@@ -53,7 +54,6 @@ const createOrder = async (payload, listCart, dataOrderDelivery) => {
     });
     return requestDB;
   } else {
-    console.log(payload);
     const requestDB = await Order.create(payload, {
       include: [{ model: OrderDetails, as: "details" }],
     });

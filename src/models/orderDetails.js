@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       quantity: DataTypes.INTEGER,
       capacity: DataTypes.INTEGER,
       img: DataTypes.STRING,
+      note: DataTypes.STRING,
       price: DataTypes.INTEGER,
       priceRp: {
         type: Sequelize.VIRTUAL,

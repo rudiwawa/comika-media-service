@@ -11,7 +11,7 @@ const service = async function (req, res, next) {
           attributes: ["id", "code", "price", "priceRp", "url", "status", "paymentType"],
           model: Order,
           include: {
-            attributes: ["id", "name", "quantity", "img", "price", "priceRp", "total", "totalRp"],
+            attributes: ["id", "name", "quantity", "img", "note", "price", "priceRp", "total", "totalRp"],
             model: OrderDetails,
             as: "details",
           },
