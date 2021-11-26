@@ -72,7 +72,7 @@ const checkAddress = async (payload) => {
 const validation = [
   body("id").notEmpty().withMessage("id tidak boleh kosong"),
   body("name").notEmpty().withMessage("name tidak boleh kosong"),
-  body("phone").isLength({ max: 13 }).withMessage("nomor telepon maksimal 13 karakter"),
+  body("phone").isLength({ minx: 10, max: 13 }).withMessage("nomor telepon maksimal 13 karakter"),
   body("postalCode").isLength({ max: 5 }).withMessage("kode pos tidak boleh lebih 5 karakter"),
   body("email").notEmpty().withMessage("email tida boleh kosong").isEmail().withMessage("email tidak valid"),
   body().custom(({ id, email }) => {

@@ -43,7 +43,7 @@ const validation = [
     }),
   body("phone", "phone tidak boleh kosong")
     .notEmpty()
-    .isLength({ min: 12, max: 13 })
+    .isLength({ min: 10, max: 13 })
     .withMessage("phone minimal 12 dan maksimal 13 karakter"),
   body("role").isIn(["admin", "writer", "user"]).withMessage("role tidak sesuai"),
 ];
