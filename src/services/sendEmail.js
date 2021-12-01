@@ -25,37 +25,50 @@ const createTemplate = (content) => {
   <title>COMIKA MEDIA INFO</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <style type="text/css">
-    body {
-        margin: 0;
-        padding: 0;
-    }
-    #header,
-    #footer,
-    .card  {
-        height: 100px;
-        background-color: #006bc1;
-        text-align: center;
-        color: white;
-        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    }
-    #header>h1 {
-        padding-top: 30px;
-    }
-    .btn {
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  #header,
+  #footer,
+  .card {
+      height: 100px;
+      background-color: #006bc1;
+      text-align: center;
+      color: white;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  }
+
+  #header>h1 {
+      padding-top: 30px;
+  }
+
+  .btn {
       background-color: #0265b6;
       height: 50px;
       padding: 10px 20px;
       color: white;
       border-radius: 4px;
-    }
+      box-shadow: 0px 0px 5px #0265b6;
+  }
 
-    #footer {
-        background-color: #0265b6;
-        height: 50px;
-    }
-    #footer h4 {
-        padding-top: 15px;
-    }
+  .text-decoration-none {
+      text-decoration: none;
+  }
+
+  .w-100 {
+      width: 100% !important;
+  }
+
+  #footer {
+      background-color: #0265b6;
+      height: 50px;
+  }
+
+  #footer h4 {
+      padding-top: 15px;
+  }
     </style>
 </head>
 

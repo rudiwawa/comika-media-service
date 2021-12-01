@@ -8,7 +8,15 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ User, ResetPassword, Address, Article, Subscription, Bookmark, Notification }) {
+    static associate({
+      User,
+      ResetPassword,
+      Address,
+      Article,
+      Subscription,
+      Bookmark,
+      Notification,
+    }) {
       User.addScope("admin", {
         where: {
           [Sequelize.Op.or]: [{ role: "admin" }, { role: "writer" }],
@@ -35,7 +43,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
         get() {
-          if (!this.getDataValue("photo")) return "https://api.comika.media/uploads/comika/icon.png";
+          if (!this.getDataValue("photo"))
+            return "https://api.comika.media/uploads/comika/icon.png";
           return this.getDataValue("photo");
         },
       },
@@ -50,6 +59,10 @@ module.exports = (sequelize, DataTypes) => {
         set(value) {
           this.setDataValue("password", hashSync(value, genSaltSync(10)));
         },
+      },
+      isVerified: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
       },
       role: {
         type: DataTypes.ENUM(["admin", "writer", "user"]),
