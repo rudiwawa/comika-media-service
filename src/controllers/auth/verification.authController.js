@@ -1,6 +1,8 @@
-const { Register, User } = require("../../models");
+const { Register, User, sequelize } = require("../../models");
 const sendEmail = require("../../services/sendEmail");
 const jwt = require("jsonwebtoken");
+const generateActivation = require("../subscription/generateActivation.service");
+const sendNotification = require("../../services/sendNotification");
 
 const service = async function (req, res, next) {
   const token = req.params.token;
@@ -24,6 +26,7 @@ const service = async function (req, res, next) {
     });
     await User.update({ isVerified: true }, { where: { id } });
     sendEmail({ to: decode.email, body: bodyWelcoming(decode.name) });
+    freeMember(id, 30);
     return res.send(
       `<script>location.replace("https://comika.media/")</script>`
     );
@@ -31,6 +34,18 @@ const service = async function (req, res, next) {
     res.response = { status: 500, msg: error.message };
   }
   next();
+};
+
+const freeMember = async (userId, days) => {
+  await generateActivation(userId, days);
+  sendNotification.create(
+    userId,
+    `FREE MEMBERSHIP 30 DAYS`,
+    `Terima kasih atas kepercayaan terhadap Comika Media. silahkan menikmati uji coba akses konten premium comika media selama 30 hari.`,
+    "https://api.comika.media/uploads/comika/settlement.png",
+    null,
+    "informasi"
+  );
 };
 
 const bodyWelcoming = (name) => {

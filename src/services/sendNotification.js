@@ -1,6 +1,6 @@
 const { Notification } = require("../models");
 
-const create = async function (userId, title, description, img, orderId) {
+const create = async function (userId, title, description, img, orderId, type) {
   try {
     const payload = {
       title,
@@ -11,7 +11,7 @@ const create = async function (userId, title, description, img, orderId) {
         .substring(0, 120),
       descriptionHtml: description.replace(/  /gi, "").replace(/\n/gi, ""),
       userId,
-      type: "transaksi",
+      type: type || "transaksi",
       img: img || "https://api.comika.media/uploads/comika/checkout.png",
       orderId,
     };
