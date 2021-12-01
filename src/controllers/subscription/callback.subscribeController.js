@@ -1,4 +1,9 @@
-const { Subscription, Order, OrderDetails, sequelize } = require("../../models");
+const {
+  Subscription,
+  Order,
+  OrderDetails,
+  sequelize,
+} = require("../../models");
 const generateActivation = require("./generateActivation.service");
 const sendEmail = require("../../services/sendEmail");
 const sendNotification = require("../../services/sendNotification");
@@ -6,7 +11,10 @@ const service = async function (req, res, next) {
   try {
     const body = req.body;
     const where = { code: body.order_id, status: "pending" };
-    const dataOrder = await Order.findOne({ where, include: { model: OrderDetails, as: "details" } });
+    const dataOrder = await Order.findOne({
+      where,
+      include: { model: OrderDetails, as: "details" },
+    });
     if (dataOrder) {
       const t = await sequelize.transaction();
       const payload = {
@@ -27,12 +35,17 @@ const service = async function (req, res, next) {
 
         notification(
           { id: dataOrder.userId, orderId: dataOrder.id },
-          dataOrder.code,
-          `Pembayaran dengan kode transaksi ${dataOrder.code} hari berhasil diterima, Terima kasih atas kepercayaan terhadap Comika Media.`
+          dataOrder.code
         );
-        res.response = { msg: "PEMBAYARAN " + dataOrder.code + " BERHASIL DITERIMA" };
+        res.response = {
+          msg: "PEMBAYARAN " + dataOrder.code + " BERHASIL DITERIMA",
+        };
       } else {
-        res.response = { status: 400, msg: "transaction " + req.body.transaction_status, data: payload };
+        res.response = {
+          status: 400,
+          msg: "transaction " + req.body.transaction_status,
+          data: payload,
+        };
       }
       await t.commit();
     } else {
@@ -46,11 +59,24 @@ const service = async function (req, res, next) {
 
 const callbackSubscribe = async (userId, longTime, t) => {
   await generateActivation(userId, longTime, t);
+  sendNotification.create(
+    userId,
+    `MEMBERSHIP ACTIVATION`,
+    `Selamat, selama ${longTime} hari kedepan kamu akan menjadi member Comika Media.`,
+    "https://api.comika.media/uploads/comika/settlement.png",
+    null,
+    "informasi"
+  );
 };
 
-const notification = (user, orderCode, msg) => {
-  const img = "https://api.comika.media/uploads/comika/settlement.png";
-  sendNotification.create(user.id, `PEMBAYARAN ${orderCode.toUpperCase()} BERHASIL`, msg, img, user.orderId);
+const notification = (user, orderCode) => {
+  sendNotification.create(
+    user.id,
+    `PEMBAYARAN ${orderCode.toUpperCase()} BERHASIL`,
+    `Pembayaran dengan kode transaksi ${orderCode.toUpperCase()} hari berhasil diterima, Terima kasih atas kepercayaan terhadap Comika Media.`,
+    "https://api.comika.media/uploads/comika/settlement.png",
+    user.orderId
+  );
   // sendEmail({ to: user.email, subject: `PEMBAYARAN ${orderId.toUpperCase()} BERHASIL`, body: msg });
 };
 
