@@ -1,7 +1,7 @@
 const { User } = require("../../models");
 const { addJWT } = require("../../middlewares/jwtUser");
 const { body } = require("express-validator");
-
+const freeMembership = require("../../services/freeMembership");
 const validation = [
   body("email", "invalid parameters").notEmpty(),
   body("secretId", "invalid parameters").notEmpty(),
@@ -11,7 +11,9 @@ const validation = [
 
 const service = async function (req, res, next) {
   try {
-    const requestUser = await User.findOne({ where: { email: req.body.email } });
+    const requestUser = await User.findOne({
+      where: { email: req.body.email },
+    });
     if (requestUser) {
       const userData = requestUser.dataValues;
       if (!userData.secretId) {
@@ -38,7 +40,12 @@ const service = async function (req, res, next) {
         secretId: req.body.secretId,
       };
       const requestDB = await User.create(payload);
-      res.response = { msg: "akun berhasil tercatat", data: requestDB, etc: addJWT(requestDB) };
+      freeMembership(requestDB.id, 30);
+      res.response = {
+        msg: "akun berhasil tercatat",
+        data: requestDB,
+        etc: addJWT(requestDB),
+      };
     }
   } catch (err) {
     res.response = {
