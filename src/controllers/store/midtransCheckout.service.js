@@ -1,3 +1,4 @@
+const { default: axios } = require("axios");
 const midtransClient = require("midtrans-client");
 const { v4: uuidv4 } = require("uuid");
 const {
@@ -92,15 +93,18 @@ module.exports = async (code, user, listCart, address = null) => {
     },
     item_details: list,
   };
-  const requestMidtrans = await snap.createTransaction(parameter);
+
   const dataOrder = {
     code: code,
     userId: user.id,
     price: total,
     type: address ? "store" : "subscription",
-    token: requestMidtrans.token,
-    url: requestMidtrans.redirect_url,
+    token: null,
+    url: null,
+    status: "pending",
+    paymentType: null,
   };
+
   const dataOrderDelivery = {
     ...address,
     addressId: address && address.addressId,
@@ -112,6 +116,28 @@ module.exports = async (code, user, listCart, address = null) => {
     delivery: (courier && courier.total) || 0,
     total,
   };
+
+  if (total > 0) {
+    const requestMidtrans = await snap.createTransaction(parameter);
+    dataOrder.token = requestMidtrans.token;
+    dataOrder.url = requestMidtrans.redirect_url;
+  }
   const createOrders = await createOrder(dataOrder, list, dataOrderDelivery);
-  return { requestMidtrans, createOrders };
+  if (total == 0) {
+    const payload = {
+      status_code: 200,
+      transaction_status: "settlement",
+      payment_type: "FREE",
+      order_id: code,
+    };
+    await axios.post("https://api.comika.media/api/payment/callback", payload);
+  }
+
+  return {
+    requestMidtrans: {
+      token: dataOrder.token,
+      redirect_url: dataOrder.url,
+    },
+    createOrders,
+  };
 };

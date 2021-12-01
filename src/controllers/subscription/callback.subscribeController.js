@@ -62,7 +62,7 @@ const callbackSubscribe = async (userId, longTime, t) => {
   sendNotification.create(
     userId,
     `MEMBERSHIP ACTIVATION`,
-    `Selamat, selama ${longTime} hari kedepan kamu akan menjadi member Comika Media.`,
+    `Selamat, selama ${longTime} hari kedepan kamu menjadi member Comika Media.`,
     "https://api.comika.media/uploads/comika/settlement.png",
     null,
     "informasi"

@@ -25,10 +25,17 @@ const service = async function (req, res, next) {
       throw new Error("Keranjang sedang kosong");
     }
     if (check.showAddress) {
-      const { detail, address } = await getAddressItem(req.auth.id, listProduct);
+      const { detail, address } = await getAddressItem(
+        req.auth.id,
+        listProduct
+      );
       if (address && detail.qty) {
-        if (courierId == null || courierId == undefined) throw new Error("Kurir tidak boleh kosong");
-        const listEstimateCost = await estimateCost(address.subdistrictId, detail.weight);
+        if (courierId == null || courierId == undefined)
+          throw new Error("Kurir tidak boleh kosong");
+        const listEstimateCost = await estimateCost(
+          address.subdistrictId,
+          detail.weight
+        );
         const courier = listEstimateCost[courierId];
         if (!courier) {
           throw new Error("Kurir tidak ditemukan");
@@ -44,7 +51,10 @@ const service = async function (req, res, next) {
         if (check.promo) {
           check.cart.push(check.promo);
         }
-        res.response = { status: 400, msg: "silahkan mengisi alamat terlebih dahulu" };
+        res.response = {
+          status: 400,
+          msg: "silahkan mengisi alamat terlebih dahulu",
+        };
       }
     } else {
       if (check.promo) {
@@ -81,22 +91,34 @@ const transactionHandler = async (user, listCart, address = null) => {
   const code = generateCode(user.name);
   let listProduct = [];
   listCart.map((item) => {
-    if (item.type == "product" || item.type == "subscription") listProduct.push(item.id);
+    if (item.type == "product" || item.type == "subscription")
+      listProduct.push(item.id);
   });
-  const { requestMidtrans, createOrders } = await midtransCheckout(code, user, listCart, address);
+  const { requestMidtrans, createOrders } = await midtransCheckout(
+    code,
+    user,
+    listCart,
+    address
+  );
   await CartTemp.destroy({ where: { id: { [Op.in]: listProduct } } });
   const dataOrder = createOrders.dataValues;
-  notification(user, listCart, requestMidtrans.redirect_url, dataOrder);
-  return { msg: "silahkan lanjutkan pembayaran", data: requestMidtrans };
+  if (requestMidtrans.token) {
+    notification(user, listCart, requestMidtrans.redirect_url, dataOrder);
+    return { msg: "silahkan lanjutkan pembayaran", data: requestMidtrans };
+  }
+  return { msg: "transaksi kamu berhasil dan lunas", data: requestMidtrans };
 };
 
 const generateCode = (name) => {
   const parseName = aiueo(name.split(" ")[0]);
-  const code = moment().format("ssmm-hhD") + `${parseName}-` + moment().format("MMYY");
+  const code =
+    moment().format("ssmm-hhD") + `${parseName}-` + moment().format("MMYY");
   return code;
 };
 
-const validation = [query("product", "produk tidak boleh kosong").notEmpty().isLength({ min: 1 })];
+const validation = [
+  query("product", "produk tidak boleh kosong").notEmpty().isLength({ min: 1 }),
+];
 
 const aiueo = (val) => val.replace(/[ \a\i\u\o\e]/gi, "").toUpperCase();
 
