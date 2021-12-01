@@ -8,8 +8,7 @@ const service = async function (req, res, next) {
     let limit = 10;
     let offset = 0;
     let order = [
-      ["isRead", "ASC"],
-      ["createdAt", "ASC"],
+      ["createdAt", "DESC"],
     ];
     const where = { userId: req.auth.id };
     if (req.query.type == "transaksi") {

@@ -1,9 +1,17 @@
 const midtransClient = require("midtrans-client");
 const { v4: uuidv4 } = require("uuid");
-const { Order, OrderDetails, OrderDelivery, sequelize } = require("../../models");
+const {
+  Order,
+  OrderDetails,
+  OrderDelivery,
+  sequelize,
+} = require("../../models");
 const snap = new midtransClient.Snap({
   isProduction: process.env.MIDTRANS_ENV == "production" ? true : false,
-  serverKey: process.env.MIDTRANS_ENV == "production" ? process.env.MIDTRANS_KEY : process.env.MIDTRANS_KEY_DEV,
+  serverKey:
+    process.env.MIDTRANS_ENV == "production"
+      ? process.env.MIDTRANS_KEY
+      : process.env.MIDTRANS_KEY_DEV,
 });
 
 const setupItemDetail = (listCart) => {
@@ -22,8 +30,10 @@ const setupItemDetail = (listCart) => {
     } else {
       subtotal += parseInt(item.total);
     }
-    weight += parseInt(item.weight);
-    qty += parseInt(item.qty);
+    if (item.type == "product") {
+      qty += parseInt(item.qty);
+      weight += parseInt(item.weight);
+    }
     return {
       id: item.id,
       productId: item.productId,
@@ -50,7 +60,10 @@ const createOrder = async (payload, listCart, dataOrderDelivery) => {
   if (dataOrderDelivery.addressId) {
     payload.OrderDelivery = dataOrderDelivery;
     const requestDB = await Order.create(payload, {
-      include: [{ model: OrderDetails, as: "details" }, { model: OrderDelivery }],
+      include: [
+        { model: OrderDetails, as: "details" },
+        { model: OrderDelivery },
+      ],
     });
     return requestDB;
   } else {
@@ -61,7 +74,8 @@ const createOrder = async (payload, listCart, dataOrderDelivery) => {
   }
 };
 module.exports = async (code, user, listCart, address = null) => {
-  const { list, weight, qty, subtotal, total, courier } = setupItemDetail(listCart);
+  const { list, weight, qty, subtotal, total, courier } =
+    setupItemDetail(listCart);
   let parameter = {
     transaction_details: {
       order_id: code,
