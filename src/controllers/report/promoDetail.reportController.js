@@ -1,4 +1,4 @@
-const { OrderDetails, Sequelize, Product } = require("../../models");
+const { OrderDetails, Sequelize, Product, Order } = require("../../models");
 const { setRupiah } = require("../../helpers/currency");
 const { Op } = Sequelize;
 
@@ -12,20 +12,57 @@ const service = async function (req, res, next) {
         [Sequelize.fn("sum", Sequelize.col("quantity")), "qty"],
         [Sequelize.fn("sum", Sequelize.col("total")), "total"],
         [
-          Sequelize.fn("date_format", Sequelize.fn("min", Sequelize.col("OrderDetails.created_at")), "%d %M %Y"),
+          Sequelize.fn(
+            "date_format",
+            Sequelize.fn("min", Sequelize.col("OrderDetails.created_at")),
+            "%d %M %Y"
+          ),
           "startDate",
         ],
         [
-          Sequelize.fn("date_format", Sequelize.fn("max", Sequelize.col("OrderDetails.created_at")), "%d %M %Y"),
+          Sequelize.fn(
+            "date_format",
+            Sequelize.fn("max", Sequelize.col("OrderDetails.created_at")),
+            "%d %M %Y"
+          ),
           "lastDate",
         ],
-        [Sequelize.fn("date_format", Sequelize.col("OrderDetails.created_at"), "%Y-%m"), "created"],
-        [Sequelize.fn("week", Sequelize.col("OrderDetails.created_at")), "week"],
+        [
+          Sequelize.fn(
+            "date_format",
+            Sequelize.col("OrderDetails.created_at"),
+            "%Y-%m"
+          ),
+          "created",
+        ],
+        [
+          Sequelize.fn("week", Sequelize.col("OrderDetails.created_at")),
+          "week",
+        ],
       ],
-      group: ["product_id", "created", "week"],
-      order: [[Sequelize.fn("date_format", Sequelize.col("OrderDetails.created_at"), "%Y-%m"), "ASC"]],
+      group: ["id", "week", "created"],
+      order: [
+        [
+          Sequelize.fn(
+            "date_format",
+            Sequelize.col("OrderDetails.created_at"),
+            "%Y-%m"
+          ),
+          "ASC",
+        ],
+      ],
       where: { "$Product.id$": req.params.id, type: "discount" },
-      include: { attributes: [], model: Product },
+      include: [
+        {
+          attributes: [],
+          model: Order,
+          as: "Order",
+          where: {
+            status: "settlement",
+          },
+        },
+        { attributes: [], model: Product },
+      ],
     });
     requestDB.map((product) => {
       if (product.price > 100) {
