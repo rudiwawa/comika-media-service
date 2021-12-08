@@ -1,12 +1,19 @@
 const nodemailer = require("nodemailer");
-const { google } = require("googleapis");
 const { SendEmail } = require("../models");
 
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL,
+    pass: "mpugandring1416",
+  },
+});
+
 const mailOptions = {
-  from: "[no-reply] Redaksi Comika Media <redaksi@comika.media>",
+  from: "[no-reply] Register-user <ghanyersa24@gmail.com>",
   to: "ghanyersa24@gmail.com",
   subject: "COMIKA INFO",
-  html: "",
+  html: "<h2>Hai</h2>",
 };
 
 const createTemplate = (content) => {
@@ -84,7 +91,10 @@ const createTemplate = (content) => {
 
 const send = async ({ to, subject, body }) => {
   if (to) mailOptions.to = to;
-  if (subject) mailOptions.subject = "COMIKA INFO : " + subject;
+  if (subject) {
+    mailOptions.subject = "COMIKA INFO : " + subject;
+    mailOptions.from = "[no-reply] " + subject;
+  }
   if (body) mailOptions.html = createTemplate(body);
 
   const recordSendEmail = {
@@ -92,38 +102,15 @@ const send = async ({ to, subject, body }) => {
     subject: mailOptions.subject,
     body,
     success: true,
-    msg: "",
   };
-
   try {
-    const oauthEmail = new google.auth.OAuth2(
-      process.env.CLIENT_ID,
-      process.env.CLIENT_SECRET,
-      process.env.REDIRECT_URL
-    );
-    oauthEmail.setCredentials({ refresh_token: process.env.REFRESH_TOKEN });
-    const accessToken = await oauthEmail.getAccessToken();
-    const payloadTransporter = {
-      sevice: "gmail",
-      auth: {
-        type: "OAuth2",
-        email: "ghanyersa24@gmail.com",
-        clientId: process.env.CLIENT_ID,
-        clientSecret: process.env.CLIENT_SECRET,
-        refreshToken:
-          "1//04rKurgbP8OEOCgYIARAAGAQSNwF-L9Ir2OSKN7UbdM0myQyDN81xUsK4zGOGeDoh8jka1qySHvNS6qpWSfCDmwGuZXu4Mgzg4wM",
-        accessToken,
-      },
-    };
-
-    const transporter = nodemailer.createTransport(payloadTransporter);
     const sendEmail = await transporter.sendMail(mailOptions);
-    console.log(sendEmail);
+    SendEmail.create(recordSendEmail);
     return sendEmail;
   } catch (error) {
-    // recordSendEmail.success = false;
-    // recordSendEmail.msg = error.message;
-    // SendEmail.create(recordSendEmail);
+    recordSendEmail.success = false;
+    recordSendEmail.msg = error.message;
+    SendEmail.create(recordSendEmail);
     throw new Error(`${error.message}`);
   }
 };
