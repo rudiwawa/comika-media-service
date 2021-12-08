@@ -40,12 +40,12 @@ module.exports = (sequelize, DataTypes) => {
         get() {
           switch (this.getDataValue("type")) {
             case "promo":
-              return "https://api.comika.media/uploads/comika/promo.png";
+              return "https://api.comika.media/uploads/comika/icons/promo.png";
             case "transaksi":
-              return "https://api.comika.media/uploads/comika/transaksi.png";
+              return "https://api.comika.media/uploads/comika/icons/transaksi.png";
             case "informasi":
             default:
-              return "https://api.comika.media/uploads/comika/informasi.png";
+              return "https://api.comika.media/uploads/comika/icons/informasi.png";
           }
         },
       },

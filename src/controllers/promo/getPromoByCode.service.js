@@ -26,7 +26,7 @@ const implementPromo = (promo, listCart) => {
     id: uuidv5(),
     productId: promo.id,
     qty: 1,
-    img: "https://api.comika.media/uploads/comika/icon.png",
+    img: "https://api.comika.media/uploads/comika/discount.png",
     note: null,
     type: promo.type,
     category: promo.category,

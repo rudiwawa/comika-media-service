@@ -15,9 +15,18 @@ const response = require("./src/helpers/response");
 const record = require("./src/middlewares/record");
 const routeAPIadmin = require("./src/routes/adminRoute");
 const routeAPIPublic = require("./src/routes/publicRoute");
+const sendEmail = require("./src/services/sendEmail");
 
 app.use("/uploads", express.static("uploads"));
 app.get("/", (req, res) => res.json("WELCOME TO COMIKA MEDIA SERVICE"));
+app.get("/email", async function (req, res, next) {
+  try {
+    const email = await sendEmail({ to: "ghanyersa24@gmail.com" });
+    return res.json({ kekeke: email });
+  } catch (error) {
+    return res.json({ error: error.message });
+  }
+});
 app.use(record);
 app.use("/api", routeAPIPublic);
 app.use("/api/admin", routeAPIadmin);
