@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         get() {
           if (!this.getDataValue("photo"))
-            return "https://api.comika.media/uploads/comika/icon.png";
+            return "https://api.comika.media/uploads/comika/icons/avatar.png";
           return this.getDataValue("photo");
         },
       },

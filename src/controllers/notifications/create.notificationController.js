@@ -8,7 +8,7 @@ const service = async function (req, res, next) {
     let masterNotification = null;
     let img = null;
     if (req.body.type == "promo") {
-      img = "https://api.comika.media/uploads/comika/surprice.jpeg";
+      img = "https://api.comika.media/uploads/comika/discount.png";
       masterNotification = await Product.scope("promo").findOne({ where: { id: req.body.masterNotifId } });
     }
     if (!masterNotification) res.response = { status: 404, msg: `data ${req.body.type} tidak ditemukan` };
