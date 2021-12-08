@@ -73,7 +73,7 @@ const addOngkirToCart = (cart, ongkir) => {
     id: uuidv4(),
     productId: "0734f6b2-6b4c-45b9-be8c-d1aaf6903373",
     qty: 1,
-    img: "http://api.comika.media/uploads/comika/icon.png",
+    img: "http://api.comika.media/uploads/comika/icons/ongkir.png",
     note: null,
     type: "ongkir",
     category: "Nominal",
