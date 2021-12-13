@@ -16,9 +16,15 @@ const service = async function (req, res, next) {
       publishedAt: req.body.publishedAt,
     };
     const updateProduct = await Product.update(payload, { where: { id: req.body.id } });
-    const clearRelation = StoreProductSource.destroy({ where: { productId: req.body.id } });
-    const product = await Product.findOne({ where: { id: req.body.id } });
-    product.addImages(req.body.images);
+    StoreProductSource.destroy({ where: { productId: req.body.id } });
+    const productSources = req.body.images.map((item, i) => {
+      return {
+        productId: req.body.id,
+        sourceId: item.sourceId,
+        thumbnail: i === 0 ? true : false,
+      };
+    });
+    StoreProductSource.bulkCreate(productSources);
     res.response = { msg: `Produk store berhasil diubah`, data: req.body };
   } catch (error) {
     res.response = {

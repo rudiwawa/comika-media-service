@@ -13,14 +13,12 @@ const service = async function (req, res, next) {
       publishedAt: req.body.publishedAt,
     };
     const createProduct = await Product.create(payload);
-    const payloadImage = req.body.images.map((item) => {
-      item.product_id = createProduct.dataValues.id;
-      item.source_id = item.sourceId;
-      delete item.sourceId;
+    const payloadImage = req.body.images.map((item, i) => {
+      item.productId = createProduct.dataValues.id;
+      item.thumbnail = i === 0 ? true : false;
       return item;
     });
-    console.log(payloadImage);
-    await StoreProductSource.bulkCreate(payloadImage);
+    StoreProductSource.bulkCreate(payloadImage);
     res.response = {
       msg: `Source berhasil ditambahkan`,
       data: req.body,
