@@ -3,10 +3,15 @@ const { JWT, Record } = require("../models");
 
 const checkToken = (req, res, next) => {
   const token = req.get("Authorization");
+  // return res.json({ token });
   if (!token) return res.status(401).json({ msg: "Unauthorized." });
   jwt.verify(token, process.env.KEY_USER, async (err, decode) => {
-    if (err) return res.status(401).json({ msg: err.message });
-    else {
+    if (err) {
+      if (err.message === "jwt malformed") {
+        return res.status(403).json({ msg: err.message });
+      }
+      return res.status(401).json({ msg: err.message });
+    } else {
       try {
         const requestDB = await JWT.findOne({ where: { token } });
         if (!requestDB) {
