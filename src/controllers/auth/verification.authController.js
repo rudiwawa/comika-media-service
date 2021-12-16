@@ -25,7 +25,7 @@ const service = async function (req, res, next) {
     });
     await User.update({ isVerified: true }, { where: { id } });
     sendEmail({ to: decode.email, body: bodyWelcoming(decode.name) });
-    freeMember(id, 30);
+    freeMembership(id, 30);
     return res.send(
       `<script>location.replace("https://comika.media/")</script>`
     );
