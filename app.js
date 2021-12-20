@@ -15,7 +15,6 @@ const response = require("./src/helpers/response");
 const record = require("./src/middlewares/record");
 const routeAPIadmin = require("./src/routes/adminRoute");
 const routeAPIPublic = require("./src/routes/publicRoute");
-const sendEmail = require("./src/services/sendEmail");
 
 app.use("/uploads", express.static("uploads"));
 app.get("/", (req, res) => res.json("WELCOME TO COMIKA MEDIA SERVICE"));
