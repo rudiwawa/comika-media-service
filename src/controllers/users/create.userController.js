@@ -23,7 +23,7 @@ const service = async (req, res, next) => {
       msg: `data ${body.name} berhasil ditambahkan.`,
       data: requestDB,
     };
-    sendEmail({ to: req.body.email, html: greeting(body.name, body.role) });
+    // sendEmail({ to: req.body.email, html: greeting(body.name, body.role) });
   } catch (err) {
     res.response = { status: 500, msg: err.message };
   }
