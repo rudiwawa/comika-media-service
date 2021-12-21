@@ -9,7 +9,7 @@ const service = async function (req, res, next) {
     isDekstop: req.body.isDekstop,
   };
   if (req.file) {
-    payload.img = req.file.path;
+    payload.img = req.urlApps + req.file.path;
   }
   try {
     const requestDB = await Jumbotron.update(payload, {
