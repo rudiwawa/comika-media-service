@@ -9,6 +9,7 @@ const service = async function (req, res, next) {
       category: req.body.category,
       price: req.body.price,
       type: "product",
+      redirect: req.body.redirect,
       isPublish: req.body.isPublish,
       publishedAt: req.body.publishedAt,
     };

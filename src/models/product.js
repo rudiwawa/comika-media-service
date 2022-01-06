@@ -144,6 +144,17 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      redirect: DataTypes.STRING,
+      isRedirect: {
+        type: DataTypes.VIRTUAL,
+        defaultValue: false,
+        get() {
+          if (this.getDataValue("redirect")) {
+            return true;
+          }
+          return false;
+        },
+      },
       publishedAt: {
         type: DataTypes.DATE,
         defaultValue: Sequelize.NOW,

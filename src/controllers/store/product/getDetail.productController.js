@@ -1,7 +1,7 @@
 const { Product, StoreProductSource, Source } = require("../../../models");
 const service = async function (req, res, next) {
   try {
-    const requestDB = await Product.findOne({
+  const requestDB = await Product.findOne({
       where: { type: "product", id: req.params.id },
       include: [
         {

@@ -11,6 +11,7 @@ const service = async function (req, res, next) {
       name: req.body.name,
       description: req.body.description,
       type: "product",
+      redirect: req.body.redirect,
       categoryId: req.body.categoryId,
       isPublish: req.body.isPublish,
       publishedAt: req.body.publishedAt,
