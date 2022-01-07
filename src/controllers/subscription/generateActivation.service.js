@@ -2,7 +2,8 @@ const {
   Subscription,
   Sequelize: { Op },
 } = require("../../models");
-const moment = require("moment");
+const moment = require("moment-timezone");
+const tz = moment().tz("Asia/Jakarta");
 const { v4: uuidv4 } = require("uuid");
 
 const generateActivation = async (userId, day = 0, t) => {
@@ -24,12 +25,12 @@ const getStartSubscribe = async (userId) => {
     where: {
       userId,
       availableOn: {
-        [Op.gte]: moment(),
+        [Op.gte]: tz,
       },
     },
   });
 
-  return lastDate || moment().format("YYYY-MM-DD");
+  return lastDate || tz.format("YYYY-MM-DD");
 };
 
 module.exports = generateActivation;

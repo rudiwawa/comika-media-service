@@ -7,7 +7,7 @@ const {
 // const moment = require("moment");
 // timezone jakarta
 const moment = require("moment-timezone");
-const now = moment().tz("Asia/Jakarta").add(7, "hours").format("YYYY-MM-DD HH:mm:ss");
+const now = moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss");
 const currency = require("../helpers/currency");
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
