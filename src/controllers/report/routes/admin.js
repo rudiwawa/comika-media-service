@@ -9,5 +9,6 @@ router.use(checkToken);
 router.get("/data/:report", productReport.service);
 router.get("/product/:id", productDetailReport.service);
 router.get("/promo/:id", promoDetailReport.service);
+router.get("/subscription", require("../reportUser.subscribeController").service);
 
 module.exports = router;

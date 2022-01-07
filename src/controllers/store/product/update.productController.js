@@ -15,6 +15,7 @@ const service = async function (req, res, next) {
       categoryId: req.body.categoryId,
       isPublish: req.body.isPublish,
       publishedAt: req.body.publishedAt,
+      availableTo: req.body.availableTo,
     };
     const updateProduct = await Product.update(payload, { where: { id: req.body.id } });
     StoreProductSource.destroy({ where: { productId: req.body.id } });

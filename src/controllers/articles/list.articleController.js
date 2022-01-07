@@ -1,5 +1,7 @@
 const { Article, Sequelize, sequelize } = require("../../models");
-const moment = require("moment");
+const moment = require("moment-timezone");
+// timezone
+moment().tz("Asia/Jakarta").format();
 const service = async function (req, res, next) {
   try {
     let limit = 10;
@@ -60,9 +62,6 @@ const service = async function (req, res, next) {
             ],
       },
       where: {
-        publishedAt: {
-          [Sequelize.Op.lte]: moment().add(7, "hours"),
-        },
         title: {
           [Sequelize.Op.substring]: search,
         },

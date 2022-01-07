@@ -12,6 +12,7 @@ const service = async function (req, res, next) {
       redirect: req.body.redirect,
       isPublish: req.body.isPublish,
       publishedAt: req.body.publishedAt,
+      availableTo: req.body.availableTo,
     };
     const createProduct = await Product.create(payload);
     const payloadImage = req.body.images.map((item, i) => {
