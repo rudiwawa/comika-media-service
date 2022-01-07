@@ -1,6 +1,6 @@
 const { Article, Visitor, Subscription, sequelize } = require("../../models");
 const moment = require("moment-timezone");
-const now = moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss");
+// const now = moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss");
 const service = async (req, res, next) => {
   try {
     const payload = {
@@ -40,7 +40,9 @@ const cutContent = (content) => {
 };
 
 const isUserPremium = async (userId) => {
-  const isSubscribe = await Subscription.findOne({ where: { userId, availableOn: now } });
+  const isSubscribe = await Subscription.findOne({
+    where: { userId, availableOn: moment().tz("Asia/Jakarta").format("YYYY-MM-DD") },
+  });
   return isSubscribe ? true : false;
 };
 
