@@ -1,4 +1,5 @@
 const { Product, Category, StoreProductSource, Source, Sequelize } = require("../../models");
+const moment = require("moment");
 const service = async function (req, res, next) {
   try {
     let limit = 3;
@@ -21,6 +22,12 @@ const service = async function (req, res, next) {
         [Sequelize.Op.substring]: search,
       },
       type: "product",
+      publishedAt: {
+        [Sequelize.Op.lte]: moment().add(7, "hours"),
+      },
+      availableTo: {
+        [Sequelize.Op.gte]: moment().add(7, "hours"),
+      },
     };
     if (req.query.category) where.category = req.query.category;
 

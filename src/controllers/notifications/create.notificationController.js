@@ -1,4 +1,8 @@
-const { Notification, Product } = require("../../models");
+const {
+  Notification,
+  Product,
+  Sequelize: { Op },
+} = require("../../models");
 const { v4: uuidv4 } = require("uuid");
 const { body } = require("express-validator");
 const moment = require("moment");
@@ -9,7 +13,17 @@ const service = async function (req, res, next) {
     let img = null;
     if (req.body.type == "promo") {
       img = "https://api.comika.media/uploads/comika/discount.png";
-      masterNotification = await Product.scope("promo").findOne({ where: { id: req.body.masterNotifId } });
+      masterNotification = await Product.scope("promo").findOne({
+        where: {
+          id: req.body.masterNotifId,
+          publishedAt: {
+            [Op.lte]: moment().add(7, "hours"),
+          },
+          availableTo: {
+            [Op.gte]: moment().add(7, "hours"),
+          },
+        },
+      });
     }
     if (!masterNotification) res.response = { status: 404, msg: `data ${req.body.type} tidak ditemukan` };
     else {

@@ -1,10 +1,22 @@
-const { Product } = require("../../models");
+const {
+  Product,
+  Sequelize: { Op },
+} = require("../../models");
 const { setRupiah } = require("../../helpers/currency");
 const { v4: uuidv5 } = require("uuid");
+const moment = require("moment");
 
 const getPromoByCode = async function (code) {
   const requestDB = await Product.scope("promoActive").findOne({
-    where: { slug: code },
+    where: {
+      slug: code,
+      publishedAt: {
+        [Op.lte]: moment().add(7, "hours"),
+      },
+      availableTo: {
+        [Op.gte]: moment().add(7, "hours"),
+      },
+    },
   });
   if (requestDB) {
     return requestDB.dataValues;

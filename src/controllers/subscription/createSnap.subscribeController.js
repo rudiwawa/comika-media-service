@@ -1,5 +1,9 @@
 const { body } = require("express-validator");
-const { User, Product } = require("../../models");
+const {
+  User,
+  Product,
+  Sequelize: { Op },
+} = require("../../models");
 const midtransSnapUi = require("./midtransSubscribe.service");
 const sendEmail = require("../../services/sendEmail");
 const sendNotification = require("../../services/sendNotification");
@@ -66,7 +70,15 @@ const validation = [
     .custom(async (value, { req }) => {
       const requestDB = await Product.scope("subscription").findOne({
         attributes: ["id", "name", "price", ["capacity", "longTime"], "rupiah"],
-        where: { id: value },
+        where: {
+          id: value,
+          publishedAt: {
+            [Op.lte]: moment().add(7, "hours"),
+          },
+          availableTo: {
+            [Op.gte]: moment().add(7, "hours"),
+          },
+        },
       });
       if (!requestDB) throw new Error("subscription plan tidak ditemukan");
       requestDB.dataValues.code = generateCode(requestDB.name);

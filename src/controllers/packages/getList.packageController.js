@@ -1,9 +1,21 @@
-const { Product } = require("../../models");
+const {
+  Product,
+  Sequelize: { Op },
+} = require("../../models");
+const moment = require("moment");
 const service = async function (req, res, next) {
   try {
     const requestDB = await Product.scope("subscription").findAll({
       attributes: ["id", "name", "price", "rupiah", ["capacity", "longTime"], "description"],
       order: [["sequence", "asc"]],
+      where: {
+        publishedAt: {
+          [Op.lte]: moment().add(7, "hours"),
+        },
+        availableTo: {
+          [Op.gte]: moment().add(7, "hours"),
+        },
+      },
     });
     if (req.params.id) {
       if (requestDB.length) {

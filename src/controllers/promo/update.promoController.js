@@ -37,7 +37,19 @@ const validation = [
     .notEmpty()
     .custom((value, { req }) => {
       return Product.scope("promoActive")
-        .findOne({ where: { slug: value, type: "discount", id: { [Op.ne]: req.body.id } } })
+        .findOne({
+          where: {
+            slug: value,
+            type: "discount",
+            publishedAt: {
+              [Op.lte]: moment().add(7, "hours"),
+            },
+            availableTo: {
+              [Op.gte]: moment().add(7, "hours"),
+            },
+            id: { [Op.ne]: req.body.id },
+          },
+        })
         .then((promo) => {
           if (promo) {
             return Promise.reject("kode promo sudah digunakan");
