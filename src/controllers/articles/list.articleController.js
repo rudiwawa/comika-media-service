@@ -62,6 +62,9 @@ const service = async function (req, res, next) {
         title: {
           [Sequelize.Op.substring]: search,
         },
+        publishedAt: {
+          [Sequelize.Op.lte]: moment().add(7, "hours"),
+        },
       },
       order,
       limit,
