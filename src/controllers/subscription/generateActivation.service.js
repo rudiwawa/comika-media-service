@@ -2,8 +2,7 @@ const {
   Subscription,
   Sequelize: { Op },
 } = require("../../models");
-const moment = require("moment-timezone");
-const tz = moment().tz("Asia/Jakarta");
+const moment = require("moment");
 const { v4: uuidv4 } = require("uuid");
 
 const generateActivation = async (userId, day = 0, t) => {
@@ -13,7 +12,7 @@ const generateActivation = async (userId, day = 0, t) => {
     listActivation.push({
       id: uuidv4(),
       userId,
-      availableOn: moment(startDate).add(7, "hours").add(index, "days"),
+      availableOn: moment(startDate).add(index, "days"),
     });
   }
   const requestDB = await Subscription.bulkCreate(listActivation, { transaction: t });
@@ -25,12 +24,12 @@ const getStartSubscribe = async (userId) => {
     where: {
       userId,
       availableOn: {
-        [Op.gte]: tz,
+        [Op.gte]: moment().add(7, "hours"),
       },
     },
   });
 
-  return lastDate || tz.format("YYYY-MM-DD");
+  return lastDate || moment().format("YYYY-MM-DD");
 };
 
 module.exports = generateActivation;

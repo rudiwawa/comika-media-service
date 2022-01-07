@@ -4,9 +4,7 @@ const {
   Sequelize: { Op },
   Sequelize,
 } = require("sequelize");
-// const moment = require("moment");
-// timezone jakarta
-const moment = require("moment-timezone");
+const moment = require("moment");
 const currency = require("../helpers/currency");
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
@@ -43,10 +41,10 @@ module.exports = (sequelize, DataTypes) => {
           type: "discount",
           isPublish: true,
           publishedAt: {
-            [Op.lte]: moment().tz("Asia/Jakarta"),
+            [Op.lte]: moment().add(7, "hours"),
           },
           availableTo: {
-            [Op.gte]: moment().tz("Asia/Jakarta"),
+            [Op.gte]: moment().add(7, "hours"),
           },
         },
       });
@@ -55,10 +53,10 @@ module.exports = (sequelize, DataTypes) => {
           type: "subscription",
           isPublish: true,
           publishedAt: {
-            [Op.lte]: moment().tz("Asia/Jakarta"),
+            [Op.lte]: moment().add(7, "hours"),
           },
           availableTo: {
-            [Op.gte]: moment().tz("Asia/Jakarta"),
+            [Op.gte]: moment().add(7, "hours"),
           },
         },
       });
@@ -67,10 +65,10 @@ module.exports = (sequelize, DataTypes) => {
           [Op.or]: [{ type: "product" }, { type: "subscription" }],
           isPublish: true,
           publishedAt: {
-            [Op.lte]: moment().tz("Asia/Jakarta"),
+            [Op.lte]: moment().add(7, "hours"),
           },
           availableTo: {
-            [Op.gte]: moment().tz("Asia/Jakarta"),
+            [Op.gte]: moment().add(7, "hours"),
           },
         },
         include: [

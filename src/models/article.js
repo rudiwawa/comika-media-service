@@ -1,10 +1,7 @@
 "use strict";
 const { Model, Sequelize } = require("sequelize");
 const { Op } = Sequelize;
-// timezone
-// const moment = require("moment");
-const moment = require("moment-timezone");
-// const now = moment().tz("Asia/Jakarta").format("YYYY-MM-DD HH:mm:ss");
+const moment = require("moment");
 
 module.exports = (sequelize, DataTypes) => {
   class Article extends Model {
@@ -57,7 +54,7 @@ module.exports = (sequelize, DataTypes) => {
         where: {
           isPublish: true,
           publishedAt: {
-            [Op.lte]: moment().tz("Asia/Jakarta"),
+            [Op.lte]: moment().add(7, "hours"),
           },
         },
       });

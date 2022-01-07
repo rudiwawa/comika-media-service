@@ -1,7 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
-const moment = require("moment-timezone");
-const tz = moment().tz("Asia/Jakarta");
+const moment = require("moment");
 const { setRupiah } = require("../helpers/currency");
 module.exports = (sequelize, DataTypes) => {
   class Promo extends Model {
@@ -34,11 +33,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       dateFrom: {
         type: DataTypes.DATE,
-        defaultValue: tz.format("YYYY-MM-DD HH:mm"),
+        defaultValue: moment().format("YYYY-MM-DD HH:mm"),
       },
       dateTo: {
         type: DataTypes.DATE,
-        defaultValue: tz.add(1, "months").format("YYYY-MM-DD HH:mm"),
+        defaultValue: moment().add(1, "months").format("YYYY-MM-DD HH:mm"),
       },
       isAvailable: {
         type: DataTypes.BOOLEAN,
