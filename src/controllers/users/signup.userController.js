@@ -15,10 +15,7 @@ const service = async function (req, res, next) {
   try {
     const payloadRegister = {
       id,
-      token: jwt.sign(
-        { email: req.body.email, name: req.body.name },
-        "SIGNUP-COMIKA-MEDIA-PRO"
-      ),
+      token: jwt.sign({ email: req.body.email, name: req.body.name }, "SIGNUP-COMIKA-MEDIA-PRO"),
     };
     const register = await Register.create(payloadRegister);
     const userData = await User.create(payload);
@@ -37,14 +34,11 @@ const service = async function (req, res, next) {
 };
 
 const emailVerification = (name, token) => {
-  const web =
-    process.env.NODE_ENV === "production"
-      ? "https://api.comika.media/api"
-      : "http://localhost:3010/api";
+  const web = process.env.NODE_ENV === "production" ? "https://api.comika.media/api" : "http://localhost:3010/api";
   return `
   <p>Halo ${name}</p>
   <p>Silakan tekan tombol di bawah ini untuk melakukan verifikasi email.</p>
-  <a style="color:white" href="${web}/verification/${token}" class="w-100 btn text-decoration-none">Verifikasi Email</a>`;
+  <a style="color:white" href="${web}/verification/${token}" class="w-100 btn text-decoration-none">Verifikasi Email</a> <br><br> atau klik <a href="${web}/verification/${token}" class="w-100 text-decoration-none"> disini</a>. `;
 };
 
 const validation = [

@@ -1,20 +1,15 @@
 const nodemailer = require("nodemailer");
 const { SendEmail } = require("../models");
+const SibApiV3Sdk = require("sib-api-v3-sdk");
+let defaultClient = SibApiV3Sdk.ApiClient.instance;
+let apiKey = defaultClient.authentications["api-key"];
+apiKey.apiKey = process.env.KEY_EMAIL;
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL,
-    pass: "mpugandring1416",
-  },
-});
+let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
-const mailOptions = {
-  from: "[no-reply] Register-user <ghanyersa24@gmail.com>",
-  to: "ghanyersa24@gmail.com",
-  subject: "COMIKA INFO",
-  html: "<h2>Hai</h2>",
-};
+let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+
+sendSmtpEmail.sender = { name: "Comika Media", email: "redaksi@comika.media" };
 
 const createTemplate = (content) => {
   return `
@@ -90,27 +85,27 @@ const createTemplate = (content) => {
 };
 
 const send = async ({ to, subject, body }) => {
-  if (to) mailOptions.to = to;
-  if (subject) {
-    mailOptions.subject = "COMIKA INFO : " + subject;
-    mailOptions.from = "[no-reply] " + subject;
-  }
-  if (body) mailOptions.html = createTemplate(body);
-
-  const recordSendEmail = {
-    email: mailOptions.to,
-    subject: mailOptions.subject,
-    body,
+  const payloadEmail = {
+    email: to,
+    subject: subject ? "COMIKA INFO : " + subject : "COMIKA INFO",
+    body: createTemplate(body),
     success: true,
   };
   try {
-    const sendEmail = await transporter.sendMail(mailOptions);
-    SendEmail.create(recordSendEmail);
+    if (!to) throw new Error("Email is required to send email. Please check your email");
+    if (!body) throw new Error("Body is required to send email. Please check your body");
+
+    sendSmtpEmail.to = [{ email: payloadEmail.email }];
+    sendSmtpEmail.subject = payloadEmail.subject;
+    sendSmtpEmail.htmlContent = payloadEmail.body;
+
+    const sendEmail = await apiInstance.sendTransacEmail(sendSmtpEmail);
+    await SendEmail.create(payloadEmail);
     return sendEmail;
   } catch (error) {
-    recordSendEmail.success = false;
-    recordSendEmail.msg = error.message;
-    SendEmail.create(recordSendEmail);
+    payloadEmail.success = false;
+    payloadEmail.msg = error.message;
+    SendEmail.create(payloadEmail);
     throw new Error(`${error.message}`);
   }
 };

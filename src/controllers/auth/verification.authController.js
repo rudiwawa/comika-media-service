@@ -14,7 +14,7 @@ const service = async function (req, res, next) {
     });
     if (!requestDB) {
       return res.status(404).json({
-        message: "Token not found",
+        message: "Token not registered",
       });
     }
     const { id } = requestDB;
