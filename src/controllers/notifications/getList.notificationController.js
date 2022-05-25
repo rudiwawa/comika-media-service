@@ -1,20 +1,18 @@
 const {
   Notification,
   Sequelize: { Op },
-} = require("../../models");
+} = require('../../models');
 
 const service = async function (req, res, next) {
   try {
     let limit = 10;
     let offset = 0;
-    let order = [
-      ["createdAt", "DESC"],
-    ];
+    let order = [['createdAt', 'DESC']];
     const where = { userId: req.auth.id };
-    if (req.query.type == "transaksi") {
+    if (req.query.type == 'transaksi') {
       where.type = req.query.type;
     } else {
-      where[Op.or] = [{ type: "informasi" }, { type: "promo" }];
+      where[Op.or] = [{ type: 'informasi' }, { type: 'promo' }];
     }
     if (req.query.limit && req.query.limit > 0) {
       limit = Number(req.query.limit);
@@ -23,7 +21,17 @@ const service = async function (req, res, next) {
       offset = Number(req.query.page - 1) * limit;
     }
     const requestDB = await Notification.findAll({
-      attributes: ["id", "img", "title", "isRead", "createdAt", "type", "typeIcon", "description"],
+      attributes: [
+        'id',
+        'img',
+        'title',
+        'isRead',
+        'createdAt',
+        'type',
+        'typeIcon',
+        'description',
+        'link',
+      ],
       where,
       order,
       limit,

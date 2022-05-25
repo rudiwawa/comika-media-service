@@ -1,5 +1,5 @@
-"use strict";
-const { Model, Sequelize } = require("sequelize");
+'use strict';
+const { Model, Sequelize } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Notification extends Model {
     /**
@@ -27,9 +27,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      link: DataTypes.STRING,
       type: {
-        type: DataTypes.ENUM(["transaksi", "promo", "informasi"]),
-        defaultValue: "transaksi",
+        type: DataTypes.ENUM(['transaksi', 'promo', 'informasi']),
+        defaultValue: 'transaksi',
       },
       userId: {
         type: DataTypes.UUID,
@@ -38,21 +39,21 @@ module.exports = (sequelize, DataTypes) => {
       typeIcon: {
         type: DataTypes.VIRTUAL,
         get() {
-          switch (this.getDataValue("type")) {
-            case "promo":
-              return "https://api.comika.media/uploads/comika/icons/promo.png";
-            case "transaksi":
-              return "https://api.comika.media/uploads/comika/icons/transaksi.png";
-            case "informasi":
+          switch (this.getDataValue('type')) {
+            case 'promo':
+              return 'https://api.comika.media/uploads/comika/icons/promo.png';
+            case 'transaksi':
+              return 'https://api.comika.media/uploads/comika/icons/transaksi.png';
+            case 'informasi':
             default:
-              return "https://api.comika.media/uploads/comika/icons/informasi.png";
+              return 'https://api.comika.media/uploads/comika/icons/informasi.png';
           }
         },
       },
     },
     {
       sequelize,
-      modelName: "Notification",
+      modelName: 'Notification',
     }
   );
   return Notification;

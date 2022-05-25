@@ -25,7 +25,7 @@ const service = async function (req, res, next) {
     await broadcastNotification(
       req.auth.name,
       payload.comment,
-      req.article.title,
+      req.article,
       payload.commentId,
       payload.userId
     );
@@ -61,7 +61,7 @@ const validation = [
 const broadcastNotification = async (
   name,
   comment,
-  articleName,
+  article,
   commentId,
   userParentCommentId
 ) => {
@@ -87,11 +87,12 @@ const broadcastNotification = async (
   // send notification to list user id
   sendNotification.bulkCreate(
     listUserReceiveNotification,
-    `${name} melakukan komentar di artikel ${articleName}`,
+    `${name} melakukan komentar di artikel ${article.title}`,
     `${name} said "${comment}"`,
     'https://api.comika.media/uploads/comika/icon.png',
     null,
-    'informasi'
+    'informasi',
+    `https://comika.media/posts/${article.slug}`
   );
 };
 const getListUserInComment = async (commentId, userParentCommentId) => {

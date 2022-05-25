@@ -26,7 +26,8 @@ const bulkCreate = async function (
   description,
   img,
   orderId,
-  type
+  type,
+  link
 ) {
   try {
     const payload = {
@@ -40,6 +41,7 @@ const bulkCreate = async function (
       type: type || 'transaksi',
       img: img || 'https://api.comika.media/uploads/comika/checkout.png',
       orderId,
+      link,
     };
     const payloads = listUserId.map((userId) => ({
       ...payload,
