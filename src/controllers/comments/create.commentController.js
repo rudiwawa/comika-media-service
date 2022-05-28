@@ -55,8 +55,6 @@ const validation = [
   body('comment')
     .notEmpty()
     .withMessage('komentar tidak boleh kosong')
-    .isLength({ min: 10 })
-    .withMessage('komentar minimal 10 karakter'),
 ];
 const broadcastNotification = async (
   name,
@@ -91,7 +89,7 @@ const broadcastNotification = async (
     `${name} said "${comment}"`,
     'https://api.comika.media/uploads/comika/icon.png',
     null,
-    'informasi',
+    'komentar',
     `https://comika.media/posts/${article.slug}`
   );
 };

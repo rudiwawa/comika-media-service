@@ -11,8 +11,17 @@ const service = async function (req, res, next) {
     const where = { userId: req.auth.id };
     if (req.query.type == 'transaksi') {
       where.type = req.query.type;
-    } else {
-      where[Op.or] = [{ type: 'informasi' }, { type: 'promo' }];
+    }
+    if (req.query.type == 'komentar') {
+      where.type = req.query.type;
+    }
+
+    if (!['transaksi', 'komentar'].includes(req.query.type)) {
+      where[Op.or] = [
+        { type: 'informasi' },
+        { type: 'promo' },
+        { type: 'komentar' },
+      ];
     }
     if (req.query.limit && req.query.limit > 0) {
       limit = Number(req.query.limit);
