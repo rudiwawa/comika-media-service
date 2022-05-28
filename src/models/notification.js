@@ -27,7 +27,20 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
-      link: DataTypes.STRING,
+      link: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        set(val) {
+          this.setDataValue('link', val);
+        },
+        get() {
+          const link = this.getDataValue('link');
+          if (link) {
+            return link;
+          }
+          return `https://comika.media/notification/${this.id}`;
+        },
+      },
       type: {
         type: DataTypes.ENUM(['transaksi', 'promo', 'informasi']),
         defaultValue: 'transaksi',

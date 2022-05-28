@@ -2,6 +2,7 @@ const { Notification } = require('../models');
 
 const create = async function (userId, title, description, img, orderId, type) {
   try {
+    type = type ? type : 'transaksi';
     const payload = {
       title,
       description: description
@@ -11,11 +12,32 @@ const create = async function (userId, title, description, img, orderId, type) {
         .substring(0, 120),
       descriptionHtml: description.replace(/  /gi, '').replace(/\n/gi, ''),
       userId,
-      type: type || 'transaksi',
+      type,
       img: img || 'https://api.comika.media/uploads/comika/checkout.png',
       orderId,
     };
-    return await Notification.create(payload);
+    const createNotif = await Notification.create(payload);
+    // update link notification with id notif
+    const where = {};
+    if (createNotif.type === 'transaksi') {
+      where = {
+        orderId,
+      };
+    } else {
+      where = {
+        id: createNotif.id,
+      };
+    }
+    await Order.update(
+      {
+        link: `https://comika.media/notification/${createNotif.id}`,
+      },
+      {
+        where,
+      }
+    );
+
+    return createNotif;
   } catch (error) {
     throw new Error(error.toString());
   }
