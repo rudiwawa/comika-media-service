@@ -88,7 +88,7 @@ const broadcastNotification = async (
     'https://api.comika.media/uploads/comika/icon.png',
     null,
     'komentar',
-    `/posts/${article.slug}`
+    `/posts/${article.slug}${commentId ? `#${commentId}` : ''}`
   );
 };
 const getListUserInComment = async (commentId, userParentCommentId) => {
