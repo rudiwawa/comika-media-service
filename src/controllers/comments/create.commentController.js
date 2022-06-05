@@ -52,9 +52,7 @@ const parentComment = async (commentId, articleId) => {
 };
 
 const validation = [
-  body('comment')
-    .notEmpty()
-    .withMessage('komentar tidak boleh kosong')
+  body('comment').notEmpty().withMessage('komentar tidak boleh kosong'),
 ];
 const broadcastNotification = async (
   name,
@@ -90,7 +88,7 @@ const broadcastNotification = async (
     'https://api.comika.media/uploads/comika/icon.png',
     null,
     'komentar',
-    `https://comika.media/posts/${article.slug}`
+    `/posts/${article.slug}`
   );
 };
 const getListUserInComment = async (commentId, userParentCommentId) => {
