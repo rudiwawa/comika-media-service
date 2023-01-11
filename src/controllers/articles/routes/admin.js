@@ -11,6 +11,7 @@ const updateArticle = require("../update.articleController");
 const deleteArticle = require("../delete.articleController");
 
 const tagRouter = require("../tags/routes/admin");
+const emailSubscriptionRouter = require("../email-subscription/routes/admin");
 
 router.use(checkToken);
 
@@ -20,5 +21,6 @@ router.get("/:id", getArticle.service);
 router.put("/", upload.single("banner"), updateArticle.validation, validator, updateArticle.service);
 router.delete("/:id", deleteArticle.service);
 router.use("/tags", tagRouter);
+router.use("/email-subscription", emailSubscriptionRouter);
 
 module.exports = router;

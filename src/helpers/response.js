@@ -5,7 +5,7 @@ const lastFunction = function (req, res) {
     const response = res.response;
     req.record.status = response.status || 200;
     req.record.msg = req.record.msg || response.msg;
-    Record.create(req.record);
+    // Record.create(req.record);
 
     if (req.method == "GET" && !response.msg) {
       if (!response.etc) return res.status(response.status || 200).json(response.data);
