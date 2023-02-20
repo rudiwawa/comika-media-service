@@ -9,19 +9,19 @@ const service = async (req, res, next) => {
     Visitor.create(payload);
     const article = req.article;
     article.withFlayer = false;
-    // if (req.auth) {
-    if (article.isPremium) {
-      if (req.auth && (await isUserPremium(req.auth.id))) {
-        res.response = { data: article };
-      } else {
-        article.withFlayer = true;
-        res.response = { data: limitReadArticle(article) };
-      }
-    } else res.response = { data: { ...article, withFlayer: false } };
-    // } else {
-    //   article.withFlayer = true;
-    //   res.response = { data: limitReadArticle(article) };
-    // }
+    if (req.auth) {
+      if (article.isPremium) {
+        if (req.auth && (await isUserPremium(req.auth.id))) {
+          res.response = { data: article };
+        } else {
+          article.withFlayer = true;
+          res.response = { data: limitReadArticle(article) };
+        }
+      } else res.response = { data: { ...article, withFlayer: false } };
+    } else {
+      article.withFlayer = true;
+      res.response = { data: limitReadArticle(article) };
+    }
   } catch (error) {
     res.response = { status: 500, msg: error.message };
   }
