@@ -9,21 +9,26 @@ const service = async (req, res, next) => {
     Visitor.create(payload);
     const article = req.article;
     article.withFlayer = false;
+    // if (req.auth) {
     if (article.isPremium) {
       if (req.auth && (await isUserPremium(req.auth.id))) {
         res.response = { data: article };
       } else {
         article.withFlayer = true;
-        res.response = { data: cannotAccessPremiun(article) };
+        res.response = { data: limitReadArticle(article) };
       }
     } else res.response = { data: { ...article, withFlayer: false } };
+    // } else {
+    //   article.withFlayer = true;
+    //   res.response = { data: limitReadArticle(article) };
+    // }
   } catch (error) {
     res.response = { status: 500, msg: error.message };
   }
   next();
 };
 
-const cannotAccessPremiun = (article) => {
+const limitReadArticle = (article) => {
   article.withFlayer = true;
   article.content = cutContent(article.content);
   return article;
@@ -39,7 +44,9 @@ const cutContent = (content) => {
 };
 
 const isUserPremium = async (userId) => {
-  const isSubscribe = await Subscription.findOne({ where: { userId, availableOn: moment().format("YYYY-MM-DD") } });
+  const isSubscribe = await Subscription.findOne({
+    where: { userId, availableOn: moment().add(7, "hours") },
+  });
   return isSubscribe ? true : false;
 };
 

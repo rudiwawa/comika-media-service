@@ -1,4 +1,4 @@
-const { Article, Comika } = require("../../models");
+const { Article, Comika, Tag } = require("../../models");
 
 const service = async function (req, res, next) {
   if (!req.params.id) {
@@ -10,10 +10,13 @@ const service = async function (req, res, next) {
       };
       const requestDB = await Article.findAll({
         where,
-        include: {
-          model: Comika,
-          attributes: ["id", "name", "photo", "verified"],
-        },
+        include: [
+          {
+            model: Comika,
+            attributes: ["id", "name", "photo", "verified"],
+          },
+          { model: Tag, attributes: ["name"] },
+        ],
       });
       if (!requestDB.length) res.response = { status: 404, msg: "artikel tidak ditemukan" };
       else res.response = { data: requestDB[0] };

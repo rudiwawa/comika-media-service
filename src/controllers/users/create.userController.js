@@ -7,9 +7,8 @@ const service = async (req, res, next) => {
   const payload = {
     name: body.name,
     email: body.email,
-    password: "comika-media",
+    password: body.password,
     role: body.role,
-    gender: body.gender,
     phone: body.phone,
     address: body.address,
     postalCode: body.postalCode,
@@ -24,7 +23,7 @@ const service = async (req, res, next) => {
       msg: `data ${body.name} berhasil ditambahkan.`,
       data: requestDB,
     };
-    sendEmail({ to: req.body.email, html: greeting(body.name, body.role) });
+    // sendEmail({ to: req.body.email, html: greeting(body.name, body.role) });
   } catch (err) {
     res.response = { status: 500, msg: err.message };
   }
@@ -42,14 +41,11 @@ const validation = [
         }
       });
     }),
-  body("gender").isIn(["L", "P"]).withMessage("gender hanya bernilai L/P"),
   body("phone", "phone tidak boleh kosong")
     .notEmpty()
-    .isLength({ min: 12, max: 13 })
+    .isLength({ min: 10, max: 13 })
     .withMessage("phone minimal 12 dan maksimal 13 karakter"),
-  body("role")
-    .isIn(["admin", "writer", "user"])
-    .withMessage("role tidak sesuai"),
+  body("role").isIn(["admin", "writer", "user"]).withMessage("role tidak sesuai"),
 ];
 
 const greeting = (name, role) => {

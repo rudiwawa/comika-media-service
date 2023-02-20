@@ -60,11 +60,11 @@ const service = async function (req, res, next) {
             ],
       },
       where: {
-        publishedAt: {
-          [Sequelize.Op.lte]: moment().add(7, "hours"),
-        },
         title: {
           [Sequelize.Op.substring]: search,
+        },
+        publishedAt: {
+          [Sequelize.Op.lte]: moment().add(7, "hours"),
         },
       },
       order,

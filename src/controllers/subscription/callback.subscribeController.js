@@ -1,25 +1,55 @@
-const { Subscription, Transaction, Order } = require("../../models");
-const moment = require("moment");
-const { v4: uuidv4 } = require("uuid");
+const {
+  Subscription,
+  Order,
+  OrderDetails,
+  sequelize,
+} = require("../../models");
+const generateActivation = require("./generateActivation.service");
+const sendEmail = require("../../services/sendEmail");
+const sendNotification = require("../../services/sendNotification");
 const service = async function (req, res, next) {
   try {
     const body = req.body;
-    const payload = {
-      trId: body.transaction_id,
-      status: body.transaction_status,
-      code: body.status_code,
-      paymentType: body.payment_type,
-      orderId: body.order_id,
-      grossAmount: Number(body.gross_amount),
-      currency: body.currency,
-    };
-    if (req.body.status_code == 200) {
-      const subscriptionActive = await successTransaction(payload);
-      const requestDB = await Subscription.bulkCreate(subscriptionActive);
-      res.response = { msg: `plan berhasil diaktifkan`, data: requestDB };
+    const where = { code: body.order_id, status: "pending" };
+    const dataOrder = await Order.findOne({
+      where,
+      include: { model: OrderDetails, as: "details" },
+    });
+    if (dataOrder) {
+      const t = await sequelize.transaction();
+      const payload = {
+        status: body.transaction_status,
+        paymentType: body.payment_type,
+      };
+      await Order.update(payload, { where, transaction: t });
+      if (req.body.status_code == 200) {
+        let longTimeSubscription = 0;
+        dataOrder.details.map((item) => {
+          if (item.type === "subscription") {
+            longTimeSubscription += Number(item.capacity);
+          }
+        });
+        if (longTimeSubscription > 0) {
+          await callbackSubscribe(dataOrder.userId, longTimeSubscription, t);
+        }
+
+        notification(
+          { id: dataOrder.userId, orderId: dataOrder.id },
+          dataOrder.code
+        );
+        res.response = {
+          msg: "PEMBAYARAN " + dataOrder.code + " BERHASIL DITERIMA",
+        };
+      } else {
+        res.response = {
+          status: 400,
+          msg: "transaction " + req.body.transaction_status,
+          data: payload,
+        };
+      }
+      await t.commit();
     } else {
-      recordTransaction(payload);
-      res.response = { msg: "successfull record pending" };
+      res.response = { status: 404, msg: "order tidak ditemukan" };
     }
   } catch (error) {
     res.response = { status: 500, msg: error.message };
@@ -27,58 +57,27 @@ const service = async function (req, res, next) {
   next();
 };
 
-const recordTransaction = async (payload) => {
-  try {
-    const requestDB = await Transaction.create(payload);
-  } catch (error) {
-    return new Promise.reject(error);
-  }
+const callbackSubscribe = async (userId, longTime, t) => {
+  await generateActivation(userId, longTime, t);
+  sendNotification.create(
+    userId,
+    `MEMBERSHIP ACTIVATION`,
+    `Selamat, selama ${longTime} hari kedepan kamu menjadi member Comika Media.`,
+    "https://api.comika.media/uploads/comika/membership.png",
+    null,
+    "informasi"
+  );
 };
 
-const successTransaction = async (payload) => {
-  await checkTransaction(payload.trId);
-  recordTransaction(payload);
-  const myOrder = await findOrder(payload.orderId);
-  const subscriptionActive = generateActivation(myOrder.plan, myOrder.userId);
-  return subscriptionActive;
+const notification = (user, orderCode) => {
+  sendNotification.create(
+    user.id,
+    `PEMBAYARAN ${orderCode.toUpperCase()} BERHASIL`,
+    `Pembayaran dengan kode transaksi ${orderCode.toUpperCase()} hari berhasil diterima, Terima kasih atas kepercayaan terhadap Comika Media.`,
+    "https://api.comika.media/uploads/comika/settlement.png",
+    user.orderId
+  );
+  // sendEmail({ to: user.email, subject: `PEMBAYARAN ${orderId.toUpperCase()} BERHASIL`, body: msg });
 };
 
-const checkTransaction = async (trId) => {
-  const requestDB = await Transaction.findOne({ where: { trId, status: "settlement" } });
-  if (requestDB) throw new Error("data sudah dibayar");
-};
-const findOrder = async (orderId) => {
-  try {
-    const myOrder = await Order.findOne({ where: { id: orderId } });
-    if (myOrder) return myOrder;
-    else return new Promise.reject("order not found");
-  } catch (error) {
-    return new Promise.reject(error.message);
-  }
-};
-
-const generateActivation = (plan, authId) => {
-  switch (plan) {
-    case "YEARLY":
-      return setAvalaibleOn(authId, 365);
-    case "MONTHLY":
-      return setAvalaibleOn(authId, 30);
-    case "WEEKLY":
-      return setAvalaibleOn(authId, 7);
-    default:
-      return setAvalaibleOn(authId, 0);
-  }
-};
-
-const setAvalaibleOn = (userId, day = 0) => {
-  const setPayload = [];
-  for (let index = 0; index < day; index++) {
-    setPayload.push({
-      id: uuidv4(),
-      userId,
-      availableOn: moment().add(index, "days"),
-    });
-  }
-  return setPayload;
-};
 module.exports = { service };

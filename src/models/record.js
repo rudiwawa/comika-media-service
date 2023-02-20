@@ -24,6 +24,8 @@ module.exports = (sequelize, DataTypes) => {
       url: DataTypes.STRING,
       msg: DataTypes.TEXT,
       userId: DataTypes.UUID,
+      name: DataTypes.STRING,
+      email: DataTypes.STRING,
     },
     {
       sequelize,

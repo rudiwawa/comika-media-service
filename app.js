@@ -5,7 +5,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 app.use(logger("dev"));
 app.use(express.json());
 app.use(cors());
@@ -25,8 +25,8 @@ app.use(response);
 
 const { sequelize } = require("./src/models");
 // if (process.env.NODE_ENV == "development")
-// sequelize.sync({ force: true });
 // sequelize.sync();
+// sequelize.sync({ force: true });
 
 app.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);

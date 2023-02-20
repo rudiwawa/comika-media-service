@@ -2,7 +2,6 @@ const { User } = require("../../models");
 
 const service = async (req, res, next) => {
   try {
-    console.log(req.params)
     const where = {};
     if (req.params.id) where.id = req.params.id;
     const requestDB = await User.scope("admin").findAll({

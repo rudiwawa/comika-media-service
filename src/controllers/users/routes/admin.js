@@ -4,6 +4,7 @@ const validator = require("../../../helpers/validator");
 const { checkToken } = require("../../../middlewares/jwtAdmin");
 const createUserController = require("../create.userController");
 const getUserController = require("../get.userController");
+const getListUserController = require("../getList.userController");
 const updateUserController = require("../update.userController");
 const deleteUserController = require("../delete.userController");
 const changePasswordController = require("../changePassword.userController");
@@ -12,8 +13,10 @@ const uploadFile = require("../../../services/uploadImage");
 router.post("/no-auth", createUserController.validation, validator, createUserController.service);
 router.use(checkToken);
 router
-  .get("/", getUserController.service)
-  .get("/:id", getUserController.service)
+  .get("/admin", getUserController.service)
+  .get("/admin/:id", getUserController.service)
+  .get("/user", getListUserController.service)
+  .get("/user/:id", getListUserController.service)
   .put("/", updateUserController.validation, validator, updateUserController.service)
   .delete("/:id", deleteUserController.service)
   .post("/", createUserController.validation, validator, createUserController.service)

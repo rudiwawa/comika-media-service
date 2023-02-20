@@ -9,6 +9,9 @@ const articleRoutes = require("../controllers/articles/routes/public");
 const commentRoutes = require("../controllers/comments/routes/public");
 const paymentsRoutes = require("../controllers/subscription/routes/public");
 const packageRoutes = require("../controllers/packages/routes/public");
+const storeRoutes = require("../controllers/store/routes/public");
+const notifRoutes = require("../controllers/notifications/routes/public");
+const promoRoutes = require("../controllers/promo/routes/public");
 
 router.use(ifHasToken);
 router.use("/", authRoutes);
@@ -18,15 +21,8 @@ router.use("/article", articleRoutes);
 router.use("/comment", commentRoutes);
 router.use("/payment", paymentsRoutes);
 router.use("/package", packageRoutes);
-router.get(
-  "/dummy",
-  require("../controllers/dummy/userDummy").service,
-  require("../controllers/dummy/comikaDummy").service,
-  require("../controllers/dummy/articleDummy").service,
-  require("../controllers/dummy/jumbotronDummy").service,
-  (req, res, next) => {
-    res.response = { msg: "DUMMY API" };
-    next();
-  }
-);
+router.use("/store", storeRoutes);
+router.use("/notification", notifRoutes);
+router.use("/promo", promoRoutes);
+
 module.exports = router;

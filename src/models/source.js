@@ -1,17 +1,17 @@
 "use strict";
 const { Model, Sequelize } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Img extends Model {
+  class Source extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ Source, Product }) {
-      Source.belongsToMany(Product, { through: "store_product_sources" });
+    static associate({ Source, StoreProductSource }) {
+      Source.hasMany(StoreProductSource);
     }
   }
-  Img.init(
+  Source.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -29,5 +29,5 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Source",
     }
   );
-  return Img;
+  return Source;
 };

@@ -19,7 +19,6 @@ const service = async function (req, res, next) {
       const code = requestDB.dataValues.id;
       const emailReceiver = user.dataValues.email;
       const isEmailSuccess = await createEmail(code, emailReceiver);
-      console.log(isEmailSuccess);
       if (isEmailSuccess)
         res.response = {
           msg: "silahkan cek email untuk reset password.",

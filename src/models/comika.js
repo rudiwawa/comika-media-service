@@ -22,7 +22,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         unique: true,
       },
-      photo: DataTypes.STRING,
+      photo: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        get() {
+          if (!this.getDataValue("photo")) return "https://api.comika.media/uploads/comika/icon.png";
+          return this.getDataValue("photo");
+        },
+      },
       verified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
@@ -31,6 +38,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Comika",
+      paranoid: true,
     }
   );
   return Comika;
